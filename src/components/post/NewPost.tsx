@@ -1,4 +1,4 @@
-function NewPost(params: any) {
+function NewPost() {
   return (
     <>
       <p>Add New Post</p>

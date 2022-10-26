@@ -8,11 +8,11 @@ function Navigation() {
       </Link>
       <div className="flex items-center gap-5">
         <Link to="/post">
-          <img src={process.env.PUBLIC_URL + "/Create.png"} alt="add new post" width={28} />
+          <img src={process.env.PUBLIC_URL + "/img/icon/Create.png"} alt="add new post" width={28} />
         </Link>
         <div className="flex w-auto items-center border-teal-300 border rounded-full">
           <span className="p-2 pr-0">
-            <img src={process.env.PUBLIC_URL + "/Search.png"} alt="search" width={20} />
+            <img src={process.env.PUBLIC_URL + "/img/icon/Search.png"} alt="search" width={20} />
           </span>
           <input type="text" placeholder="Search" className="p-2 bg-transparent focus:outline-none" />
         </div>

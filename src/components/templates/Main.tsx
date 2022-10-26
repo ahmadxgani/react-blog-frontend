@@ -26,7 +26,7 @@ function Main() {
               <span>2 menit yang lalu</span>
             </div>
             <div className="flex gap-2">
-              <img src={process.env.PUBLIC_URL + "/Bookmark.png"} alt="bookmark" width={28} />
+              <img src={process.env.PUBLIC_URL + "/img/icon/Bookmark.png"} alt="bookmark" width={28} />
               <span className="font-bold text-lg">&#x2219;&#x2219;&#x2219;</span>
             </div>
           </div>

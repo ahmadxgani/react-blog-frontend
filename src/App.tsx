@@ -1,4 +1,3 @@
-import "./App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import DetailPost from "./components/post/DetailPost";
 import NewPost from "./components/post/NewPost";
