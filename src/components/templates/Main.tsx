@@ -5,7 +5,7 @@ function Main() {
     <main className="bg-[#E6E5F3] h-[100vh] flex flex-col">
       <div className="flex flex-col gap-[20px] mt-[50px]">
         <div className="flex p-[18px] gap-[35px] justify-center mx-auto border-b bg-white rounded-xl">
-          <div className="flex gap-3">
+          <div className="flex gap-5">
             <Link to="/post/26be68a2-ec55-4fc7-bcae-3eb8d89929e1" className="relative w-[235px] h-[184px]">
               <img src={process.env.PUBLIC_URL + "/img/example/thumbnail.jpg"} alt="Thumbnail" className="rounded-[20px]" />
               <div className="pt-[10px] pr-[10px] top-0 right-0 absolute">
@@ -34,7 +34,7 @@ function Main() {
           </div>
         </div>
         <div className="flex p-[18px] gap-[35px] justify-center mx-auto border-b bg-white rounded-xl">
-          <div className="flex gap-3">
+          <div className="flex gap-5">
             <Link to="/post/26be68a2-ec55-4fc7-bcae-3eb8d89929e1" className="relative w-[235px] h-[184px]">
               <img src={process.env.PUBLIC_URL + "/img/example/thumbnail.jpg"} alt="Thumbnail" className="rounded-[20px]" />
               <div className="pt-[10px] pr-[10px] top-0 right-0 absolute">
