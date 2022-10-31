@@ -5,7 +5,7 @@ import ShowAllPost from "../post/ShowAllPost";
 
 function Main() {
   return (
-    <main className="bg-[#E6E5F3] h-[100vh] flex justify-center">
+    <main className="bg-[#E6E5F3] py-10 h-full flex justify-center">
       <Routes>
         <Route path="/" element={<ShowAllPost />} />
         <Route path="/post" element={<NewPost />} />
