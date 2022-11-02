@@ -3,7 +3,9 @@ import Editor from "../templates/Editor";
 function NewPost() {
   return (
     <>
-      <Editor />
+      <div className="bg-white w-full">
+        <Editor />
+      </div>
     </>
   );
 }

@@ -56,7 +56,7 @@ const Editor = (props: any) => {
 
   return (
     <Fragment>
-      <div id={EDITTOR_HOLDER_ID}> </div>
+      <div className="prose lg:prose-xl" id={EDITTOR_HOLDER_ID}></div>
     </Fragment>
   );
 };
