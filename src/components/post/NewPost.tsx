@@ -1,7 +1,9 @@
+import Editor from "../templates/Editor";
+
 function NewPost() {
   return (
     <>
-      <p>Add New Post</p>
+      <Editor />
     </>
   );
 }
