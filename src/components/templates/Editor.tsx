@@ -1,6 +1,7 @@
+import "./editor.css";
+import { Fragment, useEffect, useRef, useState } from "react";
 import EditorJS, { LogLevels, OutputData } from "@editorjs/editorjs";
 import Header from "@editorjs/header";
-import { Fragment, useEffect, useRef, useState } from "react";
 
 const DEFAULT_INITIAL_DATA = () => {
   return {
@@ -37,7 +38,7 @@ const Editor = (props: any) => {
   const initEditor = () => {
     const editor = new EditorJS({
       holder: EDITTOR_HOLDER_ID,
-      logLevel: "ERROR" as LogLevels.ERROR,
+      logLevel: "VERBOSE" as LogLevels,
       data: editorData,
       onReady: () => {
         ejInstance.current = editor;
@@ -56,7 +57,7 @@ const Editor = (props: any) => {
 
   return (
     <Fragment>
-      <div className="prose lg:prose-xl" id={EDITTOR_HOLDER_ID}></div>
+      <div className="prose lg:prose-xl bg-white p-5 rounded-lg shadow" id={EDITTOR_HOLDER_ID}></div>
     </Fragment>
   );
 };

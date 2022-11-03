@@ -1,4 +1,8 @@
 .ce-block__content,
 .ce-toolbar__content {
-  max-width: unset;
+  max-width: calc(100% - 80px) !important;
+}
+
+.codex-editor {
+  max-width: 100% !important;
 }
