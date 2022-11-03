@@ -20,7 +20,7 @@ const DEFAULT_INITIAL_DATA = () => {
 
 const EDITTOR_HOLDER_ID = "editorjs";
 
-const Editor = (props: any) => {
+const Editor = () => {
   const ejInstance = useRef<EditorJS | null>(null);
   const [editorData, setEditorData] = useState<OutputData>(DEFAULT_INITIAL_DATA);
 
@@ -55,7 +55,7 @@ const Editor = (props: any) => {
     });
   };
 
-  return <div className="prose lg:prose-lg xl:prose-xl prose-sm bg-white px-3 mx-3 rounded-lg shadow w-full md:w-[46.25rem]" id={EDITTOR_HOLDER_ID}></div>;
+  return <div className="xl:prose-xl lg:prose-lg md:prose-base prose-sm prose bg-white px-3 mx-3 rounded-lg shadow w-full md:w-[43.75rem] md:px-[1.25rem]" id={EDITTOR_HOLDER_ID}></div>;
 };
 
 export default Editor;
