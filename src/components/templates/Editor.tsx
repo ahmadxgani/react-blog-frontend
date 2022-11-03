@@ -55,7 +55,7 @@ const Editor = (props: any) => {
     });
   };
 
-  return <div className="prose lg:prose-lg xl:prose-xl prose-sm bg-white p-3 rounded-lg shadow w-full" id={EDITTOR_HOLDER_ID}></div>
+  return <div className="prose lg:prose-lg xl:prose-xl prose-sm bg-white px-3 mx-3 rounded-lg shadow w-full md:w-[46.25rem]" id={EDITTOR_HOLDER_ID}></div>;
 };
 
 export default Editor;
