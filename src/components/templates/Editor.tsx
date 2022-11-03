@@ -57,7 +57,7 @@ const Editor = (props: any) => {
 
   return (
     <Fragment>
-      <div className="prose lg:prose-xl bg-white p-5 rounded-lg shadow" id={EDITTOR_HOLDER_ID}></div>
+      <div className="prose lg:prose-lg xl:prose-xl prose-sm bg-white p-3 rounded-lg shadow w-full" id={EDITTOR_HOLDER_ID}></div>
     </Fragment>
   );
 };
