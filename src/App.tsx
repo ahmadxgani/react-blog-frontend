@@ -15,6 +15,10 @@ const link = from([
   errorLink,
   new HttpLink({
     uri: "http://localhost:3000/graphql",
+    headers: {
+      authorization:
+        "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwidXNlcm5hbWUiOiJsZWxvdWNoIiwicm9sZSI6MCwiZW1haWwiOiJhZG1pbkBzLmNvbSIsInBhc3N3b3JkIjoiJDJiJDEwJGJFODJ0OC9QNTVEV2FlcVMveTNRVHU2VTQzcTloNWRGaHBZMDNHWkFYb0N5UFNhaGFJVm9lIiwiY3JlYXRlZEF0IjoiMjAyMi0wOS0zMFQxMzoyNzo1Mi4wNTNaIiwidXBkYXRlZEF0IjoiMjAyMi0wOS0zMFQxMzoyODozNi45NzNaIiwiaWF0IjoxNjY3NTYxNTE5LCJleHAiOjE2OTkxMTkxMTl9.ICdEoUZBRU0g9Ghp7gz3Ea0CEC0UwX5G9AI9akESsSw",
+    },
   }),
 ]);
 
