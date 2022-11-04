@@ -56,7 +56,7 @@ const Editor = () => {
     });
   };
 
-  return <div className="xl:prose-xl lg:prose-lg md:prose-base prose-sm prose bg-white px-3 mx-3 rounded-lg shadow !max-w-[43.75rem] md:px-[1.25rem]" id={EDITTOR_HOLDER_ID}></div>;
+  return <div className="xl:prose-xl lg:prose-lg md:prose-base prose-sm prose bg-white px-3 rounded-lg shadow !max-w-[43.75rem] md:px-[1.25rem]" id={EDITTOR_HOLDER_ID}></div>;
 };
 
 export default Editor;
