@@ -1,6 +1,6 @@
 import "./editor.css";
 import { useEffect, useRef, useState } from "react";
-import EditorJS, { LogLevels, OutputData } from "@editorjs/editorjs";
+import EditorJS, { BlockToolConstructable, LogLevels, OutputData } from "@editorjs/editorjs";
 import Header from "@editorjs/header";
 
 const DEFAULT_INITIAL_DATA = () => {
@@ -9,10 +9,7 @@ const DEFAULT_INITIAL_DATA = () => {
     blocks: [
       {
         type: "header",
-        data: {
-          text: "This is my awesome editor!",
-          level: 1,
-        },
+        data: {},
       },
     ],
   };
@@ -24,7 +21,6 @@ const Editor = () => {
   const ejInstance = useRef<EditorJS | null>(null);
   const [editorData, setEditorData] = useState<OutputData>(DEFAULT_INITIAL_DATA);
 
-  // This will run only once
   useEffect(() => {
     if (!ejInstance.current) {
       initEditor();
@@ -48,9 +44,14 @@ const Editor = () => {
         // Put your logic here to save this data to your DB
         setEditorData(content);
       },
-      autofocus: true,
       tools: {
-        header: Header,
+        header: {
+          class: Header as unknown as BlockToolConstructable,
+          config: {
+            placeholder: "Title here...",
+            defaultLevel: 3,
+          },
+        },
       },
     });
   };
