@@ -1,6 +1,14 @@
 import { Link } from "react-router-dom";
+import { useQuery } from "@apollo/client";
+import { LOAD_POSTS } from "../../GraphQL/Queries";
+import { useEffect } from "react";
 
 function ShowAllPost() {
+  const { error, loading, data } = useQuery(LOAD_POSTS);
+
+  useEffect(() => {
+    console.log(data);
+  }, [data]);
   return (
     <div className="flex flex-col gap-[1.25rem] mt-[3.125rem]">
       <div className="flex p-[1.125rem] gap-[2.1875rem] justify-center mx-auto border-b bg-white rounded-xl">

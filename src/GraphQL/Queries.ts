@@ -1,6 +1,6 @@
 import { gql } from "@apollo/client";
 
-export const posts = gql`
+export const LOAD_POSTS = gql`
   query {
     ShowAllPost {
       title
