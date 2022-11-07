@@ -9,7 +9,16 @@ const DEFAULT_INITIAL_DATA = () => {
     blocks: [
       {
         type: "header",
-        data: {},
+        data: {
+          text: "Title here...",
+          version: 3,
+        },
+      },
+      {
+        type: "paragraph",
+        data: {
+          text: "Content here...",
+        },
       },
     ],
   };
@@ -20,6 +29,8 @@ const EDITTOR_HOLDER_ID = "editorjs";
 const Editor = () => {
   const ejInstance = useRef<EditorJS | null>(null);
   const [editorData, setEditorData] = useState<OutputData>(DEFAULT_INITIAL_DATA);
+
+  const handleSave = async () => {};
 
   useEffect(() => {
     if (!ejInstance.current) {
@@ -58,5 +69,16 @@ const Editor = () => {
 
   return <div className="xl:prose-xl lg:prose-lg md:prose-base prose-sm prose bg-white px-3 rounded-lg shadow !max-w-[43.75rem] md:px-[1.25rem]" id={EDITTOR_HOLDER_ID}></div>;
 };
+
+function Slugify(title: string) {
+  return title
+    .toString()
+    .toLowerCase()
+    .replace(/\s+/g, "-")
+    .replace(/[^\w\-]+/g, "")
+    .replace(/\-\-+/g, "-")
+    .replace(/^-+/, "")
+    .replace(/-+$/, "");
+}
 
 export default Editor;
