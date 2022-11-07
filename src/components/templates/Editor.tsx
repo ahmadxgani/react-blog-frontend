@@ -2,6 +2,8 @@ import "./editor.css";
 import { useEffect, useRef, useState } from "react";
 import EditorJS, { BlockToolConstructable, LogLevels, OutputData } from "@editorjs/editorjs";
 import Header from "@editorjs/header";
+import { useMutation } from "@apollo/client";
+import { CREATE_POST } from "../../GraphQL/Mutations";
 
 const DEFAULT_INITIAL_DATA = () => {
   return {
@@ -29,8 +31,27 @@ const EDITTOR_HOLDER_ID = "editorjs";
 const Editor = () => {
   const ejInstance = useRef<EditorJS | null>(null);
   const [editorData, setEditorData] = useState<OutputData>(DEFAULT_INITIAL_DATA);
+  const [createPost, { error }] = useMutation(CREATE_POST);
 
-  const handleSave = async () => {};
+  const handleSave = async () => {
+    const outputData = await ejInstance?.current?.save();
+    let title;
+
+    for (let i = 0; i < outputData!.blocks.length; i++) {
+      if (outputData?.blocks[i].type === "header" && outputData.blocks[i].data.level === 3) {
+        title = outputData.blocks[i].data.text;
+        break;
+      }
+    }
+    const slug = Slugify(title);
+    createPost({
+      variables: {
+        article: JSON.stringify(outputData),
+        slug,
+        tags: [],
+      },
+    });
+  };
 
   useEffect(() => {
     if (!ejInstance.current) {
