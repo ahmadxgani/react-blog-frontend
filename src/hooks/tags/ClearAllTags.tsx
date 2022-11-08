@@ -2,7 +2,7 @@ import { ClearAllTagsPropTypes, ClearAllTagsTypes } from "../../lib/types";
 
 const ClearAllTags = (props: ClearAllTagsTypes) => {
   return (
-    <button className={props.classNames.clearAll} onClick={props.onClick}>
+    <button className={(props.classNames as any).clearAll} onClick={props.onClick as React.MouseEventHandler<HTMLButtonElement>}>
       Clear all
     </button>
   );

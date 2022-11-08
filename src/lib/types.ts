@@ -35,6 +35,8 @@ export const TagPropTypes = {
 
 export type TagTypes = InferProps<typeof TagPropTypes>;
 
+export type Tag = Pick<TagTypes, "tag">;
+
 export const ClearAllTagsPropTypes = {
   classNames: PropTypes.object,
   onClick: PropTypes.func,

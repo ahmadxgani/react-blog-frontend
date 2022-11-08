@@ -1,4 +1,5 @@
-import React, { Component, createRef, useState, useEffect, useRef } from "react";
+// @ts-nocheck
+import React, { useState, useEffect, useRef } from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { isEqual, noop, uniq } from "lodash";
@@ -35,20 +36,20 @@ const ReactTags = (props: ReactTagTypes) => {
   const inputTextRef = useRef<HTMLInputElement | null>(null);
   const tagInputRef = useRef<HTMLInputElement | null>(null);
 
-  const addTag = (tag) => {
+  const addTag = (tag: any) => {
     const { tags, labelField, allowUnique } = props;
     const { currentEditIndex } = state;
-    if (!tag.id || !tag[labelField]) {
+    if (!tag.id || !tag[labelField as string]) {
       return;
     }
-    const existingKeys = tags.map((tag) => tag.id.toLowerCase());
+    const existingKeys = tags!.map((tag) => tag!.id.toLowerCase());
 
     // Return if tag has been already added
     if (allowUnique && existingKeys.indexOf(tag.id.toLowerCase()) >= 0) {
       return;
     }
     if (props.autocomplete) {
-      const possibleMatches = filteredSuggestions(tag[labelField]);
+      const possibleMatches = filteredSuggestions(tag[labelField as string]);
 
       if ((props.autocomplete === 1 && possibleMatches.length === 1) || (props.autocomplete === true && possibleMatches.length)) {
         tag = possibleMatches[0];
@@ -57,7 +58,7 @@ const ReactTags = (props: ReactTagTypes) => {
 
     // call method to add
     if (currentEditIndex !== -1 && props.onTagUpdate) props.onTagUpdate(currentEditIndex, tag);
-    else props.handleAddition(tag);
+    else props.handleAddition!(tag);
 
     // reset the state
     setState((currentState) => ({
@@ -71,20 +72,24 @@ const ReactTags = (props: ReactTagTypes) => {
     resetAndFocusInput();
   };
 
-  const filteredSuggestions = (query) => {
+  const getQueryIndex = (query: any, item: any) => {
+    return item[props.labelField as string].toLowerCase().indexOf(query.toLowerCase());
+  };
+
+  const filteredSuggestions = (query: any) => {
     let { suggestions } = props;
     if (props.allowUnique) {
-      const existingTags = props.tags.map((tag) => tag.id.toLowerCase());
-      suggestions = suggestions.filter((suggestion) => !existingTags.includes(suggestion.id.toLowerCase()));
+      const existingTags = props.tags!.map((tag) => tag!.id.toLowerCase());
+      suggestions = suggestions!.filter((suggestion) => !existingTags.includes(suggestion!.id.toLowerCase()));
     }
     if (props.handleFilterSuggestions) {
       return props.handleFilterSuggestions(query, suggestions);
     }
 
-    const exactSuggestions = suggestions.filter((item) => {
+    const exactSuggestions = suggestions!.filter((item) => {
       return getQueryIndex(query, item) === 0;
     });
-    const partialSuggestions = suggestions.filter((item) => {
+    const partialSuggestions = suggestions!.filter((item) => {
       return getQueryIndex(query, item) > 0;
     });
     return exactSuggestions.concat(partialSuggestions);
@@ -101,7 +106,7 @@ const ReactTags = (props: ReactTagTypes) => {
     }));
   };
 
-  const handleFocus = (event) => {
+  const handleFocus: React.FocusEventHandler<HTMLInputElement> = (event) => {
     const value = event.target.value;
     if (props.handleInputFocus) {
       props.handleInputFocus(value);
@@ -109,7 +114,7 @@ const ReactTags = (props: ReactTagTypes) => {
     setState((currentState) => ({ ...currentState, isFocused: true }));
   };
 
-  const handleBlur = (event) => {
+  const handleBlur: React.FocusEventHandler<HTMLInputElement> = (event) => {
     const value = event.target.value;
     if (props.handleInputBlur) {
       props.handleInputBlur(value);
@@ -120,7 +125,7 @@ const ReactTags = (props: ReactTagTypes) => {
     setState((currentState) => ({ ...currentState, isFocused: false, currentEditIndex: -1 }));
   };
 
-  const handleKeyDown = (event) => {
+  const handleKeyDown: React.KeyboardEventHandler<HTMLInputElement> = (event) => {
     const { query, selectedIndex, suggestions, selectionMode } = state;
 
     // hide suggestions menu on escape
@@ -139,12 +144,12 @@ const ReactTags = (props: ReactTagTypes) => {
     // When one of the terminating keys is pressed, add current query to the tags.
     // If no text is typed in so far, ignore the action - so we don't end up with a terminating
     // character typed in.
-    if (props.delimiters.indexOf(event.keyCode) !== -1 && !event.shiftKey) {
+    if (props.delimiters!.indexOf(event.keyCode) !== -1 && !event.shiftKey) {
       if (event.keyCode !== KEYS.TAB || query !== "") {
         event.preventDefault();
       }
 
-      const selectedQuery = selectionMode && selectedIndex !== -1 ? suggestions[selectedIndex] : { id: query, [props.labelField]: query };
+      const selectedQuery: any = selectionMode && selectedIndex !== -1 ? suggestions![selectedIndex] : { id: query, [props.labelField as string]: query };
 
       if (selectedQuery !== "") {
         addTag(selectedQuery);
@@ -153,7 +158,7 @@ const ReactTags = (props: ReactTagTypes) => {
 
     // when backspace key is pressed and query is blank, delete tag
     if (event.keyCode === KEYS.BACKSPACE && query === "" && props.allowDeleteFromEmptyInput) {
-      props.handleDelete(props.tags.length - 1, e);
+      props.handleDelete!(props.tags!.length - 1, event);
     }
 
     // up arrow
@@ -161,7 +166,7 @@ const ReactTags = (props: ReactTagTypes) => {
       event.preventDefault();
       setState((currentState) => ({
         ...currentState,
-        selectedIndex: selectedIndex <= 0 ? suggestions.length - 1 : selectedIndex - 1,
+        selectedIndex: selectedIndex <= 0 ? suggestions!.length - 1 : selectedIndex - 1,
         selectionMode: true,
       }));
     }
@@ -171,35 +176,36 @@ const ReactTags = (props: ReactTagTypes) => {
       event.preventDefault();
       setState((currentState) => ({
         ...currentState,
-        selectedIndex: suggestions.length === 0 ? -1 : (selectedIndex + 1) % suggestions.length,
+        selectedIndex: suggestions!.length === 0 ? -1 : (selectedIndex + 1) % suggestions!.length,
         selectionMode: true,
       }));
     }
   };
 
-  const handleChange = (event) => {
+  const handleChange: React.ChangeEventHandler<HTMLInputElement> = (event) => {
     if (props.handleInputChange) {
       props.handleInputChange(event.target.value);
     }
 
-    const query = e.target.value.trim();
+    const query = event.target.value.trim();
 
-    setState({ query }, updateSuggestions);
+    setState((currentState) => ({ ...currentState, query }));
+    updateSuggestions();
   };
 
-  const handlePaste = (event) => {
+  const handlePaste: React.ClipboardEventHandler<HTMLInputElement> = (event) => {
     if (!props.allowAdditionFromPaste) {
       return;
     }
 
     event.preventDefault();
 
-    const clipboardData = event.clipboardData || window.clipboardData;
+    const clipboardData = event.clipboardData || (window as any).clipboardData;
     const clipboardText = clipboardData.getData("text");
 
     const { maxLength = clipboardText.length } = props;
 
-    const maxTextLength = Math.min(maxLength, clipboardText.length);
+    const maxTextLength = Math.min(maxLength as number, clipboardText.length);
     const pastedText = clipboardData.getData("text").substr(0, maxTextLength);
 
     // Used to determine how the pasted content is split.
@@ -210,35 +216,41 @@ const ReactTags = (props: ReactTagTypes) => {
     uniq(tags).forEach((tag) => addTag({ id: tag, [props.labelField as string]: tag }));
   };
 
-  const handleSuggestionHover = (i) =>
+  const handleSuggestionHover = (i: number) =>
     setState((currentState) => ({
       ...currentState,
       selectedIndex: i,
       selectionMode: true,
     }));
 
-  const handleSuggestionClick = (i) => addTag(state.suggestions[i]);
+  const handleSuggestionClick = (i: number) => addTag(state.suggestions![i]);
 
-  const handleTagClick = (i, tag, e) => {
+  const handleTagClick = (i: any, tag: any, e: any) => {
     const { editable, handleTagClick, labelField } = props;
     if (editable) {
-      setState((currentState) => ({ ...currentState, currentEditIndex: i, query: tag[labelField] }));
-      tagInput.focus();
+      setState((currentState) => ({ ...currentState, currentEditIndex: i, query: tag[labelField as string] }));
+      tagInputRef.current!.focus();
     }
     if (handleTagClick) {
       handleTagClick(i, e);
     }
   };
 
-  const moveTag = (dragIndex: number, hoverIndex: number) => {
+  const handleMoveTag = (dragIndex: number, hoverIndex: number) => {
     const tags = props.tags;
 
     // locate tags
-    const dragTag = tags[dragIndex];
+    const dragTag = tags![dragIndex];
 
     // call handler with the index of the dragged tag
     // and the tag that is hovered
-    props.handleDrag(dragTag, dragIndex, hoverIndex);
+    props.handleDrag!(dragTag, dragIndex, hoverIndex);
+  };
+
+  const clearAllTags = () => {
+    if (props.onClearAll) {
+      props.onClearAll();
+    }
   };
 
   const getTagItems = () => {
@@ -246,8 +258,8 @@ const ReactTags = (props: ReactTagTypes) => {
     const classNames = { ...DEFAULT_CLASSNAMES, ...props.classNames };
 
     const { currentEditIndex, query } = state;
-    const moveTag = allowDragDrop ? moveTag : null;
-    return tags.map((tag, index) => {
+    const moveTag = allowDragDrop ? handleMoveTag : null;
+    return tags!.map((tag, index) => {
       return (
         <React.Fragment key={index}>
           {currentEditIndex === index ? (
@@ -271,13 +283,12 @@ const ReactTags = (props: ReactTagTypes) => {
               index={index}
               tag={tag}
               labelField={labelField}
-              onDelete={props.handleDelete.bind(this, index)}
+              onDelete={props!.handleDelete!.bind(this, index)}
               moveTag={moveTag}
               removeComponent={removeComponent}
               onTagClicked={handleTagClick.bind(this, index, tag)}
               readOnly={readOnly}
               classNames={classNames}
-              allowDragDrop={allowDragDrop}
             />
           )}
         </React.Fragment>
@@ -309,36 +320,44 @@ const ReactTags = (props: ReactTagTypes) => {
     }
   }, [props.suggestions, prevSuggestions]);
 
-  const classNames = { ...DEFAULT_CLASSNAMES, ...props.classNames };
+  const classNames = { ...DEFAULT_CLASSNAMES, ...props.classNames },
+    tagItems = getTagItems(),
+    query = state.query.trim(),
+    selectedIndex = state.selectedIndex,
+    suggestions = state.suggestions;
+
+  const { placeholder, name: inputName, id: inputId, maxLength, inline, inputFieldPosition, inputValue, inputProps, clearAll, tags } = props;
+
+  const position = !inline ? INPUT_FIELD_POSITIONS.BOTTOM : inputFieldPosition;
 
   const tagInput = !props.readOnly ? (
     <div className={classNames.tagInput}>
       <input
-        {...props.inputProps}
+        {...inputProps}
         ref={(input) => {
           inputTextRef.current = input;
         }}
         className={classNames.tagInputField}
         type="text"
-        placeholder={placeholder}
+        placeholder={placeholder as string}
         aria-label={placeholder}
         onFocus={handleFocus}
         onBlur={handleBlur}
         onChange={handleChange}
         onKeyDown={handleKeyDown}
         onPaste={handlePaste}
-        name={inputName}
-        id={inputId}
-        maxLength={maxLength}
-        value={inputValue}
+        name={inputName as string}
+        id={inputId as string}
+        maxLength={maxLength as number}
+        value={inputValue as string}
         data-automation="input"
         data-testid="input"
       />
 
       <Suggestions
         query={query}
-        suggestions={suggestions}
-        labelField={props.labelField}
+        suggestions={suggestions as any[]}
+        labelField={props.labelField as string}
         selectedIndex={selectedIndex}
         handleClick={handleSuggestionClick}
         handleHover={handleSuggestionHover}
@@ -348,7 +367,7 @@ const ReactTags = (props: ReactTagTypes) => {
         classNames={classNames}
         renderSuggestion={props.renderSuggestion}
       />
-      {clearAll && tags.length > 0 && <ClearAllTags classNames={classNames} onClick={clearAll} />}
+      {clearAll && tags!.length > 0 && <ClearAllTags classNames={classNames} onClick={clearAllTags} />}
     </div>
   ) : null;
 
