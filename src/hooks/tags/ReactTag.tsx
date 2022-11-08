@@ -12,6 +12,14 @@ import { buildRegExpFromDelimiters } from "../../lib/utils";
 import { KEYS, DEFAULT_PLACEHOLDER, DEFAULT_CLASSNAMES, DEFAULT_LABEL_FIELD, INPUT_FIELD_POSITIONS } from "../../lib/constants";
 import { ReactTagsPropTypes, ReactTagTypes } from "../../lib/types";
 
+const usePrevious = <T extends unknown>(value: T): T | undefined => {
+  const ref = useRef<T>();
+  useEffect(() => {
+    ref.current = value;
+  });
+  return ref.current;
+};
+
 const ReactTags = (props: ReactTagTypes) => {
   const [state, setState] = useState({
     suggestions: props.suggestions,
@@ -22,8 +30,9 @@ const ReactTags = (props: ReactTagTypes) => {
     ariaLiveStatus: "",
     currentEditIndex: -1,
   });
-  const reactTagsRef = createRef();
-  const inputTextRef = createRef();
+
+  const reactTagsRef = useRef<HTMLDivElement | null>(null);
+  const inputTextRef = useRef<HTMLInputElement | null>(null);
   const tagInputRef = useRef<HTMLInputElement | null>(null);
 
   const addTag = (tag) => {
@@ -60,6 +69,36 @@ const ReactTags = (props: ReactTagTypes) => {
     }));
 
     resetAndFocusInput();
+  };
+
+  const filteredSuggestions = (query) => {
+    let { suggestions } = props;
+    if (props.allowUnique) {
+      const existingTags = props.tags.map((tag) => tag.id.toLowerCase());
+      suggestions = suggestions.filter((suggestion) => !existingTags.includes(suggestion.id.toLowerCase()));
+    }
+    if (props.handleFilterSuggestions) {
+      return props.handleFilterSuggestions(query, suggestions);
+    }
+
+    const exactSuggestions = suggestions.filter((item) => {
+      return getQueryIndex(query, item) === 0;
+    });
+    const partialSuggestions = suggestions.filter((item) => {
+      return getQueryIndex(query, item) > 0;
+    });
+    return exactSuggestions.concat(partialSuggestions);
+  };
+
+  const updateSuggestions = () => {
+    const { query, selectedIndex } = state;
+    const suggestions = filteredSuggestions(query);
+
+    setState((currentState) => ({
+      ...currentState,
+      suggestions: suggestions,
+      selectedIndex: selectedIndex >= suggestions.length ? suggestions.length - 1 : selectedIndex,
+    }));
   };
 
   const handleFocus = (event) => {
@@ -246,22 +285,48 @@ const ReactTags = (props: ReactTagTypes) => {
     });
   };
 
-  const tagInput = !this.props.readOnly ? (
+  const resetAndFocusInput = () => {
+    setState((currentState) => ({ ...currentState, query: "" }));
+    if (inputTextRef.current) {
+      inputTextRef.current.value = "";
+      inputTextRef.current.focus();
+    }
+  };
+
+  useEffect(() => {
+    const { autofocus, readOnly } = props;
+
+    if (autofocus && !readOnly) {
+      resetAndFocusInput();
+    }
+  }, []);
+
+  const prevSuggestions = usePrevious(props.suggestions);
+
+  useEffect(() => {
+    if (!isEqual(prevSuggestions, props.suggestions)) {
+      updateSuggestions();
+    }
+  }, [props.suggestions, prevSuggestions]);
+
+  const classNames = { ...DEFAULT_CLASSNAMES, ...props.classNames };
+
+  const tagInput = !props.readOnly ? (
     <div className={classNames.tagInput}>
       <input
-        {...inputProps}
+        {...props.inputProps}
         ref={(input) => {
-          this.textInput = input;
+          inputTextRef.current = input;
         }}
         className={classNames.tagInputField}
         type="text"
         placeholder={placeholder}
         aria-label={placeholder}
-        onFocus={this.handleFocus}
-        onBlur={this.handleBlur}
-        onChange={this.handleChange}
-        onKeyDown={this.handleKeyDown}
-        onPaste={this.handlePaste}
+        onFocus={handleFocus}
+        onBlur={handleBlur}
+        onChange={handleChange}
+        onKeyDown={handleKeyDown}
+        onPaste={handlePaste}
         name={inputName}
         id={inputId}
         maxLength={maxLength}
@@ -273,22 +338,22 @@ const ReactTags = (props: ReactTagTypes) => {
       <Suggestions
         query={query}
         suggestions={suggestions}
-        labelField={this.props.labelField}
+        labelField={props.labelField}
         selectedIndex={selectedIndex}
-        handleClick={this.handleSuggestionClick}
-        handleHover={this.handleSuggestionHover}
-        minQueryLength={this.props.minQueryLength}
-        shouldRenderSuggestions={this.props.shouldRenderSuggestions}
-        isFocused={this.state.isFocused}
+        handleClick={handleSuggestionClick}
+        handleHover={handleSuggestionHover}
+        minQueryLength={props.minQueryLength}
+        shouldRenderSuggestions={props.shouldRenderSuggestions}
+        isFocused={state.isFocused}
         classNames={classNames}
-        renderSuggestion={this.props.renderSuggestion}
+        renderSuggestion={props.renderSuggestion}
       />
-      {clearAll && tags.length > 0 && <ClearAllTags classNames={classNames} onClick={this.clearAll} />}
+      {clearAll && tags.length > 0 && <ClearAllTags classNames={classNames} onClick={clearAll} />}
     </div>
   ) : null;
 
   return (
-    <div className={ClassNames(classNames.tags, "react-tags-wrapper")} ref={this.reactTagsRef}>
+    <div className={ClassNames(classNames.tags, "react-tags-wrapper")} ref={reactTagsRef}>
       <p
         role="alert"
         className="sr-only"
@@ -303,7 +368,7 @@ const ReactTags = (props: ReactTagTypes) => {
           border: 0,
         }}
       >
-        {this.state.ariaLiveStatus}
+        {state.ariaLiveStatus}
       </p>
       {position === INPUT_FIELD_POSITIONS.TOP && tagInput}
       <div className={classNames.selected}>
