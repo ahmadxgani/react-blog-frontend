@@ -1,6 +1,6 @@
 // @ts-nocheck
 import "./reactTags.css";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { isEqual, noop, uniq } from "lodash";
@@ -13,6 +13,7 @@ import { buildRegExpFromDelimiters } from "../../lib/utils";
 
 import { KEYS, DEFAULT_PLACEHOLDER, DEFAULT_CLASSNAMES, DEFAULT_LABEL_FIELD, INPUT_FIELD_POSITIONS } from "../../lib/constants";
 import { ReactTagsPropTypes, ReactTagTypes } from "../../lib/types";
+import { useStateCallback } from "../callbackState";
 
 const usePrevious = <T extends unknown>(value: T): T | undefined => {
   const ref = useRef<T>();
@@ -23,7 +24,7 @@ const usePrevious = <T extends unknown>(value: T): T | undefined => {
 };
 
 const ReactTags = (props: ReactTagTypes) => {
-  const [state, setState] = useState({
+  const [state, setState] = useStateCallback({
     suggestions: props.suggestions,
     query: "",
     isFocused: false,
@@ -190,8 +191,7 @@ const ReactTags = (props: ReactTagTypes) => {
 
     const query = event.target.value.trim();
 
-    setState((currentState) => ({ ...currentState, query }));
-    updateSuggestions();
+    setState((currentState) => ({ ...currentState, query }), updateSuggestions);
   };
 
   const handlePaste: React.ClipboardEventHandler<HTMLInputElement> = (event) => {
@@ -229,9 +229,14 @@ const ReactTags = (props: ReactTagTypes) => {
   const handleTagClick = (i: any, tag: any, e: any) => {
     const { editable, handleTagClick, labelField } = props;
     if (editable) {
-      setState((currentState) => ({ ...currentState, currentEditIndex: i, query: tag[labelField as string] }));
-      tagInputRef.current!.focus();
+      setState(
+        (currentState) => ({ ...currentState, currentEditIndex: i, query: tag[labelField as string] }),
+        () => {
+          tagInputRef.current!.focus();
+        }
+      );
     }
+
     if (handleTagClick) {
       handleTagClick(i, e);
     }
@@ -290,6 +295,7 @@ const ReactTags = (props: ReactTagTypes) => {
               onTagClicked={handleTagClick.bind(this, index, tag)}
               readOnly={readOnly}
               classNames={classNames}
+              allowDragDrop={allowDragDrop}
             />
           )}
         </React.Fragment>
