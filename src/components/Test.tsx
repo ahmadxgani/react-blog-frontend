@@ -232,7 +232,10 @@ const Test = () => {
     { id: "Turkey", text: "Turkey" },
   ]);
 
-  const handleDelete = (i: any) => {
+  const handleDelete = (i: any, event: any) => {
+    event.preventDefault();
+    event.stopPropagation();
+
     setTags((currentTags) => currentTags.filter((tag, index) => index !== i));
   };
 

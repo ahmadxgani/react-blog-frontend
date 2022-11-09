@@ -27,7 +27,7 @@ const RemoveComponent = (props: removeComponentTypes) => {
   }
 
   return (
-    <button onClick={onRemove} onKeyDown={onKeydown} className={className as string} type="button" aria-label={ariaLabel}>
+    <button onClick={(event) => onRemove(event)} onKeyDown={onKeydown} className={className as string} type="button" aria-label={ariaLabel}>
       {crossStr}
     </button>
   );

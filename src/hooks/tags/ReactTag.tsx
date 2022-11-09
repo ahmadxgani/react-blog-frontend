@@ -289,7 +289,7 @@ const ReactTags = (props: ReactTagTypes) => {
               index={index}
               tag={tag}
               labelField={labelField}
-              onDelete={props!.handleDelete!.bind(this, index)}
+              onDelete={(ev) => props!.handleDelete(index, ev)}
               moveTag={moveTag}
               removeComponent={removeComponent}
               onTagClicked={handleTagClick.bind(this, index, tag)}
