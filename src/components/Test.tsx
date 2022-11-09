@@ -233,27 +233,30 @@ const Test = () => {
   ]);
 
   const handleDelete = (i: any) => {
-    setTags(tags.filter((tag, index) => index !== i));
+    setTags((currentTags) => currentTags.filter((tag, index) => index !== i));
   };
 
   const onTagUpdate = (i: any, newTag: any) => {
-    const updatedTags = tags.slice();
-    updatedTags.splice(i, 1, newTag);
-    setTags(updatedTags);
+    setTags((currentTags) => {
+      const updatedTags = currentTags.slice();
+      updatedTags.splice(i, 1, newTag);
+      return updatedTags;
+    });
   };
 
   const handleAddition = (tag: any) => {
-    setTags([...tags, tag]);
+    setTags((currentTags) => [...currentTags, tag]);
   };
 
   const handleDrag = (tag: any, currPos: any, newPos: any) => {
-    const newTags = tags.slice();
-
-    newTags.splice(currPos, 1);
-    newTags.splice(newPos, 0, tag);
-
     // re-render
-    setTags(newTags);
+    setTags((currentTags) => {
+      const newTags = currentTags.slice();
+      newTags.splice(currPos, 1);
+      newTags.splice(newPos, 0, tag);
+
+      return newTags;
+    });
   };
 
   const handleTagClick = (index: any) => {
