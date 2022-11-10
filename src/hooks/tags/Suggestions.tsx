@@ -182,7 +182,12 @@ Suggestion.defaultProps = {
 };
 
 React.memo(Suggestion, (props, nextProps) => {
-  const shouldRenderSuggestions = props.shouldRenderSuggestions || this.shouldRenderSuggestions;
+  const shouldRenderSuggestions =
+    props.shouldRenderSuggestions ||
+    ((query) => {
+      const { minQueryLength, isFocused } = props;
+      return query.length >= minQueryLength && isFocused;
+    });
   return props.isFocused !== nextProps.isFocused || !isEqual(props.suggestions, nextProps.suggestions) || shouldRenderSuggestions(nextProps.query) || shouldRenderSuggestions(nextProps.query) !== shouldRenderSuggestions(props.query);
 });
 
