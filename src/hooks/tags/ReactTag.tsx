@@ -15,7 +15,7 @@ import { KEYS, DEFAULT_PLACEHOLDER, DEFAULT_CLASSNAMES, DEFAULT_LABEL_FIELD, INP
 import { ReactTagsPropTypes, ReactTagTypes } from "../../lib/types";
 import { useStateCallback } from "../callbackState";
 
-const usePrevious = <T extends unknown>(value: T): T | undefined => {
+export const usePrevious = <T extends unknown>(value: T): T | undefined => {
   const ref = useRef<T>();
   useEffect(() => {
     ref.current = value;
