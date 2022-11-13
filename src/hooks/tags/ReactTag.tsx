@@ -14,14 +14,7 @@ import { buildRegExpFromDelimiters } from "../../lib/utils";
 import { KEYS, DEFAULT_PLACEHOLDER, DEFAULT_CLASSNAMES, DEFAULT_LABEL_FIELD, INPUT_FIELD_POSITIONS } from "../../lib/constants";
 import { ReactTagsPropTypes, ReactTagTypes } from "../../lib/types";
 import { useStateCallback } from "../callbackState";
-
-export const usePrevious = <T extends unknown>(value: T): T | undefined => {
-  const ref = useRef<T>();
-  useEffect(() => {
-    ref.current = value;
-  });
-  return ref.current;
-};
+import { usePrevious } from "../Previous";
 
 const ReactTags = (props: ReactTagTypes) => {
   const [state, setState] = useStateCallback({
@@ -64,7 +57,7 @@ const ReactTags = (props: ReactTagTypes) => {
 
     // reset the state
     setState((currentState) => ({
-      ...state,
+      ...currentState,
       query: "",
       selectionMode: false,
       selectedIndex: -1,
@@ -80,6 +73,10 @@ const ReactTags = (props: ReactTagTypes) => {
 
   const filteredSuggestions = (query: any) => {
     let { suggestions } = props;
+    // suggestions = suggestions.filter((tag) => {
+    //   const escapedRegex = query.trim().replace(/[-\\^$*+?.()|[\]{}]/g, "\\$&");
+    //   return RegExp(escapedRegex, "gi").test(tag[props.labelField]);
+    // });
     if (props.allowUnique) {
       const existingTags = props.tags!.map((tag) => tag!.id.toLowerCase());
       suggestions = suggestions!.filter((suggestion) => !existingTags.includes(suggestion!.id.toLowerCase()));
@@ -319,13 +316,13 @@ const ReactTags = (props: ReactTagTypes) => {
     }
   }, []);
 
-  const prevSuggestions = usePrevious(props.suggestions);
+  const prevSuggestions = usePrevious(state.suggestions);
 
   useEffect(() => {
-    if (!isEqual(prevSuggestions, props.suggestions)) {
+    if (!isEqual(prevSuggestions, state.suggestions)) {
       updateSuggestions();
     }
-  }, [props.suggestions, prevSuggestions]);
+  }, [state.suggestions, prevSuggestions]);
 
   const classNames = { ...DEFAULT_CLASSNAMES, ...props.classNames },
     tagItems = getTagItems(),
@@ -363,6 +360,7 @@ const ReactTags = (props: ReactTagTypes) => {
 
       <Suggestions
         query={query}
+        setSuggestions={setState}
         suggestions={suggestions as any[]}
         labelField={props.labelField as string}
         selectedIndex={selectedIndex}
