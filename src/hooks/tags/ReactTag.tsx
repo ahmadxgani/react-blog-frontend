@@ -72,7 +72,7 @@ const ReactTags = (props: ReactTagTypes) => {
   };
 
   const filteredSuggestions = (query: any) => {
-    let { suggestions } = props;
+    let suggestions = props.suggestions;
     // suggestions = suggestions.filter((tag) => {
     //   const escapedRegex = query.trim().replace(/[-\\^$*+?.()|[\]{}]/g, "\\$&");
     //   return RegExp(escapedRegex, "gi").test(tag[props.labelField]);

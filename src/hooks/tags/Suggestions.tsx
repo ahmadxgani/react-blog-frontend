@@ -39,13 +39,15 @@ const Suggestions = (props: SuggestionsTypes) => {
   };
 
   useEffect(() => {
-    props.setSuggestions((currentState) => ({
-      ...currentState,
-      suggestions: props.suggestions.filter((tag) => {
-        const escapedRegex = props.query.trim().replace(/[-\\^$*+?.()|[\]{}]/g, "\\$&");
-        return RegExp(escapedRegex, "gi").test(tag[props.labelField]);
-      }),
-    }));
+    if (props.query) {
+      props.setSuggestions((currentState) => ({
+        ...currentState,
+        suggestions: props.suggestions.filter((tag) => {
+          const escapedRegex = props.query.trim().replace(/[-\\^$*+?.()|[\]{}]/g, "\\$&");
+          return RegExp(escapedRegex, "gi").test(tag[props.labelField]);
+        }),
+      }));
+    }
   }, [props.query]);
 
   const suggestions = props.suggestions.map((item, i) => {
