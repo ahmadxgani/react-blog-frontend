@@ -1,15 +1,4 @@
 /* Example Styles for React Tags*/
-.app {
-  padding: 40px;
-  text-align: center;
-}
-
-/* Example Styles for React Tags*/
-
-.container {
-  margin: auto;
-  width: 50%;
-}
 .ReactTags__tags {
   position: relative;
 }
@@ -22,6 +11,7 @@
 }
 .ReactTags__tagInput input.ReactTags__tagInputField,
 .ReactTags__tagInput input.ReactTags__tagInputField:focus {
+  padding-left: 5px;
   height: 31px;
   margin: 0;
   font-size: 12px;

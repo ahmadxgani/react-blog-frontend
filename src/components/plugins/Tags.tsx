@@ -57,9 +57,6 @@ const Tags = () => {
     console.log("The tag at index " + index + " was clicked");
   };
 
-  const onClearAll = () => {
-    setTags([]);
-  };
   return (
     <ReactTags
       tags={tags}
@@ -69,11 +66,9 @@ const Tags = () => {
       handleAddition={handleAddition}
       handleDrag={handleDrag}
       handleTagClick={handleTagClick}
-      inputFieldPosition="bottom"
+      inputFieldPosition="inline"
       autocomplete
       editable
-      clearAll
-      onClearAll={onClearAll}
       onTagUpdate={onTagUpdate}
     />
   );

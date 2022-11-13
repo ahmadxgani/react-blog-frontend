@@ -17,6 +17,8 @@ import { useStateCallback } from "../callbackState";
 import { usePrevious } from "../Previous";
 
 const ReactTags = (props: ReactTagTypes) => {
+  const classNames = { ...DEFAULT_CLASSNAMES, ...props.classNames };
+
   const [state, setState] = useStateCallback({
     suggestions: props.suggestions,
     query: "",
@@ -258,7 +260,6 @@ const ReactTags = (props: ReactTagTypes) => {
 
   const getTagItems = () => {
     const { tags, labelField, removeComponent, readOnly, allowDragDrop } = props;
-    const classNames = { ...DEFAULT_CLASSNAMES, ...props.classNames };
 
     const { currentEditIndex, query } = state;
     const moveTag = allowDragDrop ? handleMoveTag : null;
@@ -300,6 +301,11 @@ const ReactTags = (props: ReactTagTypes) => {
     });
   };
 
+  const tagItems = getTagItems(),
+    query = state.query.trim(),
+    selectedIndex = state.selectedIndex,
+    suggestions = state.suggestions;
+
   const resetAndFocusInput = () => {
     setState((currentState) => ({ ...currentState, query: "" }));
     if (inputTextRef.current) {
@@ -323,12 +329,6 @@ const ReactTags = (props: ReactTagTypes) => {
       updateSuggestions();
     }
   }, [state.suggestions, prevSuggestions]);
-
-  const classNames = { ...DEFAULT_CLASSNAMES, ...props.classNames },
-    tagItems = getTagItems(),
-    query = state.query.trim(),
-    selectedIndex = state.selectedIndex,
-    suggestions = state.suggestions;
 
   const { placeholder, name: inputName, id: inputId, maxLength, inline, inputFieldPosition, inputValue, inputProps, clearAll, tags } = props;
 
