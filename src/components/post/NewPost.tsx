@@ -1,4 +1,5 @@
-import Editor from "../templates/Editor";
+import Editor from "../plugins/Editor";
+import Tags from "../plugins/Tags";
 
 function NewPost() {
   return (
@@ -8,6 +9,7 @@ function NewPost() {
         <img className="cursor-pointer" src={process.env.PUBLIC_URL + "/img/icon/Option.png"} alt="Option" />
       </div>
       <Editor />
+      <Tags />
       <div className="flex gap-5 items-center self-end mt-5">
         <p className="uppercase cursor-pointer">save as draft</p>
         <button className="p-2 rounded-xl bg-[#3B49DF] text-white uppercase">submit</button>

@@ -32,7 +32,7 @@
 /* Styles for selected tags */
 .ReactTags__selected span.ReactTags__tag {
   border: 1px solid #ddd;
-  background: #63bcfd;
+  background: #57b3f4;
   color: white;
   font-size: 12px;
   display: inline-block;

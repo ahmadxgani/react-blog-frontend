@@ -1,6 +1,6 @@
-import { WithContext as ReactTags } from "../hooks/tags/ReactTag";
+import { WithContext as ReactTags } from "../../hooks/tags/ReactTag";
 import { useState } from "react";
-import { COUNTRIES } from "./dummy";
+import { COUNTRIES } from "../dummy";
 
 const suggestions = COUNTRIES.map((country) => {
   return {
@@ -16,7 +16,7 @@ const KeyCodes = {
 
 const delimiters = [KeyCodes.comma, KeyCodes.enter];
 
-const Test = () => {
+const Tags = () => {
   const [tags, setTags] = useState([
     { id: "Thailand", text: "Thailand" },
     { id: "India", text: "India" },
@@ -61,26 +61,21 @@ const Test = () => {
     setTags([]);
   };
   return (
-    <div className="app">
-      <h1 className="text-lg"> React Tags Example </h1>
-      <div>
-        <ReactTags
-          tags={tags}
-          suggestions={suggestions}
-          delimiters={delimiters}
-          handleDelete={handleDelete}
-          handleAddition={handleAddition}
-          handleDrag={handleDrag}
-          handleTagClick={handleTagClick}
-          inputFieldPosition="bottom"
-          autocomplete
-          editable
-          clearAll
-          onClearAll={onClearAll}
-          onTagUpdate={onTagUpdate}
-        />
-      </div>
-    </div>
+    <ReactTags
+      tags={tags}
+      suggestions={suggestions}
+      delimiters={delimiters}
+      handleDelete={handleDelete}
+      handleAddition={handleAddition}
+      handleDrag={handleDrag}
+      handleTagClick={handleTagClick}
+      inputFieldPosition="bottom"
+      autocomplete
+      editable
+      clearAll
+      onClearAll={onClearAll}
+      onTagUpdate={onTagUpdate}
+    />
   );
 };
-export default Test;
+export default Tags;
