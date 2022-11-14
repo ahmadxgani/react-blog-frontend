@@ -1,6 +1,18 @@
 import PropTypes, { InferProps } from "prop-types";
 import { INPUT_FIELD_POSITIONS } from "./constants";
 
+export interface HandleData {
+  title: string;
+  content: string;
+  slug: string;
+  tags: number[];
+}
+
+export interface EditorProps {
+  handleData: (data: HandleData) => void;
+  submitted: boolean;
+}
+
 export const SuggestionsPropTypes = {
   query: PropTypes.string.isRequired,
   selectedIndex: PropTypes.number.isRequired,
