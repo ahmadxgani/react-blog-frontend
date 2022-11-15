@@ -1,32 +1,5 @@
 export default function Dashboard() {
   return (
-    // <div className="w-1/2">
-    //   <div className="flex justify-between">
-    //     <h3>Lists Tag</h3>
-    //     <button>New Tag</button>
-    //   </div>
-    //   <table className="w-full text-center border-collapse table-auto rounded-xl">
-    //     <thead className="bg-slate-400">
-    //       <tr>
-    //         <th>No</th>
-    //         <th>Name</th>
-    //         <th></th>
-    //         <th></th>
-    //       </tr>
-    //     </thead>
-    //     <tbody className="bg-white">
-    //      1
-    //         <td>Programming</td>
-    //         <td>
-    //           <button>Edit</button>
-    //         </td>
-    //         <td>
-    //           <button>Delete</button>
-    //         </td>
-    //       </tr>
-    //     </tbody>
-    //   </table>
-    // </div>
     <div className="w-full max-w-2xl mx-auto bg-white shadow-lg rounded-sm border border-gray-200">
       <header className="px-5 py-4 border-b border-gray-100 flex justify-between">
         <h2 className="font-semibold text-gray-800">List Of Tags</h2>
