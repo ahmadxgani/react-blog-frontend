@@ -10,6 +10,12 @@ function Navigation() {
         <Link to="/post">
           <img src={process.env.PUBLIC_URL + "/img/icon/Create.png"} alt="add new post" width={28} />
         </Link>
+        <Link to="#">
+          <img src={process.env.PUBLIC_URL + "/img/icon/Login.png"} alt="Sign up" width={28} />
+        </Link>
+        <Link to="/dashboard">
+          <img src={process.env.PUBLIC_URL + "/img/icon/Administrative.png"} alt="admin panel" width={28} />
+        </Link>
         <div className="flex w-auto items-center border-teal-300 border rounded-full">
           <span className="p-2 pr-0">
             <img src={process.env.PUBLIC_URL + "/img/icon/Search.png"} alt="search" width={20} />
