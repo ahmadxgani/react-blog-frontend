@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 const Login = () => {
   return (
     <div className="flex flex-col">
@@ -9,6 +11,10 @@ const Login = () => {
         <input type="checkbox" name="rememberme" id="rememberme" />
         <label htmlFor="rememberme">Remember me</label>
       </div>
+      <p>
+        Don't have an account yet? <Link to="/register">Register</Link>
+      </p>
+      <Link to="/recovery-password">Forgot password?</Link>
       <button>Submit</button>
     </div>
   );
