@@ -3,7 +3,7 @@
 import { useEffect, useRef } from "react";
 import escape from "lodash/escape";
 import { SuggestionsPropTypes, SuggestionsTypes } from "../../lib/types";
-import { usePrevious } from "../Previous";
+import { usePrevious } from "../usePrevious";
 
 const maybeScrollSuggestionIntoView = (suggestionEl: any, suggestionsContainer: any) => {
   const containerHeight = suggestionsContainer.offsetHeight;

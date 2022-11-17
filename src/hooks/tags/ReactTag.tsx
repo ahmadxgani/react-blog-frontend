@@ -13,8 +13,8 @@ import { buildRegExpFromDelimiters } from "../../lib/utils";
 
 import { KEYS, DEFAULT_PLACEHOLDER, DEFAULT_CLASSNAMES, DEFAULT_LABEL_FIELD, INPUT_FIELD_POSITIONS } from "../../lib/constants";
 import { ReactTagsPropTypes, ReactTagTypes } from "../../lib/types";
-import { useStateCallback } from "../callbackState";
-import { usePrevious } from "../Previous";
+import { useStateCallback } from "../useStateCallback";
+import { usePrevious } from "../usePrevious";
 
 const ReactTags = (props: ReactTagTypes) => {
   const classNames = { ...DEFAULT_CLASSNAMES, ...props.classNames };

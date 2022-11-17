@@ -10,7 +10,7 @@ function Navigation() {
         <Link to="/post">
           <img src={process.env.PUBLIC_URL + "/img/icon/Create.png"} alt="add new post" width={28} />
         </Link>
-        <Link to="#">
+        <Link to="/login">
           <img src={process.env.PUBLIC_URL + "/img/icon/Login.png"} alt="Sign up" width={28} />
         </Link>
         <Link to="/dashboard">
