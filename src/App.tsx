@@ -3,6 +3,7 @@ import Navigation from "./components/templates/Navigation";
 import Main from "./components/templates/Main";
 import { ApolloClient, ApolloProvider, InMemoryCache, HttpLink, from } from "@apollo/client";
 import { onError } from "@apollo/client/link/error";
+import UserProvider from "./global/UserProvider";
 
 const errorLink = onError(({ graphQLErrors, networkError }) => {
   if (graphQLErrors) {
@@ -30,12 +31,14 @@ const client = new ApolloClient({
 function App() {
   return (
     <>
-      <ApolloProvider client={client}>
-        <BrowserRouter>
-          <Navigation />
-          <Main />
-        </BrowserRouter>
-      </ApolloProvider>
+      <UserProvider user={""}>
+        <ApolloProvider client={client}>
+          <BrowserRouter>
+            <Navigation />
+            <Main />
+          </BrowserRouter>
+        </ApolloProvider>
+      </UserProvider>
     </>
   );
 }
