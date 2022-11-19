@@ -1,25 +1,24 @@
 const Reducer = (state: any, action: any) => {
   switch (action.type) {
-    case "preLogin":
+    case "login":
       localStorage.setItem("token", action.payload.token);
       return {
         ...state,
         token: action.payload.token,
       };
-    case "login":
+    case "profile":
       localStorage.setItem("user", JSON.stringify(action.payload.user));
-      localStorage.setItem("token", action.payload.token);
       return {
         ...state,
         user: action.payload.user,
-        token: action.payload.token,
-        isLoggedIn: true,
       };
     case "update":
       localStorage.setItem("user", JSON.stringify(action.payload.user));
+      localStorage.setItem("token", action.payload.token);
       return {
         ...state,
         user: action.payload.user,
+        token: action.payload.token,
       };
     case "logout":
       localStorage.clear();
@@ -27,7 +26,6 @@ const Reducer = (state: any, action: any) => {
         ...state,
         user: null,
         token: null,
-        isLoggedIn: false,
       };
 
     default:

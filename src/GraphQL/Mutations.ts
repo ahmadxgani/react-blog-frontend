@@ -8,3 +8,11 @@ export const CREATE_POST = gql`
     }
   }
 `;
+
+export const LOGIN = gql`
+  mutation Login($email: String!, $password: String!) {
+    login(payload: { email: $email, password: $password }) {
+      token
+    }
+  }
+`;
