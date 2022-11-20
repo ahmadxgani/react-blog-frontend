@@ -16,3 +16,28 @@ export const LOGIN = gql`
     }
   }
 `;
+
+export const CREATE_TAG = gql`
+  mutation CreateTag($name: String!) {
+    CreateTag(payload: { name: $name }) {
+      name
+      id
+    }
+  }
+`;
+
+export const UPDATE_TAG = gql`
+  mutation UpdateTag($id: Int!, $name: String!) {
+    UpdateTag(payload: { id: $id, name: $name }) {
+      name
+    }
+  }
+`;
+
+export const DELETE_TAG = gql`
+  mutation DeleteTag($id: Int!) {
+    DeleteTag(payload: { id: $id }) {
+      success
+    }
+  }
+`;

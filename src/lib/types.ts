@@ -8,6 +8,11 @@ export interface HandleData {
   tags: number[];
 }
 
+export interface Tags {
+  inputTag?: HTMLInputElement;
+  id: number;
+}
+
 export type Pages = {
   label: string;
   path: string;

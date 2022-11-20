@@ -132,7 +132,7 @@ const ManageUsers = () => {
           </table>
         </div>
       </div>
-      {isOpen && <Modalbox content={newTag} title={"Add new tag"} close={toggleModalBox} />}
+      {isOpen && <Modalbox content={newTag} title={"Add new tag"} onClose={toggleModalBox} />}
     </div>
   );
 };

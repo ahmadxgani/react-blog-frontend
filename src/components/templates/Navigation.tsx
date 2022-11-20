@@ -9,7 +9,7 @@ function Navigation({ pages }: { pages: Pages }) {
       </Link>
       <div className="flex items-center gap-5">
         {pages.map(({ label, path }) => (
-          <Link key={label} to={path}>
+          <Link key={label} to={path} className="uppercase font-semibold">
             {label}
           </Link>
         ))}

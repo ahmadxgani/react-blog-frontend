@@ -16,3 +16,12 @@ export const SHOW_ALL_USERS = gql`
     }
   }
 `;
+
+export const SHOW_ALL_TAGS = gql`
+  query {
+    ShowAllTag {
+      name
+      id
+    }
+  }
+`;
