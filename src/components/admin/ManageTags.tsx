@@ -9,6 +9,7 @@ const ManageTags = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [tags, setTag] = useState<{ name: string; id: number }[]>([]);
   const [inputTag, setInputTag] = useState("");
+  const [typeModal, setTypeModal] = useState("");
   const { data } = useQuery(SHOW_ALL_TAGS);
   const inputCreateRef = useRef<null | HTMLInputElement>(null);
   const editTagRef = useRef<Tags | null>(null);
@@ -41,7 +42,7 @@ const ManageTags = () => {
         },
       });
 
-      setTag((currentTags) => [...currentTags, { name: newTag.data.UpdateTag.name, id: newTag.data.UpdateTag.id }]);
+      setTag((currentTags) => [...currentTags.filter((tag) => editTagRef.current!.id !== tag.id), { name: newTag.data.UpdateTag.name, id: newTag.data.UpdateTag.id }]);
       toggleModalBox();
     }
   };
@@ -64,7 +65,7 @@ const ManageTags = () => {
       id,
     };
     setInputTag(name);
-    toggleModalBox();
+    openModal("edit");
   };
 
   const handleTagOnChange: ChangeEventHandler<HTMLInputElement> = (e) => {
@@ -96,11 +97,28 @@ const ManageTags = () => {
     </div>
   );
 
+  const RenderModal = () => {
+    if (isOpen) {
+      switch (typeModal) {
+        case "edit":
+          return <Modalbox content={editTag} title={"Update tag"} onClose={toggleModalBox} />;
+        case "add":
+          return <Modalbox content={newTag} title={"Add new tag"} onClose={toggleModalBox} />;
+      }
+    }
+    return <></>;
+  };
+
+  const openModal = (type: string) => {
+    setTypeModal(type);
+    toggleModalBox();
+  };
+
   return (
     <div className="w-1/2 max-w-2xl mx-auto bg-white shadow-lg rounded-sm border border-gray-200">
       <header className="px-5 py-4 border-b border-gray-100 flex justify-between">
         <h2 className="font-semibold text-gray-800">List Of Tags</h2>
-        <button className="text-sm p-1 px-2 bg-[#5561E3] text-white rounded-lg" onClick={toggleModalBox}>
+        <button className="text-sm p-1 px-2 bg-[#5561E3] text-white rounded-lg" onClick={() => openModal("add")}>
           New Tag
         </button>
       </header>
@@ -141,8 +159,7 @@ const ManageTags = () => {
           </table>
         </div>
       </div>
-      {/* {isOpen && <Modalbox content={newTag} title={"Add new tag"} onClose={toggleModalBox} />} */}
-      {isOpen && <Modalbox content={editTag} title={"Update tag"} onClose={toggleModalBox} />}
+      <RenderModal />
     </div>
   );
 };
