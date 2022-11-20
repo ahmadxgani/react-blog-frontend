@@ -7,3 +7,12 @@ export const LOAD_POSTS = gql`
     }
   }
 `;
+
+export const SHOW_ALL_USERS = gql`
+  query {
+    ShowAllAuthor {
+      username
+      email
+    }
+  }
+`;

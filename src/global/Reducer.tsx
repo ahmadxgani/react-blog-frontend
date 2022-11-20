@@ -1,12 +1,6 @@
 const Reducer = (state: any, action: any) => {
   switch (action.type) {
     case "login":
-      localStorage.setItem("token", action.payload.token);
-      return {
-        ...state,
-        token: action.payload.token,
-      };
-    case "profile":
       localStorage.setItem("user", JSON.stringify(action.payload.user));
       return {
         ...state,

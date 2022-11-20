@@ -16,7 +16,7 @@ const ManageTags = () => {
   );
 
   return (
-    <div className="w-full max-w-2xl mx-auto bg-white shadow-lg rounded-sm border border-gray-200">
+    <div className="w-1/2 max-w-2xl mx-auto bg-white shadow-lg rounded-sm border border-gray-200">
       <header className="px-5 py-4 border-b border-gray-100 flex justify-between">
         <h2 className="font-semibold text-gray-800">List Of Tags</h2>
         <button className="text-sm p-1 px-2 bg-[#5561E3] text-white rounded-lg" onClick={toggleModalBox}>

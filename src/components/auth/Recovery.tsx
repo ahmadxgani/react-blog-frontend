@@ -1,4 +1,13 @@
+import { Navigate } from "react-router-dom";
+import { useUser } from "../../global/UserProvider";
+
 const Recovery = () => {
+  const user = useUser();
+
+  if (user?.currentUser.user) {
+    return <Navigate to="/dashboard/users" />;
+  }
+
   return (
     <div className="flex flex-col">
       <label htmlFor="password">New Password</label>

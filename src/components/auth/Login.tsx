@@ -1,6 +1,6 @@
 import { useMutation } from "@apollo/client";
 import { ChangeEventHandler, FormEventHandler, useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import { useUser } from "../../global/UserProvider";
 import { LOGIN } from "../../GraphQL/Mutations";
 
@@ -10,13 +10,7 @@ const Login = () => {
   const passwordRef = useRef<HTMLInputElement | null>(null);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { setCurrentUser } = useUser() as {
-    currentUser: {
-      user: string | null;
-      token: string | null;
-    };
-    setCurrentUser: React.Dispatch<any>;
-  };
+  const user = useUser();
 
   const onSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
@@ -28,10 +22,14 @@ const Login = () => {
             password,
           },
         });
-        setCurrentUser({
+        user!.setCurrentUser({
           type: "login",
           payload: {
-            token: result.data.login.token,
+            user: {
+              token: result.data.login.token,
+              username: result.data.login.username,
+              email: result.data.login.email,
+            },
           },
         });
         setEmail("");
@@ -47,6 +45,10 @@ const Login = () => {
     setEmail(emailRef.current?.value as string);
     setPassword(passwordRef.current?.value as string);
   };
+
+  if (user?.currentUser.user) {
+    return <Navigate to="/dashboard/users" />;
+  }
 
   return (
     <form onSubmit={onSubmit} className="flex flex-col">

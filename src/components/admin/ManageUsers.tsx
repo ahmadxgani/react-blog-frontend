@@ -1,12 +1,19 @@
-import { useState } from "react";
+import { useQuery } from "@apollo/client";
+import { useEffect, useState } from "react";
+import { SHOW_ALL_USERS } from "../../GraphQL/Queries";
 import Modalbox from "../plugins/Modalbox";
 
 const ManageUsers = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const { data } = useQuery(SHOW_ALL_USERS);
 
   const toggleModalBox = () => {
     setIsOpen(!isOpen);
   };
+
+  useEffect(() => {
+    console.log(data);
+  }, [data]);
 
   const newTag = (
     <div className="flex flex-col gap-2">

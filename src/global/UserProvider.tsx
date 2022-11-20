@@ -1,27 +1,16 @@
 import { createContext, ReactNode, useContext, useReducer } from "react";
+import { User } from "../lib/types";
 import Reducer from "./Reducer";
 
 let initialState: {
-  user: string | null;
-  token: string | null;
-} = {
-  user: null,
-  token: null,
-};
-
-const parse = () => {
-  try {
-    initialState = localStorage.getItem("user")
-      ? {
-          user: JSON.parse(localStorage.getItem("user") as string),
-          token: localStorage.getItem("token"),
-        }
-      : initialState;
-  } catch (e) {
-    console.log(e);
-  }
-};
-parse();
+  user: string | null | User;
+} = localStorage.getItem("user")
+  ? {
+      user: JSON.parse(localStorage.getItem("user") as string),
+    }
+  : {
+      user: null,
+    };
 
 const UserContext = createContext<{ currentUser: typeof initialState; setCurrentUser: React.Dispatch<any> } | null>(null);
 

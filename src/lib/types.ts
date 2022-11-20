@@ -8,9 +8,20 @@ export interface HandleData {
   tags: number[];
 }
 
+export type Pages = {
+  label: string;
+  path: string;
+}[];
+
 export interface EditorProps {
   handleData: (data: HandleData) => void;
   submitted: boolean;
+}
+
+export interface User {
+  username: string;
+  email: string;
+  token: string;
 }
 
 export const SuggestionsPropTypes = {
