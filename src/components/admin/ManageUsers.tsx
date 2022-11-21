@@ -15,7 +15,7 @@ const ManageUsers = () => {
     console.log(data);
   }, [data]);
 
-  const newTag = (
+  const NewTag = () => (
     <div className="flex flex-col gap-2">
       <input id="tag" type="text" placeholder="add new tag..." className="p-1 rounded-lg focus:outline-none" />
       <button className="p-1 px-2 bg-[#5561E3] text-white rounded-lg">Submit</button>
@@ -132,7 +132,7 @@ const ManageUsers = () => {
           </table>
         </div>
       </div>
-      {isOpen && <Modalbox content={newTag} title={"Add new tag"} onClose={toggleModalBox} />}
+      {isOpen && <Modalbox children={<NewTag />} title={"Add new tag"} onClose={toggleModalBox} />}
     </div>
   );
 };

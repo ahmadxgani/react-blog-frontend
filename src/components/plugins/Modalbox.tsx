@@ -1,5 +1,5 @@
 // @ts-nocheck
-const Modalbox = ({ content, title, onClose }) => {
+const Modalbox = ({ children, title, onClose }) => {
   return (
     <div className="absolute md:w-1/2 w-4/5 flex mx-auto top-28 inset-x-0 flex-col bg-slate-400 rounded gap-5 lg:p-5 md:p-3 p-2">
       <header className="flex justify-between items-center">
@@ -8,7 +8,7 @@ const Modalbox = ({ content, title, onClose }) => {
           &#10006;
         </span>
       </header>
-      {content}
+      {children}
     </div>
   );
 };
