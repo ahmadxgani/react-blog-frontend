@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from "@apollo/client";
-import { ChangeEventHandler, useEffect, useRef, useState } from "react";
+import { ChangeEventHandler, MouseEventHandler, useEffect, useRef, useState } from "react";
 import { CREATE_TAG, DELETE_TAG, UPDATE_TAG } from "../../GraphQL/Mutations";
 import { SHOW_ALL_TAGS } from "../../GraphQL/Queries";
 import Modalbox from "../plugins/Modalbox";
@@ -82,10 +82,11 @@ const ManageTags = () => {
     </div>
   );
 
-  const EditTag = ({ id, name }: any) => {
+  const EditTag = ({ id, name, setTags }: { id: number; name: string; setTags: typeof setTag }) => {
     const [inputTag, setInputTag] = useState<string | boolean>(false);
     const editTagRef = useRef<HTMLInputElement | null>(null);
-    const handleUpdate = async () => {
+    const handleUpdate: MouseEventHandler<HTMLButtonElement> = async (e) => {
+      e.preventDefault();
       if (inputTag) {
         const newTag = await updateTag({
           variables: {
@@ -94,7 +95,7 @@ const ManageTags = () => {
           },
         });
 
-        setTag((currentTags) => [...currentTags.filter((tag) => id !== tag.id), { name: newTag.data.UpdateTag.name, id: newTag.data.UpdateTag.id }]);
+        setTags((currentTags) => [...currentTags.filter((tag) => id !== tag.id), { name: newTag.data.UpdateTag.name, id: newTag.data.UpdateTag.id }]);
         toggleModalBox();
         MySwal.fire({
           position: "top-end",
@@ -118,7 +119,7 @@ const ManageTags = () => {
     };
     return (
       <div className="flex flex-col gap-2">
-        <input ref={(input) => (editTagRef.current = input as HTMLInputElement)} id="tag" type="text" className="p-1 rounded-lg focus:outline-none" value={inputTag ? (inputTag as string) : ""} onChange={handleTagOnChange} />
+        <input ref={(input) => (editTagRef.current = input as HTMLInputElement)} id="tag" type="text" className="p-1 rounded-lg focus:outline-none" value={inputTag as string} onChange={handleTagOnChange} />
         <button className="p-1 px-2 bg-[#5561E3] text-white rounded-lg" onClick={handleUpdate}>
           Submit
         </button>
@@ -127,14 +128,20 @@ const ManageTags = () => {
   };
 
   const handleEdit = (id: number, name: string) => {
-    OpenModal("edit", { id, name });
+    if (name && id) {
+      setItem({
+        name,
+        id,
+      });
+    }
+    OpenModal("edit");
   };
 
   const RenderModal = ({ name, id }: { name?: string; id?: number }) => {
     if (isOpen) {
       switch (typeModal) {
         case "edit":
-          return <Modalbox children={<EditTag name={name} id={id} />} title={"Update tag"} onClose={toggleModalBox} />;
+          return <Modalbox children={<EditTag name={name as string} id={id as number} setTags={setTag} />} title={"Update tag"} onClose={toggleModalBox} />;
         case "add":
           return <Modalbox children={<NewTag />} title={"Add new tag"} onClose={toggleModalBox} />;
       }
@@ -142,13 +149,7 @@ const ManageTags = () => {
     return <></>;
   };
 
-  const OpenModal = (type: string, { name, id }: { name?: string; id?: number }) => {
-    if (name && id) {
-      setItem({
-        name,
-        id,
-      });
-    }
+  const OpenModal = (type: string) => {
     setTypeModal(type);
     toggleModalBox();
   };
@@ -157,7 +158,7 @@ const ManageTags = () => {
     <div className="w-1/2 max-w-2xl mx-auto bg-white shadow-lg rounded-sm border border-gray-200">
       <header className="px-5 py-4 border-b border-gray-100 flex justify-between">
         <h2 className="font-semibold text-gray-800">List Of Tags</h2>
-        <button className="text-sm p-1 px-2 bg-[#5561E3] text-white rounded-lg" onClick={() => OpenModal("add", {})}>
+        <button className="text-sm p-1 px-2 bg-[#5561E3] text-white rounded-lg" onClick={() => OpenModal("add")}>
           New Tag
         </button>
       </header>
@@ -198,7 +199,7 @@ const ManageTags = () => {
           </table>
         </div>
       </div>
-      <RenderModal name={tag?.name} id={tag?.id as number} />;
+      <RenderModal name={tag?.name} id={tag?.id as number} />
     </div>
   );
 };

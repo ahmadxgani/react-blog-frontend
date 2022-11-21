@@ -30,6 +30,7 @@ export const UPDATE_TAG = gql`
   mutation UpdateTag($id: Int!, $name: String!) {
     UpdateTag(payload: { id: $id, name: $name }) {
       name
+      id
     }
   }
 `;
