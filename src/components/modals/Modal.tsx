@@ -37,7 +37,7 @@ const Modal = ({ children, show, setShow, title }: Props) => {
     <>
       {show && (
         <PortalModal wrapperId="modal-portal">
-          <div ref={modalRef} className="absolute md:w-1/2 w-4/5 flex mx-auto top-28 inset-x-0 flex-col bg-slate-400 rounded gap-5 lg:p-5 md:p-3 p-2">
+          <div ref={modalRef} className="absolute md:w-1/2 w-4/5 flex mx-auto top-28 inset-x-0 flex-col bg-[#E6E5F3] drop-shadow-2xl rounded gap-5 lg:p-5 md:p-3 p-2">
             <header className="flex justify-between items-center">
               <h3 className="text-lg">{title}</h3>
               <span className="text-2xl hover:cursor-pointer" onClick={() => setShow(!show)}>
