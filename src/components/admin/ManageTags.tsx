@@ -1,47 +1,86 @@
 import { useMutation, useQuery } from "@apollo/client";
-import { ChangeEventHandler, MouseEventHandler, useEffect, useRef, useState } from "react";
+import { ChangeEventHandler, FormEventHandler, useEffect, useState } from "react";
 import { CREATE_TAG, DELETE_TAG, UPDATE_TAG } from "../../GraphQL/Mutations";
 import { SHOW_ALL_TAGS } from "../../GraphQL/Queries";
-import Modalbox from "../plugins/Modalbox";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
+import Modal from "../modals/Modal";
+import { SelectedTag } from "../../lib/types";
 
 const ManageTags = () => {
   const MySwal = withReactContent(Swal);
-  const [isOpen, setIsOpen] = useState(false);
-  const [tags, setTag] = useState<{ name: string; id: number }[]>([]);
-  const [tag, setItem] = useState<{ name: string; id: number } | null>(null);
-  const [typeModal, setTypeModal] = useState("");
-  const { data } = useQuery(SHOW_ALL_TAGS);
-  const inputCreateRef = useRef<null | HTMLInputElement>(null);
-  const [createTag] = useMutation(CREATE_TAG);
-  const [deleteTag] = useMutation(DELETE_TAG);
-  const [updateTag] = useMutation(UPDATE_TAG);
-  const toggleModalBox = () => {
-    setIsOpen(!isOpen);
-  };
+  const [tags, setTag] = useState<SelectedTag[]>([]);
+  const [selectedTag, setSelectedTag] = useState<null | SelectedTag>(null);
+  const [inputEditTag, setInputEditTag] = useState("");
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [showCreateModal, setShowCreateModal] = useState(false);
 
-  const handleCreateTag = async () => {
-    if (inputCreateRef.current) {
-      const newTag = await createTag({
-        variables: {
-          name: inputCreateRef.current.value,
-        },
+  const { data } = useQuery(SHOW_ALL_TAGS);
+  const [createTag] = useMutation(CREATE_TAG, {
+    update: (cache, { data }) => {
+      const newTagFromResponse = data.CreateTag;
+      const existingTags = cache.readQuery({
+        query: SHOW_ALL_TAGS,
       });
 
-      setTag((currentTags) => [...currentTags, { name: newTag.data.CreateTag.name, id: newTag.data.CreateTag.id }]);
-      toggleModalBox();
+      if (existingTags && newTagFromResponse) {
+        cache.writeQuery({
+          query: SHOW_ALL_TAGS,
+          data: {
+            ShowAllTag: [...(existingTags as any).ShowAllTag, newTagFromResponse],
+          },
+        });
+      }
+    },
+  });
+  const [deleteTag] = useMutation(DELETE_TAG, {
+    update: (cache, _, { variables }) => {
+      const existingTags = cache.readQuery({
+        query: SHOW_ALL_TAGS,
+      });
+
+      if (existingTags) {
+        cache.writeQuery({
+          query: SHOW_ALL_TAGS,
+          data: {
+            ShowAllTag: (existingTags as any).ShowAllTag.filter((tag: any) => tag.id !== variables!.id),
+          },
+        });
+      }
+    },
+  });
+  const [updateTag] = useMutation(UPDATE_TAG);
+
+  const handleEditOnSubmit: FormEventHandler<HTMLFormElement> = async (event) => {
+    event.preventDefault();
+    if (inputEditTag) {
+      await updateTag({
+        variables: {
+          id: selectedTag?.id,
+          name: inputEditTag,
+        },
+      });
+      setShowEditModal(false);
       MySwal.fire({
         position: "top-end",
         icon: "success",
-        title: "The tag has been saved",
+        title: "The tag has been changed",
         showConfirmButton: false,
         timer: 1500,
       });
     }
   };
 
-  const handleDelete = (i: number) => {
+  const handleEditOnChange: ChangeEventHandler<HTMLInputElement> = (event) => {
+    event.preventDefault();
+    setInputEditTag(event.target.value);
+  };
+
+  const handleEditTag = (tag: SelectedTag) => {
+    setSelectedTag(tag);
+  };
+
+  const handleDeleteTag = (i: number) => {
     MySwal.fire({
       title: "Are you sure?",
       text: "You won't be able to revert this!",
@@ -67,98 +106,43 @@ const ManageTags = () => {
     });
   };
 
+  const handleCreateOnSubmit: FormEventHandler<HTMLFormElement> = async (event) => {
+    event.preventDefault();
+    if ((event as any).target.nameTag.value) {
+      await createTag({
+        variables: {
+          name: (event as any).target.nameTag.value,
+        },
+      });
+      setShowCreateModal(false);
+      MySwal.fire({
+        position: "top-end",
+        icon: "success",
+        title: "The tag has been saved",
+        showConfirmButton: false,
+        timer: 1500,
+      });
+    }
+  };
+
   useEffect(() => {
     if (data) {
-      setTag(data.ShowAllTag.map((tag: { name: string; id: number }) => ({ name: tag.name, id: tag.id })));
+      setTag(data.ShowAllTag.map((tag: SelectedTag) => ({ name: tag.name, id: tag.id })));
     }
   }, [data]);
 
-  const NewTag = () => (
-    <div className="flex flex-col gap-2">
-      <input ref={(input) => (inputCreateRef.current = input)} id="tag" type="text" placeholder="add new tag..." className="p-1 rounded-lg focus:outline-none" />
-      <button className="p-1 px-2 bg-[#5561E3] text-white rounded-lg" onClick={handleCreateTag}>
-        Submit
-      </button>
-    </div>
-  );
-
-  const EditTag = ({ id, name, setTags }: { id: number; name: string; setTags: typeof setTag }) => {
-    const [inputTag, setInputTag] = useState<string | boolean>(false);
-    const editTagRef = useRef<HTMLInputElement | null>(null);
-    const handleUpdate: MouseEventHandler<HTMLButtonElement> = async (e) => {
-      e.preventDefault();
-      if (inputTag) {
-        const newTag = await updateTag({
-          variables: {
-            name: inputTag,
-            id,
-          },
-        });
-
-        setTags((currentTags) => [...currentTags.filter((tag) => id !== tag.id), { name: newTag.data.UpdateTag.name, id: newTag.data.UpdateTag.id }]);
-        toggleModalBox();
-        MySwal.fire({
-          position: "top-end",
-          icon: "success",
-          title: "The tag has been changed",
-          showConfirmButton: false,
-          timer: 1500,
-        });
-      }
-    };
-
-    useEffect(() => {
-      if (inputTag === false) {
-        setInputTag(name);
-      }
-    }, []);
-
-    const handleTagOnChange: ChangeEventHandler<HTMLInputElement> = (e) => {
-      e.preventDefault();
-      setInputTag(editTagRef.current!.value);
-    };
-    return (
-      <div className="flex flex-col gap-2">
-        <input ref={(input) => (editTagRef.current = input as HTMLInputElement)} id="tag" type="text" className="p-1 rounded-lg focus:outline-none" value={inputTag as string} onChange={handleTagOnChange} />
-        <button className="p-1 px-2 bg-[#5561E3] text-white rounded-lg" onClick={handleUpdate}>
-          Submit
-        </button>
-      </div>
-    );
-  };
-
-  const handleEdit = (id: number, name: string) => {
-    if (name && id) {
-      setItem({
-        name,
-        id,
-      });
+  useEffect(() => {
+    if (selectedTag) {
+      setInputEditTag(selectedTag.name);
+      setShowEditModal(true);
     }
-    OpenModal("edit");
-  };
-
-  const RenderModal = ({ name, id }: { name?: string; id?: number }) => {
-    if (isOpen) {
-      switch (typeModal) {
-        case "edit":
-          return <Modalbox children={<EditTag name={name as string} id={id as number} setTags={setTag} />} title={"Update tag"} onClose={toggleModalBox} />;
-        case "add":
-          return <Modalbox children={<NewTag />} title={"Add new tag"} onClose={toggleModalBox} />;
-      }
-    }
-    return <></>;
-  };
-
-  const OpenModal = (type: string) => {
-    setTypeModal(type);
-    toggleModalBox();
-  };
+  }, [selectedTag]);
 
   return (
     <div className="w-1/2 max-w-2xl mx-auto bg-white shadow-lg rounded-sm border border-gray-200">
       <header className="px-5 py-4 border-b border-gray-100 flex justify-between">
         <h2 className="font-semibold text-gray-800">List Of Tags</h2>
-        <button className="text-sm p-1 px-2 bg-[#5561E3] text-white rounded-lg" onClick={() => OpenModal("add")}>
+        <button className="text-sm p-1 px-2 bg-[#5561E3] text-white rounded-lg" onClick={() => setShowCreateModal(true)}>
           New Tag
         </button>
       </header>
@@ -185,10 +169,10 @@ const ManageTags = () => {
                   </td>
                   <td className="p-2 whitespace-nowrap">
                     <div className="flex gap-5 items-center">
-                      <button className="text-sm p-1 px-2 bg-[#5561E3] text-white rounded-lg" onClick={() => handleEdit(tag.id, tag.name)}>
+                      <button className="text-sm p-1 px-2 bg-[#5561E3] text-white rounded-lg" onClick={() => handleEditTag({ name: tag.name, id: tag.id })}>
                         Edit
                       </button>
-                      <button className="text-sm p-1 px-2 bg-[#5561E3] text-white rounded-lg" onClick={() => handleDelete(tag.id)}>
+                      <button className="text-sm p-1 px-2 bg-[#5561E3] text-white rounded-lg" onClick={() => handleDeleteTag(tag.id)}>
                         Delete
                       </button>
                     </div>
@@ -199,7 +183,18 @@ const ManageTags = () => {
           </table>
         </div>
       </div>
-      <RenderModal name={tag?.name} id={tag?.id as number} />
+      <Modal show={showEditModal} setShow={setShowEditModal} title="Edit Tag">
+        <form onSubmit={handleEditOnSubmit} className="flex flex-col gap-2">
+          <input id="nameTag" type="text" className="p-1 rounded-lg focus:outline-none" value={inputEditTag} onChange={handleEditOnChange} />
+          <button className="p-1 px-2 bg-[#5561E3] text-white rounded-lg">Submit</button>
+        </form>
+      </Modal>
+      <Modal show={showCreateModal} setShow={setShowCreateModal} title="Create Tag">
+        <form onSubmit={handleCreateOnSubmit} className="flex flex-col gap-2">
+          <input id="nameTag" type="text" className="p-1 rounded-lg focus:outline-none" />
+          <button className="p-1 px-2 bg-[#5561E3] text-white rounded-lg">Submit</button>
+        </form>
+      </Modal>
     </div>
   );
 };

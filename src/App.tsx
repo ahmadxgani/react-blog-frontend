@@ -4,13 +4,11 @@ import { Router } from "./components/plugins/Router";
 
 function App() {
   return (
-    <>
-      <UserProvider>
-        <GraphQLClient>
-          <Router />
-        </GraphQLClient>
-      </UserProvider>
-    </>
+    <UserProvider>
+      <GraphQLClient>
+        <Router />
+      </GraphQLClient>
+    </UserProvider>
   );
 }
 

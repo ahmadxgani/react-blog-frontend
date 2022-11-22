@@ -1,7 +1,6 @@
 import { useQuery } from "@apollo/client";
 import { useEffect, useState } from "react";
 import { SHOW_ALL_USERS } from "../../GraphQL/Queries";
-import Modalbox from "../plugins/Modalbox";
 
 const ManageUsers = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -132,7 +131,6 @@ const ManageUsers = () => {
           </table>
         </div>
       </div>
-      {isOpen && <Modalbox children={<NewTag />} title={"Add new tag"} onClose={toggleModalBox} />}
     </div>
   );
 };
