@@ -53,24 +53,8 @@ const Tags = () => {
     });
   };
 
-  const handleTagClick = (index: any) => {
-    console.log("The tag at index " + index + " was clicked");
-  };
-
   return (
-    <ReactTags
-      tags={tags}
-      suggestions={suggestions}
-      delimiters={delimiters}
-      handleDelete={handleDelete}
-      handleAddition={handleAddition}
-      handleDrag={handleDrag}
-      handleTagClick={handleTagClick}
-      inputFieldPosition="inline"
-      autocomplete
-      editable
-      onTagUpdate={onTagUpdate}
-    />
+    <ReactTags tags={tags} suggestions={suggestions} delimiters={delimiters} handleDelete={handleDelete} handleAddition={handleAddition} handleDrag={handleDrag} inputFieldPosition="inline" autocomplete editable onTagUpdate={onTagUpdate} />
   );
 };
 export default Tags;

@@ -8,7 +8,7 @@ import Tags from "../plugins/Tags";
 function NewPost() {
   const [data, setData] = useState<null | HandleData>(null);
   const [submit, setSubmit] = useState(false);
-  const [createPost, { error }] = useMutation(CREATE_POST);
+  const [createPost] = useMutation(CREATE_POST);
   const handleData = (newData: HandleData) => {
     setData(newData);
   };

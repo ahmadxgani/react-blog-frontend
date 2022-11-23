@@ -17,7 +17,7 @@ import { useStateCallback } from "../useStateCallback";
 import { usePrevious } from "../usePrevious";
 
 const ReactTags = (props: ReactTagTypes) => {
-  const classNames = { ...DEFAULT_CLASSNAMES, ...props.classNames };
+  const classNames = { ...DEFAULT_CLASSNAMES };
 
   const [state, setState] = useStateCallback({
     suggestions: props.suggestions,
@@ -25,7 +25,6 @@ const ReactTags = (props: ReactTagTypes) => {
     isFocused: false,
     selectedIndex: -1,
     selectionMode: false,
-    ariaLiveStatus: "",
     currentEditIndex: -1,
   });
 
@@ -226,7 +225,7 @@ const ReactTags = (props: ReactTagTypes) => {
   const handleSuggestionClick = (i: number) => addTag(state.suggestions![i]);
 
   const handleTagClick = (i: any, tag: any, e: any) => {
-    const { editable, handleTagClick, labelField } = props;
+    const { editable, labelField } = props;
     if (editable) {
       setState(
         (currentState) => ({ ...currentState, currentEditIndex: i, query: tag[labelField as string] }),
@@ -234,10 +233,6 @@ const ReactTags = (props: ReactTagTypes) => {
           tagInputRef.current!.focus();
         }
       );
-    }
-
-    if (handleTagClick) {
-      handleTagClick(i, e);
     }
   };
 
@@ -378,22 +373,6 @@ const ReactTags = (props: ReactTagTypes) => {
 
   return (
     <div className={ClassNames(classNames.tags, "react-tags-wrapper")} ref={reactTagsRef}>
-      <p
-        role="alert"
-        className="sr-only"
-        style={{
-          position: "absolute",
-          overflow: "hidden",
-          clip: "rect(0 0 0 0)",
-          margin: "-1px",
-          padding: 0,
-          width: "1px",
-          height: "1px",
-          border: 0,
-        }}
-      >
-        {state.ariaLiveStatus}
-      </p>
       {position === INPUT_FIELD_POSITIONS.TOP && tagInput}
       <div className={classNames.selected}>
         {tagItems}
