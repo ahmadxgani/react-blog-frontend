@@ -1,4 +1,3 @@
-// @ts-nocheck
 import "./reactTags.css";
 import React, { useEffect, useRef } from "react";
 import { DndProvider } from "react-dnd";
@@ -12,14 +11,14 @@ import Tag from "./Tag";
 import { buildRegExpFromDelimiters } from "../../lib/utils";
 
 import { KEYS, DEFAULT_PLACEHOLDER, DEFAULT_CLASSNAMES, DEFAULT_LABEL_FIELD, INPUT_FIELD_POSITIONS } from "../../lib/constants";
-import { ReactTagsPropTypes, ReactTagTypes } from "../../lib/types";
+import { ReactTagsPropTypes, ReactTagsState, ReactTagTypes } from "../../lib/types";
 import { useStateCallback } from "../useStateCallback";
 import { usePrevious } from "../usePrevious";
 
 const ReactTags = (props: ReactTagTypes) => {
   const classNames = { ...DEFAULT_CLASSNAMES };
 
-  const [state, setState] = useStateCallback({
+  const [state, setState] = useStateCallback<ReactTagsState>({
     suggestions: props.suggestions,
     query: "",
     isFocused: false,
@@ -33,19 +32,18 @@ const ReactTags = (props: ReactTagTypes) => {
   const tagInputRef = useRef<HTMLInputElement | null>(null);
 
   const addTag = (tag: any) => {
-    const { tags, labelField, allowUnique } = props;
     const { currentEditIndex } = state;
-    if (!tag.id || !tag[labelField as string]) {
+    if (!tag.id || !tag[props.labelField as string]) {
       return;
     }
-    const existingKeys = tags!.map((tag) => tag!.id.toLowerCase());
+    const existingKeys = props.tags!.map((tag) => tag!.id.toLowerCase());
 
     // Return if tag has been already added
-    if (allowUnique && existingKeys.indexOf(tag.id.toLowerCase()) >= 0) {
+    if (props.allowUnique && existingKeys.indexOf(tag.id.toLowerCase()) >= 0) {
       return;
     }
     if (props.autocomplete) {
-      const possibleMatches = filteredSuggestions(tag[labelField as string]);
+      const possibleMatches = filteredSuggestions(tag[props.labelField as string]);
 
       if ((props.autocomplete === 1 && possibleMatches.length === 1) || (props.autocomplete === true && possibleMatches.length)) {
         tag = possibleMatches[0];
@@ -202,9 +200,7 @@ const ReactTags = (props: ReactTagTypes) => {
     const clipboardData = event.clipboardData || (window as any).clipboardData;
     const clipboardText = clipboardData.getData("text");
 
-    const { maxLength = clipboardText.length } = props;
-
-    const maxTextLength = Math.min(maxLength as number, clipboardText.length);
+    const maxTextLength = Math.min(props.maxLength || clipboardText.length, clipboardText.length);
     const pastedText = clipboardData.getData("text").substr(0, maxTextLength);
 
     // Used to determine how the pasted content is split.
@@ -225,10 +221,9 @@ const ReactTags = (props: ReactTagTypes) => {
   const handleSuggestionClick = (i: number) => addTag(state.suggestions![i]);
 
   const handleTagClick = (i: any, tag: any, e: any) => {
-    const { editable, labelField } = props;
-    if (editable) {
+    if (props.editable) {
       setState(
-        (currentState) => ({ ...currentState, currentEditIndex: i, query: tag[labelField as string] }),
+        (currentState) => ({ ...currentState, currentEditIndex: i, query: tag[props.labelField as string] }),
         () => {
           tagInputRef.current!.focus();
         }
@@ -237,10 +232,8 @@ const ReactTags = (props: ReactTagTypes) => {
   };
 
   const handleMoveTag = (dragIndex: number, hoverIndex: number) => {
-    const tags = props.tags;
-
     // locate tags
-    const dragTag = tags![dragIndex];
+    const dragTag = props.tags![dragIndex];
 
     // call handler with the index of the dragged tag
     // and the tag that is hovered
@@ -254,11 +247,9 @@ const ReactTags = (props: ReactTagTypes) => {
   };
 
   const getTagItems = () => {
-    const { tags, labelField, removeComponent, readOnly, allowDragDrop } = props;
-
     const { currentEditIndex, query } = state;
-    const moveTag = allowDragDrop ? handleMoveTag : null;
-    return tags!.map((tag, index) => {
+    const moveTag = props.allowDragDrop ? handleMoveTag : null;
+    return props.tags!.map((tag, index) => {
       return (
         <React.Fragment key={index}>
           {currentEditIndex === index ? (
@@ -281,14 +272,14 @@ const ReactTags = (props: ReactTagTypes) => {
             <Tag
               index={index}
               tag={tag}
-              labelField={labelField}
+              labelField={props.labelField}
               onDelete={(ev) => props!.handleDelete(index, ev)}
               moveTag={moveTag}
-              removeComponent={removeComponent}
+              removeComponent={props.removeComponent}
               onTagClicked={handleTagClick.bind(this, index, tag)}
-              readOnly={readOnly}
+              readOnly={props.readOnly}
               classNames={classNames}
-              allowDragDrop={allowDragDrop}
+              allowDragDrop={props.allowDragDrop}
             />
           )}
         </React.Fragment>
@@ -310,9 +301,7 @@ const ReactTags = (props: ReactTagTypes) => {
   };
 
   useEffect(() => {
-    const { autofocus, readOnly } = props;
-
-    if (autofocus && !readOnly) {
+    if (props.autofocus && !props.readOnly) {
       resetAndFocusInput();
     }
   }, []);
@@ -325,30 +314,28 @@ const ReactTags = (props: ReactTagTypes) => {
     }
   }, [state.suggestions, prevSuggestions]);
 
-  const { placeholder, name: inputName, id: inputId, maxLength, inline, inputFieldPosition, inputValue, inputProps, clearAll, tags } = props;
-
-  const position = !inline ? INPUT_FIELD_POSITIONS.BOTTOM : inputFieldPosition;
+  const position = !props.inline ? INPUT_FIELD_POSITIONS.BOTTOM : props.inputFieldPosition;
 
   const tagInput = !props.readOnly ? (
     <div className={classNames.tagInput}>
       <input
-        {...inputProps}
+        {...props.inputProps}
         ref={(input) => {
           inputTextRef.current = input;
         }}
         className={classNames.tagInputField}
         type="text"
-        placeholder={placeholder as string}
-        aria-label={placeholder}
+        placeholder={props.placeholder as string}
+        aria-label={props.placeholder}
         onFocus={handleFocus}
         onBlur={handleBlur}
         onChange={handleChange}
         onKeyDown={handleKeyDown}
         onPaste={handlePaste}
-        name={inputName as string}
-        id={inputId as string}
-        maxLength={maxLength as number}
-        value={inputValue as string}
+        name={props.name as string}
+        id={props.id as string}
+        maxLength={props.maxLength as number}
+        value={props.inputValue as string}
         data-automation="input"
         data-testid="input"
       />
@@ -367,7 +354,7 @@ const ReactTags = (props: ReactTagTypes) => {
         classNames={classNames}
         renderSuggestion={props.renderSuggestion}
       />
-      {clearAll && tags!.length > 0 && <ClearAllTags classNames={classNames} onClick={clearAllTags} />}
+      {props.clearAll && props.tags!.length > 0 && <ClearAllTags classNames={classNames} onClick={clearAllTags} />}
     </div>
   ) : null;
 

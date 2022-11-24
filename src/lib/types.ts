@@ -29,6 +29,15 @@ export interface User {
   token: string;
 }
 
+export interface ReactTagsState {
+  suggestions: any;
+  query: string;
+  isFocused: boolean;
+  selectedIndex: number;
+  selectionMode: boolean;
+  currentEditIndex: number;
+}
+
 export const SuggestionsPropTypes = {
   query: PropTypes.string.isRequired,
   selectedIndex: PropTypes.number.isRequired,
