@@ -1,5 +1,5 @@
 import "./reactTags.css";
-import React, { useEffect, useRef } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { isEqual, noop, uniq } from "lodash";
@@ -12,13 +12,12 @@ import { buildRegExpFromDelimiters } from "../../lib/utils";
 
 import { KEYS, DEFAULT_PLACEHOLDER, DEFAULT_CLASSNAMES, DEFAULT_LABEL_FIELD, INPUT_FIELD_POSITIONS } from "../../lib/constants";
 import { ReactTagsPropTypes, ReactTagsState, ReactTagTypes } from "../../lib/types";
-import { useStateCallback } from "../useStateCallback";
 import { usePrevious } from "../usePrevious";
 
 const ReactTags = (props: ReactTagTypes) => {
   const classNames = { ...DEFAULT_CLASSNAMES };
 
-  const [state, setState] = useStateCallback<ReactTagsState>({
+  const [state, setState] = useState<ReactTagsState>({
     suggestions: props.suggestions,
     query: "",
     isFocused: false,
@@ -93,7 +92,7 @@ const ReactTags = (props: ReactTagTypes) => {
     return exactSuggestions.concat(partialSuggestions);
   };
 
-  const updateSuggestions = () => {
+  const updateSuggestions = useCallback(() => {
     const { query, selectedIndex } = state;
     const suggestions = filteredSuggestions(query);
 
@@ -102,7 +101,7 @@ const ReactTags = (props: ReactTagTypes) => {
       suggestions: suggestions,
       selectedIndex: selectedIndex >= suggestions.length ? suggestions.length - 1 : selectedIndex,
     }));
-  };
+  }, []);
 
   const handleFocus: React.FocusEventHandler<HTMLInputElement> = (event) => {
     const value = event.target.value;
@@ -187,7 +186,7 @@ const ReactTags = (props: ReactTagTypes) => {
 
     const query = event.target.value.trim();
 
-    setState((currentState) => ({ ...currentState, query }), updateSuggestions);
+    setState((currentState) => ({ ...currentState, query }));
   };
 
   const handlePaste: React.ClipboardEventHandler<HTMLInputElement> = (event) => {
@@ -222,12 +221,7 @@ const ReactTags = (props: ReactTagTypes) => {
 
   const handleTagClick = (i: any, tag: any, e: any) => {
     if (props.editable) {
-      setState(
-        (currentState) => ({ ...currentState, currentEditIndex: i, query: tag[props.labelField as string] }),
-        () => {
-          tagInputRef.current!.focus();
-        }
-      );
+      setState((currentState) => ({ ...currentState, currentEditIndex: i, query: tag[props.labelField as string] }));
     }
   };
 
@@ -273,13 +267,12 @@ const ReactTags = (props: ReactTagTypes) => {
               index={index}
               tag={tag}
               labelField={props.labelField}
-              onDelete={(ev) => props!.handleDelete(index, ev)}
+              onDelete={(ev) => props!.handleDelete!(index, ev)}
               moveTag={moveTag}
               removeComponent={props.removeComponent}
               onTagClicked={handleTagClick.bind(this, index, tag)}
               readOnly={props.readOnly}
               classNames={classNames}
-              allowDragDrop={props.allowDragDrop}
             />
           )}
         </React.Fragment>
@@ -309,10 +302,16 @@ const ReactTags = (props: ReactTagTypes) => {
   const prevSuggestions = usePrevious(state.suggestions);
 
   useEffect(() => {
-    if (!isEqual(prevSuggestions, state.suggestions)) {
+    if (state.currentEditIndex !== -1) {
+      tagInputRef.current!.focus();
+    }
+  }, [state.currentEditIndex]);
+
+  useEffect(() => {
+    if (!isEqual(prevSuggestions, state.suggestions) || state.query) {
       updateSuggestions();
     }
-  }, [state.suggestions, prevSuggestions]);
+  }, [state.suggestions, prevSuggestions, state.query, updateSuggestions]);
 
   const position = !props.inline ? INPUT_FIELD_POSITIONS.BOTTOM : props.inputFieldPosition;
 
@@ -326,7 +325,6 @@ const ReactTags = (props: ReactTagTypes) => {
         className={classNames.tagInputField}
         type="text"
         placeholder={props.placeholder as string}
-        aria-label={props.placeholder}
         onFocus={handleFocus}
         onBlur={handleBlur}
         onChange={handleChange}

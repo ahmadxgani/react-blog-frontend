@@ -39,6 +39,7 @@ export interface ReactTagsState {
 }
 
 export const SuggestionsPropTypes = {
+  setSuggestions: PropTypes.func.isRequired,
   query: PropTypes.string.isRequired,
   selectedIndex: PropTypes.number.isRequired,
   suggestions: PropTypes.array.isRequired,
