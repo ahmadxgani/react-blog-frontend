@@ -20,7 +20,7 @@ const RemoveComponent = (props: removeComponentTypes) => {
     return <span />;
   }
 
-  const ariaLabel = `Tag at index ${index} with value ${tag!.id} focussed. Press backspace to remove`;
+  const ariaLabel = `Tag at index ${index} with value ${tag.name} focussed. Press backspace to remove`;
   if (removeComponent) {
     const Component = removeComponent;
     return <Component onRemove={onRemove} onKeyDown={onKeydown} className={className} aria-label={ariaLabel} tag={tag} index={index} />;

@@ -1,5 +1,4 @@
 // @ts-nocheck
-
 import { useEffect, useRef } from "react";
 import escape from "lodash/escape";
 import { SuggestionsPropTypes, SuggestionsTypes } from "../../lib/types";

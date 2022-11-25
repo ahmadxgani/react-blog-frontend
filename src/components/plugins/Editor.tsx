@@ -59,7 +59,6 @@ const Editor = ({ handleData, submitted }: EditorProps) => {
             title,
             content: JSON.stringify(outputData),
             slug,
-            tags: [1],
           });
         }
       })();

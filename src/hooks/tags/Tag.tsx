@@ -38,14 +38,12 @@ const Tag = (props: TagTypes) => {
 
   drag(drop(tagRef));
 
-  const label = tag![props.labelField];
-  const { className = "" } = tag;
-  /* istanbul ignore next */
+  const label = tag[props.labelField as string];
   const opacity = isDragging ? 0 : 1;
   const tagComponent = (
     <span
       ref={tagRef}
-      className={ClassNames("tag-wrapper", (classNames as any).tag, className)}
+      className={ClassNames("tag-wrapper", (classNames as any).tag)}
       style={{
         opacity,
         cursor: canDrag(props) ? "move" : "auto",
@@ -63,7 +61,7 @@ const Tag = (props: TagTypes) => {
 Tag.propTypes = TagPropTypes;
 
 Tag.defaultProps = {
-  labelField: "text",
+  labelField: "name",
   readOnly: false,
 };
 

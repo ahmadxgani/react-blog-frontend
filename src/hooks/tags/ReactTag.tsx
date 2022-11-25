@@ -11,7 +11,7 @@ import Tag from "./Tag";
 import { buildRegExpFromDelimiters } from "../../lib/utils";
 
 import { KEYS, DEFAULT_PLACEHOLDER, DEFAULT_CLASSNAMES, DEFAULT_LABEL_FIELD, INPUT_FIELD_POSITIONS } from "../../lib/constants";
-import { ReactTagsPropTypes, ReactTagsState, ReactTagTypes } from "../../lib/types";
+import { ReactTagsPropTypes, ReactTagsState, ReactTagTypes, tags } from "../../lib/types";
 import { usePrevious } from "../usePrevious";
 
 const ReactTags = (props: ReactTagTypes) => {
@@ -30,15 +30,14 @@ const ReactTags = (props: ReactTagTypes) => {
   const inputTextRef = useRef<HTMLInputElement | null>(null);
   const tagInputRef = useRef<HTMLInputElement | null>(null);
 
-  const addTag = (tag: any) => {
-    const { currentEditIndex } = state;
+  const addTag = (tag: tags) => {
     if (!tag.id || !tag[props.labelField as string]) {
       return;
     }
-    const existingKeys = props.tags!.map((tag) => tag!.id.toLowerCase());
+    const existingKeys = props.tags.map((tag) => tag.name.toLowerCase());
 
     // Return if tag has been already added
-    if (props.allowUnique && existingKeys.indexOf(tag.id.toLowerCase()) >= 0) {
+    if (props.allowUnique && existingKeys.indexOf((tag.name as string).toLowerCase()) >= 0) {
       return;
     }
     if (props.autocomplete) {
@@ -50,7 +49,7 @@ const ReactTags = (props: ReactTagTypes) => {
     }
 
     // call method to add
-    if (currentEditIndex !== -1 && props.onTagUpdate) props.onTagUpdate(currentEditIndex, tag);
+    if (state.currentEditIndex !== -1 && props.onTagUpdate) props.onTagUpdate(state.currentEditIndex, tag);
     else props.handleAddition!(tag);
 
     // reset the state
@@ -65,43 +64,44 @@ const ReactTags = (props: ReactTagTypes) => {
     resetAndFocusInput();
   };
 
-  const getQueryIndex = (query: any, item: any) => {
-    return item[props.labelField as string].toLowerCase().indexOf(query.toLowerCase());
-  };
+  const getQueryIndex = useCallback(
+    (query: any, item: any) => {
+      return item[props.labelField as string].toLowerCase().indexOf(query.toLowerCase());
+    },
+    [props.labelField]
+  );
 
-  const filteredSuggestions = (query: any) => {
-    let suggestions = props.suggestions;
-    // suggestions = suggestions.filter((tag) => {
-    //   const escapedRegex = query.trim().replace(/[-\\^$*+?.()|[\]{}]/g, "\\$&");
-    //   return RegExp(escapedRegex, "gi").test(tag[props.labelField]);
-    // });
-    if (props.allowUnique) {
-      const existingTags = props.tags!.map((tag) => tag!.id.toLowerCase());
-      suggestions = suggestions!.filter((suggestion) => !existingTags.includes(suggestion!.id.toLowerCase()));
-    }
-    if (props.handleFilterSuggestions) {
-      return props.handleFilterSuggestions(query, suggestions);
-    }
+  const filteredSuggestions = useCallback(
+    (query: any) => {
+      let suggestions = props.suggestions;
+      if (props.allowUnique) {
+        const existingTags = props.tags!.map((tag) => tag!.name.toLowerCase());
+        suggestions = suggestions!.filter((suggestion) => !existingTags.includes(suggestion.name.toLowerCase()));
+      }
+      if (props.handleFilterSuggestions) {
+        return props.handleFilterSuggestions(query, suggestions);
+      }
 
-    const exactSuggestions = suggestions!.filter((item) => {
-      return getQueryIndex(query, item) === 0;
-    });
-    const partialSuggestions = suggestions!.filter((item) => {
-      return getQueryIndex(query, item) > 0;
-    });
-    return exactSuggestions.concat(partialSuggestions);
-  };
+      const exactSuggestions = suggestions!.filter((item) => {
+        return getQueryIndex(query, item) === 0;
+      });
+      const partialSuggestions = suggestions!.filter((item) => {
+        return getQueryIndex(query, item) > 0;
+      });
+      return exactSuggestions.concat(partialSuggestions);
+    },
+    [getQueryIndex, props]
+  );
 
   const updateSuggestions = useCallback(() => {
-    const { query, selectedIndex } = state;
-    const suggestions = filteredSuggestions(query);
+    const suggestions = filteredSuggestions(state.query.trim());
 
     setState((currentState) => ({
       ...currentState,
       suggestions: suggestions,
-      selectedIndex: selectedIndex >= suggestions.length ? suggestions.length - 1 : selectedIndex,
+      selectedIndex: currentState.selectedIndex >= suggestions.length ? suggestions.length - 1 : currentState.selectedIndex,
     }));
-  }, []);
+  }, [filteredSuggestions, state]);
 
   const handleFocus: React.FocusEventHandler<HTMLInputElement> = (event) => {
     const value = event.target.value;
@@ -273,6 +273,7 @@ const ReactTags = (props: ReactTagTypes) => {
               onTagClicked={handleTagClick.bind(this, index, tag)}
               readOnly={props.readOnly}
               classNames={classNames}
+              allowDragDrop={props.allowDragDrop}
             />
           )}
         </React.Fragment>
@@ -280,10 +281,7 @@ const ReactTags = (props: ReactTagTypes) => {
     });
   };
 
-  const tagItems = getTagItems(),
-    query = state.query.trim(),
-    selectedIndex = state.selectedIndex,
-    suggestions = state.suggestions;
+  const tagItems = getTagItems();
 
   const resetAndFocusInput = () => {
     setState((currentState) => ({ ...currentState, query: "" }));
@@ -297,7 +295,7 @@ const ReactTags = (props: ReactTagTypes) => {
     if (props.autofocus && !props.readOnly) {
       resetAndFocusInput();
     }
-  }, []);
+  }, [props.autofocus, props.readOnly]);
 
   const prevSuggestions = usePrevious(state.suggestions);
 
@@ -311,7 +309,7 @@ const ReactTags = (props: ReactTagTypes) => {
     if (!isEqual(prevSuggestions, state.suggestions) || state.query) {
       updateSuggestions();
     }
-  }, [state.suggestions, prevSuggestions, state.query, updateSuggestions]);
+  }, [state.query]);
 
   const position = !props.inline ? INPUT_FIELD_POSITIONS.BOTTOM : props.inputFieldPosition;
 
@@ -339,14 +337,14 @@ const ReactTags = (props: ReactTagTypes) => {
       />
 
       <Suggestions
-        query={query}
+        query={state.query.trim()}
         setSuggestions={setState}
-        suggestions={suggestions as any[]}
+        suggestions={state.suggestions as any[]}
         labelField={props.labelField as string}
-        selectedIndex={selectedIndex}
+        selectedIndex={state.selectedIndex}
         handleClick={handleSuggestionClick}
         handleHover={handleSuggestionHover}
-        minQueryLength={props.minQueryLength}
+        minQueryLength={props.minQueryLength as number}
         shouldRenderSuggestions={props.shouldRenderSuggestions}
         isFocused={state.isFocused}
         classNames={classNames}

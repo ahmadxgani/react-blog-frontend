@@ -13,10 +13,12 @@ export function buildRegExpFromDelimiters(delimiters: any) {
 
 export function canDrag(params: any) {
   const { moveTag, readOnly, allowDragDrop } = params;
+
   return moveTag !== undefined && !readOnly && allowDragDrop;
 }
 
 export function canDrop(params: any) {
   const { readOnly, allowDragDrop } = params;
+
   return !readOnly && allowDragDrop;
 }

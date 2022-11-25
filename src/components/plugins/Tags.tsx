@@ -1,6 +1,7 @@
 import { WithContext as ReactTags } from "../../hooks/tags/ReactTag";
 import { useState } from "react";
 import { COUNTRIES } from "../dummy";
+import { tags, TagsPropTypes, TagsTypes } from "../../lib/types";
 
 const suggestions = COUNTRIES.map((country) => {
   return {
@@ -16,19 +17,14 @@ const KeyCodes = {
 
 const delimiters = [KeyCodes.comma, KeyCodes.enter];
 
-const Tags = () => {
-  const [tags, setTags] = useState([
-    { id: "Thailand", text: "Thailand" },
-    { id: "India", text: "India" },
-    { id: "Vietnam", text: "Vietnam" },
-    { id: "Turkey", text: "Turkey" },
-  ]);
+const Tags = ({ suggestions }: TagsTypes) => {
+  const [tags, setTags] = useState<tags[]>([]);
 
   const handleDelete = (i: any, event: any) => {
     event.preventDefault();
     event.stopPropagation();
 
-    setTags((currentTags) => currentTags.filter((tag, index) => index !== i));
+    setTags((currentTags) => currentTags.filter((_, index) => index !== i));
   };
 
   const onTagUpdate = (i: any, newTag: any) => {
@@ -57,4 +53,7 @@ const Tags = () => {
     <ReactTags tags={tags} suggestions={suggestions} delimiters={delimiters} handleDelete={handleDelete} handleAddition={handleAddition} handleDrag={handleDrag} inputFieldPosition="inline" autocomplete editable onTagUpdate={onTagUpdate} />
   );
 };
+
+Tags.propTypes = TagsPropTypes;
+
 export default Tags;

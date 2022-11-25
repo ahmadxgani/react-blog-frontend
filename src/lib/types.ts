@@ -5,7 +5,7 @@ export interface HandleData {
   title: string;
   content: string;
   slug: string;
-  tags: number[];
+  tags?: number[];
 }
 
 export interface SelectedTag {
@@ -45,10 +45,10 @@ export const SuggestionsPropTypes = {
   suggestions: PropTypes.array.isRequired,
   handleClick: PropTypes.func.isRequired,
   handleHover: PropTypes.func.isRequired,
-  minQueryLength: PropTypes.number,
+  minQueryLength: PropTypes.number.isRequired,
   shouldRenderSuggestions: PropTypes.func,
   isFocused: PropTypes.bool.isRequired,
-  classNames: PropTypes.object,
+  classNames: PropTypes.object.isRequired,
   labelField: PropTypes.string.isRequired,
   renderSuggestion: PropTypes.func,
 };
@@ -59,16 +59,16 @@ export const TagPropTypes = {
   labelField: PropTypes.string,
   onDelete: PropTypes.func.isRequired,
   tag: PropTypes.shape({
-    id: PropTypes.string.isRequired,
-    className: PropTypes.string,
-    key: PropTypes.string,
-  }),
+    id: PropTypes.number.isRequired,
+    name: PropTypes.string.isRequired,
+  }).isRequired,
   moveTag: PropTypes.func,
   removeComponent: PropTypes.func,
   onTagClicked: PropTypes.func,
   classNames: PropTypes.object,
   readOnly: PropTypes.bool,
   index: PropTypes.number.isRequired,
+  allowDragDrop: PropTypes.bool.isRequired,
 };
 
 export type TagTypes = InferProps<typeof TagPropTypes>;
@@ -88,22 +88,29 @@ export const RemoveComponentPropTypes = {
   readOnly: PropTypes.bool,
   removeComponent: PropTypes.func,
   tag: PropTypes.shape({
-    id: PropTypes.string.isRequired,
-    className: PropTypes.string,
-    key: PropTypes.string,
-  }),
+    id: PropTypes.number.isRequired,
+    name: PropTypes.string.isRequired,
+  }).isRequired,
   index: PropTypes.number.isRequired,
 };
 
 export type removeComponentTypes = InferProps<typeof RemoveComponentPropTypes>;
+
+export const TagsPropTypes = {
+  suggestions: PropTypes.array.isRequired,
+};
+
+export type TagsTypes = InferProps<typeof TagsPropTypes>;
+export type tags = Record<string, string | number>;
 
 export const ReactTagsPropTypes = {
   placeholder: PropTypes.string,
   labelField: PropTypes.string,
   suggestions: PropTypes.arrayOf(
     PropTypes.shape({
-      id: PropTypes.string.isRequired,
-    })
+      id: PropTypes.number.isRequired,
+      name: PropTypes.string.isRequired,
+    }).isRequired
   ),
   delimiters: PropTypes.arrayOf(PropTypes.number),
   autofocus: PropTypes.bool,
@@ -116,7 +123,7 @@ export const ReactTagsPropTypes = {
   handleFilterSuggestions: PropTypes.func,
   allowDeleteFromEmptyInput: PropTypes.bool,
   allowAdditionFromPaste: PropTypes.bool,
-  allowDragDrop: PropTypes.bool,
+  allowDragDrop: PropTypes.bool.isRequired,
   handleInputChange: PropTypes.func,
   handleInputFocus: PropTypes.func,
   handleInputBlur: PropTypes.func,
@@ -131,10 +138,10 @@ export const ReactTagsPropTypes = {
   inputValue: PropTypes.string,
   tags: PropTypes.arrayOf(
     PropTypes.shape({
-      id: PropTypes.string.isRequired,
-      className: PropTypes.string,
-    })
-  ),
+      id: PropTypes.number.isRequired,
+      name: PropTypes.string.isRequired,
+    }).isRequired
+  ).isRequired,
   allowUnique: PropTypes.bool,
   renderSuggestion: PropTypes.func,
   inputProps: PropTypes.object,
