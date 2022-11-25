@@ -1,14 +1,6 @@
 import { WithContext as ReactTags } from "../../hooks/tags/ReactTag";
-import { useState } from "react";
-import { COUNTRIES } from "../dummy";
+import { useEffect, useState } from "react";
 import { tags, TagsPropTypes, TagsTypes } from "../../lib/types";
-
-const suggestions = COUNTRIES.map((country) => {
-  return {
-    id: country,
-    text: country,
-  };
-});
 
 const KeyCodes = {
   comma: 188,
@@ -17,7 +9,7 @@ const KeyCodes = {
 
 const delimiters = [KeyCodes.comma, KeyCodes.enter];
 
-const Tags = ({ suggestions }: TagsTypes) => {
+const Tags = ({ suggestions, handleTags, submitted }: TagsTypes) => {
   const [tags, setTags] = useState<tags[]>([]);
 
   const handleDelete = (i: any, event: any) => {
@@ -48,6 +40,12 @@ const Tags = ({ suggestions }: TagsTypes) => {
       return newTags;
     });
   };
+
+  useEffect(() => {
+    if (submitted) {
+      handleTags(tags);
+    }
+  }, [submitted]);
 
   return (
     <ReactTags tags={tags} suggestions={suggestions} delimiters={delimiters} handleDelete={handleDelete} handleAddition={handleAddition} handleDrag={handleDrag} inputFieldPosition="inline" autocomplete editable onTagUpdate={onTagUpdate} />

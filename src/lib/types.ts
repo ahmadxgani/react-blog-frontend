@@ -98,6 +98,8 @@ export type removeComponentTypes = InferProps<typeof RemoveComponentPropTypes>;
 
 export const TagsPropTypes = {
   suggestions: PropTypes.array.isRequired,
+  submitted: PropTypes.bool.isRequired,
+  handleTags: PropTypes.func.isRequired,
 };
 
 export type TagsTypes = InferProps<typeof TagsPropTypes>;
