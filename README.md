@@ -2,4 +2,4 @@
 
 ## Include:
 - wysiwyg
-- graphql client
+- apollo client
