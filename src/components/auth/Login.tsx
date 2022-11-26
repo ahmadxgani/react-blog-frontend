@@ -5,12 +5,16 @@ import { useUser } from "../../global/UserProvider";
 import { LOGIN } from "../../GraphQL/Mutations";
 
 const Login = () => {
-  const [fetchToken, { error }] = useMutation(LOGIN);
+  const [fetchToken] = useMutation(LOGIN);
   const emailRef = useRef<HTMLInputElement | null>(null);
   const passwordRef = useRef<HTMLInputElement | null>(null);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const user = useUser();
+
+  if (user?.currentUser.user) {
+    return <Navigate to="/dashboard/users" />;
+  }
 
   const onSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
@@ -45,10 +49,6 @@ const Login = () => {
     setEmail(emailRef.current?.value as string);
     setPassword(passwordRef.current?.value as string);
   };
-
-  if (user?.currentUser.user) {
-    return <Navigate to="/dashboard/users" />;
-  }
 
   return (
     <form onSubmit={onSubmit} className="flex flex-col">
