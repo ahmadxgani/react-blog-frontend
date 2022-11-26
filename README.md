@@ -8,4 +8,4 @@
 - Tailwind as inline style 
 
 ## Important Note!
-> Run backend side before start frontend side, and ensure you has been config your environment variable
+> Run backend side first, before start frontend side. And ensure you has been config your environment variable
