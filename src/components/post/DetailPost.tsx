@@ -1,16 +1,28 @@
 import { useQuery } from "@apollo/client";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { GET_POST } from "../../GraphQL/Queries";
+import Output from "editorjs-react-renderer";
+import { Query } from "../../../generated-types";
 
 function DetailPost() {
-  const { data } = useQuery(GET_POST, {
+  const { data } = useQuery<Query>(GET_POST, {
     variables: {
-      id: 1,
+      id: 3,
     },
   });
+  const [isLoaded, setIsLoaded] = useState(false);
+
   useEffect(() => {
-    console.log(data);
+    if (data) {
+      setIsLoaded(true);
+    }
   }, [data]);
+
+  const Article = () => (
+    <section className="xl:prose-xl lg:prose-lg md:prose-base prose-sm prose bg-white px-3 rounded-lg shadow !max-w-[43.75rem] md:px-[1.25rem]">
+      <Output data={JSON.parse(data!.GetPost.content)} />
+    </section>
+  );
 
   return (
     <div className="flex flex-col w-[55.125rem] mx-3">
@@ -21,8 +33,13 @@ function DetailPost() {
             <div className="flex gap-3 items-center">
               <img src={process.env.PUBLIC_URL + "/img/example/user.jpeg"} alt="Twitter" className="w-[3.125rem] rounded-full" />
               <div className="leading-none">
-                <h1 className="text-base font-semibold">Shinigami Zero</h1>
-                <span className="text-sm">Jul 13, 2022</span>
+                <h1 className="text-base font-semibold">{isLoaded && data!.GetPost.author.username}</h1>
+                <span className="text-sm">
+                  {isLoaded &&
+                    new Intl.DateTimeFormat("en", {
+                      dateStyle: "medium",
+                    }).format(new Date(data!.GetPost.createdAt))}
+                </span>
               </div>
             </div>
             <div className="flex gap-1">
@@ -33,22 +50,17 @@ function DetailPost() {
             </div>
           </div>
           <div className="flex gap-2">
-            <span className="text-[#404040] bg-[#B7BDFF] px-[0.625rem] py-[0.3125rem] rounded-xl text-xs">#TAGS</span>
-            <span className="text-[#404040] bg-[#B7BDFF] px-[0.625rem] py-[0.3125rem] rounded-xl text-xs">#TAGS</span>
-            <span className="text-[#404040] bg-[#B7BDFF] px-[0.625rem] py-[0.3125rem] rounded-xl text-xs">#TAGS</span>
+            {isLoaded &&
+              data!.GetPost.tags.map((tag, id) => {
+                return (
+                  <span key={id} className="text-[#404040] bg-[#B7BDFF] px-[0.625rem] py-[0.3125rem] rounded-xl text-xs">
+                    {tag.name}
+                  </span>
+                );
+              })}
           </div>
         </div>
-        <div className="flex flex-col gap-1">
-          <h1 className="font-extrabold text-3xl">How to be an Ideal Engineer React JS</h1>
-          <p className="text-[#353443] font-normal text-xl">
-            Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley. Corrupti ullam minus, aperiam
-            officiis rem fugit unde impedit commodi libero maiores quo modi aut laborum mollitia esse error, nobis voluptatem est sapiente illum! Ratione adipisci consequuntur fugit quos sit. Dolores cum ipsa impedit mollitia sit a possimus
-            voluptatum omnis reprehenderit? Voluptatem ipsam ab quia odit sint itaque! Quisquam accusantium deserunt libero et totam sequi suscipit ut numquam necessitatibus aspernatur. Nisi, veritatis consequatur neque praesentium
-            aspernatur, ea maiores doloribus dicta tempore officia beatae quis quisquam molestiae. Voluptatem ipsam ab quia odit sint itaque! Quisquam accusantium deserunt libero et totam sequi suscipit ut numquam necessitatibus aspernatur.
-            Nisi, veritatis consequatur neque praesentium aspernatur, ea maiores doloribus dicta tempore officia beatae quis quisquam molestiae, Voluptatem ipsam ab quia odit sint itaque! Quisquam accusantium deserunt libero et totam sequi
-            suscipit ut numquam necessitatibus aspernatur. Nisi, veritatis consequatur neque praesentium aspernatur, ea maiores doloribus dicta tempore officia beatae quis quisquam molestiae.
-          </p>
-        </div>
+        <div className="flex flex-col gap-1">{isLoaded && <Article />}</div>
       </div>
     </div>
   );

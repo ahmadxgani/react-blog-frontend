@@ -112,7 +112,7 @@ export type tags = Record<string, string | number>;
 
 export const ReactTagsPropTypes = {
   placeholder: PropTypes.string,
-  labelField: PropTypes.string,
+  labelField: PropTypes.string.isRequired,
   suggestions: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.number.isRequired,

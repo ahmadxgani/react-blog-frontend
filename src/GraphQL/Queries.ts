@@ -22,6 +22,10 @@ export const LOAD_POSTS = gql`
   query LoadPosts {
     ShowAllPost {
       title
+      slug
+      tags {
+        name
+      }
     }
   }
 `;

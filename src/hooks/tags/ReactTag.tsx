@@ -265,8 +265,8 @@ const ReactTags = (props: ReactTagTypes) => {
           ) : (
             <Tag
               index={index}
-              tag={tag}
-              labelField={props.labelField}
+              tag={tag as any}
+              labelField={props.labelField as any}
               onDelete={(ev) => props!.handleDelete!(index, ev)}
               moveTag={moveTag}
               removeComponent={props.removeComponent}
