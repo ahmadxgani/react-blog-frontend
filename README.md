@@ -1,4 +1,4 @@
-# My Personal Blog Client Site
+# Zero's Blog | Client Side
 
 ## Include:
 - wysiwyg
