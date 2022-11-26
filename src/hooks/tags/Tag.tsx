@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { useDrag, useDrop } from "react-dnd";
 import ClassNames from "classnames";
 
@@ -11,7 +10,6 @@ const ItemTypes = { TAG: "tag" };
 
 const Tag = (props: TagTypes) => {
   const tagRef = useRef(null);
-  const { readOnly, tag, classNames, index } = props;
 
   const [{ isDragging }, drag] = useDrag(() => ({
     type: ItemTypes.TAG,
@@ -24,9 +22,9 @@ const Tag = (props: TagTypes) => {
 
   const [, drop] = useDrop(() => ({
     accept: ItemTypes.TAG,
-    drop: (item: any, monitor) => {
+    drop: (item: any) => {
       const dragIndex = item.index;
-      const hoverIndex = index;
+      const hoverIndex = props.index;
       if (dragIndex === hoverIndex) {
         return;
       }
@@ -38,12 +36,12 @@ const Tag = (props: TagTypes) => {
 
   drag(drop(tagRef));
 
-  const label = tag[props.labelField as string];
+  const label = props.tag[props.labelField];
   const opacity = isDragging ? 0 : 1;
   const tagComponent = (
     <span
       ref={tagRef}
-      className={ClassNames("tag-wrapper", (classNames as any).tag)}
+      className={ClassNames("tag-wrapper", (props.classNames as any).tag)}
       style={{
         opacity,
         cursor: canDrag(props) ? "move" : "auto",
@@ -52,7 +50,7 @@ const Tag = (props: TagTypes) => {
       onTouchStart={props.onTagClicked as React.TouchEventHandler<HTMLSpanElement>}
     >
       {label}
-      <RemoveComponent tag={props.tag} className={(classNames as any).remove} removeComponent={props.removeComponent} onRemove={props.onDelete} readOnly={readOnly} index={index} />
+      <RemoveComponent tag={props.tag} className={(props.classNames as any).remove} removeComponent={props.removeComponent} onRemove={props.onDelete} readOnly={props.readOnly} index={props.index} />
     </span>
   );
   return tagComponent;

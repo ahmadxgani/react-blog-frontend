@@ -6,6 +6,7 @@ import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import Modal from "../modals/Modal";
 import { SelectedTag } from "../../lib/types";
+import { Query } from "../../../generated-types";
 
 const ManageTags = () => {
   const MySwal = withReactContent(Swal);
@@ -35,7 +36,7 @@ const ManageTags = () => {
   });
   const [deleteTag] = useMutation(DELETE_TAG, {
     update: (cache, _, { variables }) => {
-      const existingTags = cache.readQuery({
+      const existingTags = cache.readQuery<Query>({
         query: SHOW_ALL_TAGS,
       });
 
@@ -43,7 +44,7 @@ const ManageTags = () => {
         cache.writeQuery({
           query: SHOW_ALL_TAGS,
           data: {
-            ShowAllTag: (existingTags as any).ShowAllTag.filter((tag: any) => tag.id !== variables!.id),
+            ShowAllTag: existingTags.ShowAllTag.filter((tag) => tag.id !== variables!.id),
           },
         });
       }

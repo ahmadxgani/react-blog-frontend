@@ -1,4 +1,17 @@
+import { useQuery } from "@apollo/client";
+import { useEffect } from "react";
+import { GET_POST } from "../../GraphQL/Queries";
+
 function DetailPost() {
+  const { data } = useQuery(GET_POST, {
+    variables: {
+      id: 1,
+    },
+  });
+  useEffect(() => {
+    console.log(data);
+  }, [data]);
+
   return (
     <div className="flex flex-col w-[55.125rem] mx-3">
       <img src={process.env.PUBLIC_URL + "/img/example/thumbnail.jpg"} alt="Thumbnail" className="w-auto h-[21.125rem] rounded-t-[0.625rem]" />

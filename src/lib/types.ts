@@ -71,7 +71,12 @@ export const TagPropTypes = {
   allowDragDrop: PropTypes.bool.isRequired,
 };
 
-export type TagTypes = InferProps<typeof TagPropTypes>;
+interface tag<K extends string = "name"> {
+  labelField: K;
+  tag: Array<{ id: string } & { [k in K]: string }>;
+}
+
+export type TagTypes = Omit<InferProps<typeof TagPropTypes>, "tag" & "labelField"> & tag;
 
 export type Tag = Pick<TagTypes, "tag">;
 

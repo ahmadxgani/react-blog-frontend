@@ -1,7 +1,25 @@
 import { gql } from "@apollo/client";
 
+export const GET_POST = gql`
+  query GetPost($id: Int!) {
+    GetPost(payload: { id: $id }) {
+      author {
+        username
+      }
+      title
+      content
+      slug
+      createdAt
+      updatedAt
+      tags {
+        name
+      }
+    }
+  }
+`;
+
 export const LOAD_POSTS = gql`
-  query {
+  query LoadPosts {
     ShowAllPost {
       title
     }
@@ -9,7 +27,7 @@ export const LOAD_POSTS = gql`
 `;
 
 export const SHOW_ALL_USERS = gql`
-  query {
+  query ShowAllUsers {
     ShowAllAuthor {
       username
       email
@@ -18,7 +36,7 @@ export const SHOW_ALL_USERS = gql`
 `;
 
 export const SHOW_ALL_TAGS = gql`
-  query {
+  query ShowAllTags {
     ShowAllTag {
       name
       id
