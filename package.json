@@ -1,7 +1,20 @@
 {
-  "name": "simple-blog-frontend",
+  "name": "zero-blog-frontend",
   "version": "0.1.0",
-  "private": true,
+  "description": "Back-end side for Simple Blog",
+  "author": "Ahmad Gani <ahmadxgani01@gmail.com>",
+  "license": "MIT",
+  "repository": {
+    "url": "https://github.com/QUERY-GANI/simple-blog-frontend.git"
+  },
+  "keywords": [
+    "reactjs",
+    "frontend",
+    "apollo",
+    "graphql",
+    "wyswyg",
+    "typescript"
+  ],
   "dependencies": {
     "@apollo/client": "^3.7.1",
     "@editorjs/editorjs": "^2.25.0",
