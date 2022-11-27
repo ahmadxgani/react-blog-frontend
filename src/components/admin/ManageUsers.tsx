@@ -1,25 +1,76 @@
-import { useQuery } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import { useEffect, useState } from "react";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+import { Mutation, Query } from "../../../generated-types";
+import { UPDATE_PROFILE } from "../../GraphQL/Mutations";
 import { SHOW_ALL_USERS } from "../../GraphQL/Queries";
+import Modal from "../modals/Modal";
+import Loading from "../plugins/Loading";
 
 const ManageUsers = () => {
-  const [isOpen, setIsOpen] = useState(false);
-  const { data } = useQuery(SHOW_ALL_USERS);
+  const { data, loading } = useQuery<Query>(SHOW_ALL_USERS);
+  const [updateProfile] = useMutation<Mutation>(UPDATE_PROFILE, {
+    update: (cache, { data }) => {
+      const updatedDataFromResponse = data!.UpdateAuthor;
+      const existingAuthors = cache.readQuery<Query>({
+        query: SHOW_ALL_USERS,
+      });
 
-  const toggleModalBox = () => {
-    setIsOpen(!isOpen);
+      if (existingAuthors && updatedDataFromResponse) {
+        cache.writeQuery({
+          query: SHOW_ALL_USERS,
+          data: {
+            ShowAllAuthor: [...existingAuthors.ShowAllAuthor, updatedDataFromResponse],
+          },
+        });
+      }
+    },
+  });
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [user, setUser] = useState<{ id: number; username: string } | null>();
+  const [inputEditUsername, setInputEditUsername] = useState("");
+  const MySwal = withReactContent(Swal);
+
+  const handleEditProfile = (id: number, username: string) => {
+    setUser({ id, username });
+  };
+
+  const handleEditOnChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
+    e.preventDefault();
+    setInputEditUsername(e.target.value);
+  };
+
+  const handleEditOnSubmit: React.FormEventHandler<HTMLFormElement> = async (e) => {
+    e.preventDefault();
+    await updateProfile({
+      variables: {
+        id: user!.id,
+        username: inputEditUsername,
+      },
+    });
+    setUser(null);
+    MySwal.fire({
+      position: "top-end",
+      icon: "success",
+      title: "The username has been changed",
+      showConfirmButton: false,
+      timer: 1500,
+    });
+  };
+
+  const handleCloseModal = () => {
+    setUser(null);
   };
 
   useEffect(() => {
-    console.log(data);
-  }, [data]);
+    if (user) {
+      setInputEditUsername(user.username);
+      setShowEditModal(true);
+    } else setShowEditModal(false);
+  }, [user]);
 
-  const NewTag = () => (
-    <div className="flex flex-col gap-2">
-      <input id="tag" type="text" placeholder="add new tag..." className="p-1 rounded-lg focus:outline-none" />
-      <button className="p-1 px-2 bg-[#5561E3] text-white rounded-lg">Submit</button>
-    </div>
-  );
+  if (loading) return <Loading />;
 
   return (
     <div className="w-full max-w-2xl mx-auto bg-white shadow-lg rounded-sm border border-gray-200">
@@ -47,90 +98,36 @@ const ManageUsers = () => {
               </tr>
             </thead>
             <tbody className="text-sm divide-y divide-gray-100">
-              <tr>
-                <td className="p-2 whitespace-nowrap">1</td>
-                <td className="p-2 whitespace-nowrap">
-                  <div className="text-left">Shinigami Shinoa</div>
-                </td>
-                <td>shinigami@s.com</td>
-                <td>admin</td>
-                <td className="p-2 whitespace-nowrap">
-                  <div className="flex gap-5 items-center">
-                    <button className="text-sm p-1 px-2 bg-[#5561E3] text-white rounded-lg" onClick={toggleModalBox}>
-                      Edit
-                    </button>
-                    <button className="text-sm p-1 px-2 bg-[#5561E3] text-white rounded-lg">Delete</button>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td className="p-2 whitespace-nowrap">2</td>
-                <td className="p-2 whitespace-nowrap">
-                  <div className="text-left">Shinigami Shinoa</div>
-                </td>
-                <td>shinigami@s.com</td>
-                <td>admin</td>
-                <td className="p-2 whitespace-nowrap">
-                  <div className="flex gap-5 items-center">
-                    <button className="text-sm p-1 px-2 bg-[#5561E3] text-white rounded-lg" onClick={toggleModalBox}>
-                      Edit
-                    </button>
-                    <button className="text-sm p-1 px-2 bg-[#5561E3] text-white rounded-lg">Delete</button>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td className="p-2 whitespace-nowrap">3</td>
-                <td className="p-2 whitespace-nowrap">
-                  <div className="text-left">Shinigami Shinoa</div>
-                </td>
-                <td>shinigami@s.com</td>
-                <td>admin</td>
-                <td className="p-2 whitespace-nowrap">
-                  <div className="flex gap-5 items-center">
-                    <button className="text-sm p-1 px-2 bg-[#5561E3] text-white rounded-lg" onClick={toggleModalBox}>
-                      Edit
-                    </button>
-                    <button className="text-sm p-1 px-2 bg-[#5561E3] text-white rounded-lg">Delete</button>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td className="p-2 whitespace-nowrap">4</td>
-                <td className="p-2 whitespace-nowrap">
-                  <div className="text-left">Shinigami Shinoa</div>
-                </td>
-                <td>shinigami@s.com</td>
-                <td>admin</td>
-                <td className="p-2 whitespace-nowrap">
-                  <div className="flex gap-5 items-center">
-                    <button className="text-sm p-1 px-2 bg-[#5561E3] text-white rounded-lg" onClick={toggleModalBox}>
-                      Edit
-                    </button>
-                    <button className="text-sm p-1 px-2 bg-[#5561E3] text-white rounded-lg">Delete</button>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td className="p-2 whitespace-nowrap">5</td>
-                <td className="p-2 whitespace-nowrap">
-                  <div className="text-left">Shinigami Shinoa</div>
-                </td>
-                <td>shinigami@s.com</td>
-                <td>admin</td>
-                <td className="p-2 whitespace-nowrap">
-                  <div className="flex gap-5 items-center">
-                    <button className="text-sm p-1 px-2 bg-[#5561E3] text-white rounded-lg" onClick={toggleModalBox}>
-                      Edit
-                    </button>
-                    <button className="text-sm p-1 px-2 bg-[#5561E3] text-white rounded-lg">Delete</button>
-                  </div>
-                </td>
-              </tr>
+              {data?.ShowAllAuthor.map((author, i) => {
+                return (
+                  <tr key={i}>
+                    <td className="p-2 whitespace-nowrap">{++i}</td>
+                    <td className="p-2 whitespace-nowrap">
+                      <div className="text-left">{author.username}</div>
+                    </td>
+                    <td>{author.email}</td>
+                    <td>admin or member</td>
+                    <td className="p-2 whitespace-nowrap">
+                      <div className="flex gap-5 items-center">
+                        <button className="text-sm p-1 px-2 bg-[#5561E3] text-white rounded-lg" onClick={() => handleEditProfile(author.id, author.username)}>
+                          Edit
+                        </button>
+                        <button className="text-sm p-1 px-2 bg-[#5561E3] text-white rounded-lg">Delete</button>
+                      </div>
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>
       </div>
+      <Modal show={showEditModal} setShow={handleCloseModal} title="Edit Author">
+        <form onSubmit={handleEditOnSubmit} className="flex flex-col gap-2">
+          <input type="text" className="p-1 rounded-lg focus:outline-none" value={inputEditUsername} onChange={handleEditOnChange} />
+          <button className="p-1 px-2 bg-[#5561E3] text-white rounded-lg">Submit</button>
+        </form>
+      </Modal>
     </div>
   );
 };

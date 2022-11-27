@@ -20,7 +20,7 @@ const ManageTags = () => {
   const [createTag] = useMutation(CREATE_TAG, {
     update: (cache, { data }) => {
       const newTagFromResponse = data.CreateTag;
-      const existingTags = cache.readQuery({
+      const existingTags = cache.readQuery<Query>({
         query: SHOW_ALL_TAGS,
       });
 
@@ -28,7 +28,7 @@ const ManageTags = () => {
         cache.writeQuery({
           query: SHOW_ALL_TAGS,
           data: {
-            ShowAllTag: [...(existingTags as any).ShowAllTag, newTagFromResponse],
+            ShowAllTag: [...existingTags.ShowAllTag, newTagFromResponse],
           },
         });
       }

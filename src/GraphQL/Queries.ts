@@ -33,6 +33,7 @@ export const LOAD_POSTS = gql`
 export const SHOW_ALL_USERS = gql`
   query ShowAllUsers {
     ShowAllAuthor {
+      id
       username
       email
     }
