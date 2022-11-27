@@ -10,23 +10,7 @@ import Loading from "../plugins/Loading";
 
 const ManageUsers = () => {
   const { data, loading } = useQuery<Query>(SHOW_ALL_USERS);
-  const [updateProfile] = useMutation<Mutation>(UPDATE_PROFILE, {
-    update: (cache, { data }) => {
-      const updatedDataFromResponse = data!.UpdateAuthor;
-      const existingAuthors = cache.readQuery<Query>({
-        query: SHOW_ALL_USERS,
-      });
-
-      if (existingAuthors && updatedDataFromResponse) {
-        cache.writeQuery({
-          query: SHOW_ALL_USERS,
-          data: {
-            ShowAllAuthor: [...existingAuthors.ShowAllAuthor, updatedDataFromResponse],
-          },
-        });
-      }
-    },
-  });
+  const [updateProfile] = useMutation<Mutation>(UPDATE_PROFILE);
   const [showEditModal, setShowEditModal] = useState(false);
   const [user, setUser] = useState<{ id: number; username: string } | null>();
   const [inputEditUsername, setInputEditUsername] = useState("");

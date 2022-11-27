@@ -45,7 +45,9 @@ export const UPDATE_TAG = gql`
 export const UPDATE_PROFILE = gql`
   mutation UpdateAuthor($id: Int!, $username: String!) {
     UpdateAuthor(payload: { id: $id, username: $username }) {
+      id
       username
+      email
     }
   }
 `;
