@@ -1,19 +1,16 @@
-import { Navigate, useOutlet } from "react-router-dom";
+import { useNavigate, useOutlet } from "react-router-dom";
 import { useUser } from "../../global/UserProvider";
 
 const ProtectedLayout = () => {
+  const navigate = useNavigate();
   const user = useUser();
   const outlet = useOutlet();
 
   if (!user?.currentUser.user) {
-    return <Navigate to="/" />;
+    navigate("/");
   }
 
-  return (
-    <>
-      {outlet}
-    </>
-  );
+  return <>{outlet}</>;
 };
 
 export default ProtectedLayout;

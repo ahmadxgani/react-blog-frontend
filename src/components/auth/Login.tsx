@@ -1,11 +1,12 @@
 import { useMutation } from "@apollo/client";
 import { ChangeEventHandler, FormEventHandler, useRef, useState } from "react";
-import { Link, Navigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useUser } from "../../global/UserProvider";
 import { LOGIN } from "../../GraphQL/Mutations";
 
 const Login = () => {
   const [fetchToken] = useMutation(LOGIN);
+  const navigate = useNavigate();
   const emailRef = useRef<HTMLInputElement | null>(null);
   const passwordRef = useRef<HTMLInputElement | null>(null);
   const [email, setEmail] = useState("");
@@ -13,7 +14,7 @@ const Login = () => {
   const user = useUser();
 
   if (user?.currentUser.user) {
-    return <Navigate to="/dashboard/users" />;
+    navigate("/dashboard/users");
   }
 
   const onSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
@@ -36,8 +37,6 @@ const Login = () => {
             },
           },
         });
-        setEmail("");
-        setPassword("");
       } catch (error) {
         console.log(error);
       }

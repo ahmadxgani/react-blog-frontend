@@ -3,7 +3,6 @@ import Dashboard from "../admin/Dashboard";
 import ManageTags from "../admin/ManageTags";
 import ManageUsers from "../admin/ManageUsers";
 import Login from "../auth/Login";
-import Logout from "../auth/Logout";
 import Profile from "../auth/Profile";
 import Recovery from "../auth/Recovery";
 import Register from "../auth/Register";
@@ -20,7 +19,6 @@ export const Router = () => {
     { label: "dashboard", path: "/dashboard/users" },
     { label: "profile", path: "/profile" },
     { label: "new post", path: "/post" },
-    { label: "logout", path: "/logout" },
   ];
   const unprotectedRoutes = [
     { label: "login", path: "/login" },
@@ -32,7 +30,6 @@ export const Router = () => {
       <Routes>
         <Route element={<MainLayout pages={user?.currentUser.user ? protectedRoutes : unprotectedRoutes} />}>
           <Route element={<ProtectedRoute />}>
-            <Route path="logout" element={<Logout />}></Route>
             <Route path="profile" element={<Profile />} />
             <Route path="dashboard/*" element={<Dashboard />}>
               <Route path="users" element={<ManageUsers />} />
@@ -44,7 +41,7 @@ export const Router = () => {
           <Route path="/register" element={<Register />} />
           <Route path="/recovery-password" element={<Recovery />} />
           <Route path="/" element={<ShowAllPost />} />
-          <Route path="/post/26be68a2-ec55-4fc7-bcae-3eb8d89929e1" element={<DetailPost />} />
+          <Route path="/post/:slug" element={<DetailPost />} />
         </Route>
       </Routes>
     </BrowserRouter>

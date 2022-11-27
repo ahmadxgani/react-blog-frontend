@@ -20,7 +20,6 @@ export type Pages = {
 
 export interface EditorProps {
   handleData: (data: HandleData) => void;
-  submitted: boolean;
 }
 
 export interface User {
@@ -103,11 +102,16 @@ export type removeComponentTypes = InferProps<typeof RemoveComponentPropTypes>;
 
 export const TagsPropTypes = {
   suggestions: PropTypes.array.isRequired,
-  submitted: PropTypes.bool.isRequired,
-  handleTags: PropTypes.func.isRequired,
+  setTags: PropTypes.func.isRequired,
+  tags: PropTypes.array.isRequired,
 };
 
-export type TagsTypes = InferProps<typeof TagsPropTypes>;
+interface tagState extends Omit<InferProps<typeof TagsPropTypes>, "tags" & "setTags"> {
+  setTags: React.Dispatch<React.SetStateAction<tags[]>>;
+  tags: tags[];
+}
+
+export type TagsTypes = tagState;
 export type tags = Record<string, string | number>;
 
 export const ReactTagsPropTypes = {

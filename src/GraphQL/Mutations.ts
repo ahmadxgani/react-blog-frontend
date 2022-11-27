@@ -5,6 +5,7 @@ export const CREATE_POST = gql`
     CreatePost(payload: { title: $title, content: $content, tags: $tags, slug: $slug }) {
       title
       content
+      slug
       tags {
         name
       }

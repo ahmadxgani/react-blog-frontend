@@ -1,11 +1,12 @@
-import { Navigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useUser } from "../../global/UserProvider";
 
 const Recovery = () => {
+  const navigate = useNavigate();
   const user = useUser();
 
   if (user?.currentUser.user) {
-    return <Navigate to="/dashboard/users" />;
+    navigate("/dashboard/users");
   }
 
   return (

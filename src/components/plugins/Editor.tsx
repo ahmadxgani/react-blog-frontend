@@ -27,7 +27,7 @@ const DEFAULT_INITIAL_DATA = () => {
 
 const EDITTOR_HOLDER_ID = "editorjs";
 
-const Editor = ({ handleData, submitted }: EditorProps) => {
+const Editor = ({ handleData }: EditorProps) => {
   const ejInstance = useRef<EditorJS | null>(null);
   const [editorData, setEditorData] = useState<OutputData>(DEFAULT_INITIAL_DATA);
 
@@ -42,28 +42,27 @@ const Editor = ({ handleData, submitted }: EditorProps) => {
   }, []);
 
   useEffect(() => {
-    if (submitted) {
-      (async () => {
-        const outputData = await ejInstance?.current?.save();
-        if (outputData) {
-          let title;
+    (async () => {
+      const outputData = await ejInstance?.current?.save();
 
-          for (let i = 0; i < outputData!.blocks.length; i++) {
-            if (outputData?.blocks[i].type === "header" && outputData.blocks[i].data.level === 3) {
-              title = outputData.blocks[i].data.text;
-              break;
-            }
+      if (outputData) {
+        let title;
+
+        for (let i = 0; i < outputData!.blocks.length; i++) {
+          if (outputData?.blocks[i].type === "header" && outputData.blocks[i].data.level === 3) {
+            title = outputData.blocks[i].data.text;
+            break;
           }
-          const slug = Slugify(title);
-          handleData({
-            title,
-            content: JSON.stringify(outputData),
-            slug,
-          });
         }
-      })();
-    }
-  }, [submitted]);
+        const slug = Slugify(title);
+        handleData({
+          title,
+          content: JSON.stringify(outputData),
+          slug,
+        });
+      }
+    })();
+  }, [editorData]);
 
   const initEditor = () => {
     const editor = new EditorJS({
@@ -74,8 +73,7 @@ const Editor = ({ handleData, submitted }: EditorProps) => {
         ejInstance.current = editor;
       },
       onChange: async () => {
-        let content = await editor.saver.save();
-        // Put your logic here to save this data to your DB
+        const content = await editor.saver.save();
         setEditorData(content);
       },
       tools: {

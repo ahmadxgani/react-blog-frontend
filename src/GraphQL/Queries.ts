@@ -1,8 +1,8 @@
 import { gql } from "@apollo/client";
 
 export const GET_POST = gql`
-  query GetPost($id: Int!) {
-    GetPost(payload: { id: $id }) {
+  query GetPost($slug: String!) {
+    GetPost(payload: { slug: $slug }) {
       author {
         username
       }
