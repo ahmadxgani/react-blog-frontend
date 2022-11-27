@@ -31,6 +31,7 @@ const Login = () => {
           type: "login",
           payload: {
             user: {
+              id: result.data.login.id,
               token: result.data.login.token,
               username: result.data.login.username,
               email: result.data.login.email,

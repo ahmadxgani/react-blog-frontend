@@ -1,15 +1,43 @@
+import { useMutation } from "@apollo/client";
 import { ChangeEventHandler, useState } from "react";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
 import { useUser } from "../../global/UserProvider";
+import { UPDATE_PROFILE } from "../../GraphQL/Mutations";
 import { User } from "../../lib/types";
 
 const Profile = () => {
+  const MySwal = withReactContent(Swal);
   const user = useUser();
   const [username, setUsername] = useState((user?.currentUser.user as User).username);
-  const [image, setImage] = useState();
+  const [updateProfile] = useMutation(UPDATE_PROFILE);
 
   const handleUsername: ChangeEventHandler<HTMLInputElement> = (e) => {
     e.preventDefault();
     setUsername(e.target.value);
+  };
+
+  const handleSubmit: React.FormEventHandler<HTMLFormElement> = async (e) => {
+    e.preventDefault();
+    const result = await updateProfile({
+      variables: {
+        id: (user?.currentUser.user as User).id,
+        username,
+      },
+    });
+    user?.setCurrentUser({
+      type: "update",
+      payload: {
+        user: { ...(user.currentUser.user as User), username: result.data.UpdateAuthor.username },
+      },
+    });
+    MySwal.fire({
+      position: "top-end",
+      icon: "success",
+      title: "The username has been changed",
+      showConfirmButton: false,
+      timer: 1500,
+    });
   };
 
   const handleImage: ChangeEventHandler<HTMLInputElement> = (e) => {
@@ -22,7 +50,7 @@ const Profile = () => {
         <h3 className="text-xl font-bold">Profile</h3>
         <button className="p-1 px-2 bg-[#5561E3] text-white rounded-lg">Set New Password</button>
       </div>
-      <form className="flex flex-col gap-3">
+      <form onSubmit={handleSubmit} className="flex flex-col gap-3">
         <div className="flex flex-col gap-2">
           <div className="flex flex-col">
             <label htmlFor="username">Username</label>

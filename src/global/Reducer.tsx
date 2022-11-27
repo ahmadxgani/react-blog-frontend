@@ -8,18 +8,15 @@ const Reducer = (state: any, action: any) => {
       };
     case "update":
       localStorage.setItem("user", JSON.stringify(action.payload.user));
-      localStorage.setItem("token", action.payload.token);
       return {
         ...state,
         user: action.payload.user,
-        token: action.payload.token,
       };
     case "logout":
       localStorage.clear();
       return {
         ...state,
         user: null,
-        token: null,
       };
 
     default:

@@ -16,6 +16,7 @@ export const CREATE_POST = gql`
 export const LOGIN = gql`
   mutation Login($email: String!, $password: String!) {
     login(payload: { email: $email, password: $password }) {
+      id
       token
       username
       email
@@ -37,6 +38,14 @@ export const UPDATE_TAG = gql`
     UpdateTag(payload: { id: $id, name: $name }) {
       name
       id
+    }
+  }
+`;
+
+export const UPDATE_PROFILE = gql`
+  mutation UpdateAuthor($id: Int!, $username: String!) {
+    UpdateAuthor(payload: { id: $id, username: $username }) {
+      username
     }
   }
 `;

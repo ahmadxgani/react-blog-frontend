@@ -34,10 +34,6 @@ function NewPost() {
     }
   };
 
-  // const handleTags = (tags: tags[]) => {
-  //   setTags(tags);
-  // };
-
   if (loading) return <Loading />;
   return (
     <div className="flex flex-col gap-3 w-[43.75rem] mx-3">
