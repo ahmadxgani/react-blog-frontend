@@ -4,32 +4,34 @@ import EditorJS, { BlockToolConstructable, LogLevels, OutputData } from "@editor
 import Header from "@editorjs/header";
 import { EditorProps } from "../../lib/types";
 
-const DEFAULT_INITIAL_DATA = () => {
-  return {
-    time: new Date().getTime(),
-    blocks: [
-      {
-        type: "header",
-        data: {
-          text: "Title here...",
-          version: 3,
-        },
-      },
-      {
-        type: "paragraph",
-        data: {
-          text: "Content here...",
-        },
-      },
-    ],
-  };
+const DEFAULT_INITIAL_DATA = (content?: null | string) => {
+  return content
+    ? JSON.parse(content)
+    : {
+        time: new Date().getTime(),
+        blocks: [
+          {
+            type: "header",
+            data: {
+              text: "Title here...",
+              version: 3,
+            },
+          },
+          {
+            type: "paragraph",
+            data: {
+              text: "Content here...",
+            },
+          },
+        ],
+      };
 };
 
 const EDITTOR_HOLDER_ID = "editorjs";
 
-const Editor = ({ handleData }: EditorProps) => {
+const Editor = ({ handleData, content = null }: EditorProps) => {
   const ejInstance = useRef<EditorJS | null>(null);
-  const [editorData, setEditorData] = useState<OutputData>(DEFAULT_INITIAL_DATA);
+  const [editorData, setEditorData] = useState<OutputData>(() => DEFAULT_INITIAL_DATA(content));
 
   useEffect(() => {
     if (!ejInstance.current) {
@@ -40,6 +42,8 @@ const Editor = ({ handleData }: EditorProps) => {
       ejInstance.current = null;
     };
   }, []);
+
+  useEffect(() => {}, []);
 
   useEffect(() => {
     (async () => {

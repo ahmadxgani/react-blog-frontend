@@ -3,7 +3,8 @@ import { GET_POST } from "../../GraphQL/Queries";
 import Output from "editorjs-react-renderer";
 import { Query } from "../../../generated-types";
 import Loading from "../plugins/Loading";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
+import { useUser } from "../../global/UserProvider";
 
 function DetailPost() {
   const urlParams = useParams();
@@ -13,6 +14,7 @@ function DetailPost() {
       slug: urlParams.slug,
     },
   });
+  const user = useUser();
 
   if (loading) return <Loading />;
 
@@ -40,6 +42,11 @@ function DetailPost() {
               </div>
             </div>
             <div className="flex gap-1">
+              {!!user?.currentUser.user && (
+                <Link to={`/post/${data?.GetPost.slug}/edit`}>
+                  <img src={process.env.PUBLIC_URL + "/img/icon/Option.png"} alt="Edit Post" />
+                </Link>
+              )}
               <img src={process.env.PUBLIC_URL + "/img/icon/Twitter.png"} alt="Twitter" />
               <img src={process.env.PUBLIC_URL + "/img/icon/Facebook.png"} alt="Facebook" />
               <img src={process.env.PUBLIC_URL + "/img/icon/LinkedIn.png"} alt="LinkedIn" />

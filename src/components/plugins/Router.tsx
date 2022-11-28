@@ -12,13 +12,14 @@ import ShowAllPost from "../post/ShowAllPost";
 import MainLayout from "../templates/MainLayout";
 import ProtectedRoute from "../templates/ProtectedLayout";
 import { useUser } from "../../global/UserProvider";
+import EditPost from "../post/EditPost";
 
 export const Router = () => {
   const user = useUser();
   const protectedRoutes = [
     { label: "dashboard", path: "/dashboard/users" },
     { label: "profile", path: "/profile" },
-    { label: "new post", path: "/post" },
+    { label: "new post", path: "/post/" },
   ];
   const unprotectedRoutes = [
     { label: "login", path: "/login" },
@@ -36,6 +37,7 @@ export const Router = () => {
               <Route path="tags" element={<ManageTags />} />
             </Route>
             <Route path="post" element={<NewPost />} />
+            <Route path="/post/:slug/edit" element={<EditPost />} />
           </Route>
           <Route path="/login" element={<Login />}></Route>
           <Route path="/register" element={<Register />} />

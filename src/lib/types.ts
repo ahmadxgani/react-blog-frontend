@@ -5,7 +5,6 @@ export interface HandleData {
   title: string;
   content: string;
   slug: string;
-  tags?: number[];
 }
 
 export interface SelectedTag {
@@ -20,6 +19,7 @@ export type Pages = {
 
 export interface EditorProps {
   handleData: (data: HandleData) => void;
+  content?: string | null;
 }
 
 export interface User {

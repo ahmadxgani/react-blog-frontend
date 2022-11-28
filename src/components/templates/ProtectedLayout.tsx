@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useNavigate, useOutlet } from "react-router-dom";
 import { useUser } from "../../global/UserProvider";
 
@@ -6,9 +7,11 @@ const ProtectedLayout = () => {
   const user = useUser();
   const outlet = useOutlet();
 
-  if (!user?.currentUser.user) {
-    navigate("/");
-  }
+  useEffect(() => {
+    if (!user?.currentUser.user) {
+      navigate("/");
+    }
+  }, []);
 
   return <>{outlet}</>;
 };

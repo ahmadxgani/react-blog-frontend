@@ -1,20 +1,49 @@
 import { useMutation, useQuery } from "@apollo/client";
-import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import { Mutation } from "../../../generated-types";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { Mutation, Query } from "../../../generated-types";
 import { CREATE_POST, EDIT_POST } from "../../GraphQL/Mutations";
-import { SHOW_ALL_TAGS } from "../../GraphQL/Queries";
+import { GET_POST, SHOW_ALL_TAGS } from "../../GraphQL/Queries";
 import { HandleData, tags } from "../../lib/types";
 import Editor from "../plugins/Editor";
 import Loading from "../plugins/Loading";
 import Tags from "../plugins/Tags";
 
-function NewPost({ editPost = null }: { editPost?: HandleData | null }) {
+function NewPost({ editPost = null, tags = null }: { editPost?: HandleData | null; tags?: tags[] | null }) {
   const navigate = useNavigate();
-  const urlParams = useParams();
-  const [data, setData] = useState<HandleData>();
-  const [tags, setTags] = useState<tags[]>([]);
-  const [createPost] = useMutation<Mutation>(editPost ? CREATE_POST : EDIT_POST);
+  const [data, setData] = useState<HandleData | null>(() => editPost);
+  const [inputTags, setTags] = useState<tags[]>(() => tags || []);
+  const [createOrUpdatePost] = useMutation<Mutation>(
+    editPost ? EDIT_POST : CREATE_POST,
+    editPost
+      ? {
+          update: (cache, { data }, { variables }) => {
+            const existingPost = cache.readQuery<Query>({
+              query: GET_POST,
+              variables: {
+                slug: variables?.slug,
+              },
+            });
+
+            if (existingPost) {
+              cache.writeQuery({
+                query: GET_POST,
+                data: {
+                  GetPost: {
+                    ...existingPost.GetPost,
+                    ...variables,
+                    tags: inputTags.map((tag) => ({ ...tag, __typename: "Tag" })),
+                  },
+                },
+                variables: {
+                  slug: data?.UpdatePost.slug,
+                },
+              });
+            }
+          },
+        }
+      : {}
+  );
   const { data: suggestions, loading } = useQuery(SHOW_ALL_TAGS);
 
   const handleData = (newData: HandleData) => {
@@ -25,34 +54,27 @@ function NewPost({ editPost = null }: { editPost?: HandleData | null }) {
     e.preventDefault();
 
     if (data) {
-      const response = await createPost({
+      const response = await createOrUpdatePost({
         variables: JSON.parse(
           JSON.stringify({
             ...data,
-            tags: tags.length ? tags.map((tag) => tag.id) : undefined,
-            slug: urlParams.slug,
+            tags: inputTags.length ? inputTags.map((tag) => tag.id) : undefined,
           })
         ),
       });
-      navigate(`/post/${response!.data!.CreatePost.slug}`);
+      navigate(`/post/${editPost ? response!.data!.UpdatePost.slug : response!.data!.CreatePost.slug}`);
     }
   };
-
-  useEffect(() => {
-    if (editPost) {
-      setData(editPost);
-    }
-  }, [editPost]);
 
   if (loading) return <Loading />;
   return (
     <div className="flex flex-col gap-3 w-[43.75rem] mx-3">
       <div className="flex justify-between">
-        <button className="p-2 px-3 rounded-xl bg-[#DADDFB] text-[#5561E3] uppercase">create new article</button>
+        <button className="p-2 px-3 rounded-xl bg-[#DADDFB] text-[#5561E3] uppercase">{(editPost ? "edit " : "create new ") + "article"}</button>
         <img className="cursor-pointer" src={process.env.PUBLIC_URL + "/img/icon/Option.png"} alt="Option" />
       </div>
-      <Editor handleData={handleData} />
-      {<Tags suggestions={suggestions.ShowAllTag} setTags={setTags} tags={tags} />}
+      <Editor handleData={handleData} content={data?.content} />
+      {<Tags suggestions={suggestions.ShowAllTag} setTags={setTags} tags={inputTags} />}
       <div className="flex gap-5 items-center self-end mt-5">
         <p className="uppercase cursor-pointer">save as draft</p>
         <button className="p-1 px-2 rounded-xl bg-[#3B49DF] text-white uppercase" onClick={handleClick}>

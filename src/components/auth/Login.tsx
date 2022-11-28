@@ -1,5 +1,5 @@
 import { useMutation } from "@apollo/client";
-import { ChangeEventHandler, FormEventHandler, useRef, useState } from "react";
+import { ChangeEventHandler, FormEventHandler, useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useUser } from "../../global/UserProvider";
 import { LOGIN } from "../../GraphQL/Mutations";
@@ -13,9 +13,11 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const user = useUser();
 
-  if (user?.currentUser.user) {
-    navigate("/dashboard/users");
-  }
+  useEffect(() => {
+    if (user?.currentUser.user) {
+      navigate("/dashboard/users");
+    }
+  }, []);
 
   const onSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
