@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useUser } from "../../global/UserProvider";
 import { Pages } from "../../lib/types";
 
@@ -18,9 +18,9 @@ function Navigation({ pages }: { pages: Pages }) {
       </Link>
       <div className="flex items-center gap-5">
         {pages.map(({ label, path }) => (
-          <Link key={label} to={path} className="uppercase font-semibold">
+          <NavLink key={label} to={path} className={({ isActive }) => (isActive ? "bg-[#E6E5F3] rounded p-1 px-2" : undefined) + " uppercase font-semibold"}>
             {label}
-          </Link>
+          </NavLink>
         ))}
         <button className="uppercase font-semibold" onClick={handleLogout}>
           Logout
