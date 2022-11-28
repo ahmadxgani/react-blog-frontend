@@ -24,7 +24,7 @@ function ShowAllPost() {
                   {post.title}
                 </Link>
                 <p className="sm:text-xl text-sm">
-                  <small className="text-[#37A0C1] font-bold">{post.tags[0].name}&#9;</small>
+                  <small className="text-[#37A0C1] font-bold">{post.tags[0] ? post.tags[0].name : "Uncategories"}&#9;</small>
                   <span className="text-[#8C8B93] font-light">|&#9;</span>
                   <small className="text-[#8E8D93]">6 min read</small>
                 </p>

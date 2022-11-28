@@ -25,10 +25,12 @@ function NewPost() {
 
     if (data) {
       const response = await createPost({
-        variables: {
-          ...data,
-          tags: tags.length ? tags.map((tag) => tag.id) : 8,
-        },
+        variables: JSON.parse(
+          JSON.stringify({
+            ...data,
+            tags: tags.length ? tags.map((tag) => tag.id) : undefined,
+          })
+        ),
       });
       navigate(`/post/${response!.data!.CreatePost.slug}`);
     }

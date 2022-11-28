@@ -39,7 +39,7 @@ export type CreatePostInput = {
   content: Scalars['String'];
   draft?: InputMaybe<Scalars['Boolean']>;
   slug: Scalars['String'];
-  tags: Array<Scalars['Int']>;
+  tags?: InputMaybe<Array<Scalars['Int']>>;
   title: Scalars['String'];
 };
 
@@ -68,7 +68,7 @@ export type GetByTagInput = {
 };
 
 export type GetPostByIdInput = {
-  id: Scalars['Int'];
+  slug: Scalars['String'];
 };
 
 export type LoginInput = {
@@ -78,8 +78,11 @@ export type LoginInput = {
 
 export type LoginType = {
   __typename?: 'LoginType';
+  email: Scalars['String'];
   expiresIn: Scalars['String'];
+  id: Scalars['Int'];
   token: Scalars['String'];
+  username: Scalars['String'];
 };
 
 export type Mutation = {
@@ -200,7 +203,6 @@ export type Tag = {
 
 export type UpdateAuthorInput = {
   id: Scalars['Int'];
-  password: Scalars['String'];
   username: Scalars['String'];
 };
 
@@ -209,7 +211,7 @@ export type UpdatePostInput = {
   draft?: InputMaybe<Scalars['Boolean']>;
   id: Scalars['Int'];
   slug: Scalars['String'];
-  tags: Array<Scalars['Int']>;
+  tags?: InputMaybe<Array<Scalars['Int']>>;
   title: Scalars['String'];
 };
 
@@ -225,13 +227,13 @@ export enum Roles {
 
 export type CreatePostMutationVariables = Exact<{
   content: Scalars['String'];
-  tags: Array<Scalars['Int']> | Scalars['Int'];
+  tags?: InputMaybe<Array<Scalars['Int']> | Scalars['Int']>;
   slug: Scalars['String'];
   title: Scalars['String'];
 }>;
 
 
-export type CreatePostMutation = { __typename?: 'Mutation', CreatePost: { __typename?: 'Post', title: string, content: string, tags: Array<{ __typename?: 'Tag', name: string }> } };
+export type CreatePostMutation = { __typename?: 'Mutation', CreatePost: { __typename?: 'Post', title: string, content: string, slug: string, tags: Array<{ __typename?: 'Tag', name: string }> } };
 
 export type LoginMutationVariables = Exact<{
   email: Scalars['String'];
@@ -239,7 +241,7 @@ export type LoginMutationVariables = Exact<{
 }>;
 
 
-export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'LoginType', token: string } };
+export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'LoginType', id: number, token: string, username: string, email: string } };
 
 export type CreateTagMutationVariables = Exact<{
   name: Scalars['String'];
@@ -256,6 +258,14 @@ export type UpdateTagMutationVariables = Exact<{
 
 export type UpdateTagMutation = { __typename?: 'Mutation', UpdateTag: { __typename?: 'Tag', name: string, id: number } };
 
+export type UpdateAuthorMutationVariables = Exact<{
+  id: Scalars['Int'];
+  username: Scalars['String'];
+}>;
+
+
+export type UpdateAuthorMutation = { __typename?: 'Mutation', UpdateAuthor: { __typename?: 'Author', id: number, username: string, email: string } };
+
 export type DeleteTagMutationVariables = Exact<{
   id: Scalars['Int'];
 }>;
@@ -264,7 +274,7 @@ export type DeleteTagMutationVariables = Exact<{
 export type DeleteTagMutation = { __typename?: 'Mutation', DeleteTag: { __typename?: 'ResponseType', success: boolean } };
 
 export type GetPostQueryVariables = Exact<{
-  id: Scalars['Int'];
+  slug: Scalars['String'];
 }>;
 
 
@@ -273,12 +283,12 @@ export type GetPostQuery = { __typename?: 'Query', GetPost: { __typename?: 'Post
 export type LoadPostsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type LoadPostsQuery = { __typename?: 'Query', ShowAllPost: Array<{ __typename?: 'Post', title: string }> };
+export type LoadPostsQuery = { __typename?: 'Query', ShowAllPost: Array<{ __typename?: 'Post', title: string, slug: string, tags: Array<{ __typename?: 'Tag', name: string }> }> };
 
 export type ShowAllUsersQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type ShowAllUsersQuery = { __typename?: 'Query', ShowAllAuthor: Array<{ __typename?: 'Author', username: string, email: string }> };
+export type ShowAllUsersQuery = { __typename?: 'Query', ShowAllAuthor: Array<{ __typename?: 'Author', id: number, username: string, email: string }> };
 
 export type ShowAllTagsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -287,12 +297,13 @@ export type ShowAllTagsQuery = { __typename?: 'Query', ShowAllTag: Array<{ __typ
 
 
 export const CreatePostDocument = gql`
-    mutation CreatePost($content: String!, $tags: [Int!]!, $slug: String!, $title: String!) {
+    mutation CreatePost($content: String!, $tags: [Int!], $slug: String!, $title: String!) {
   CreatePost(
     payload: {title: $title, content: $content, tags: $tags, slug: $slug}
   ) {
     title
     content
+    slug
     tags {
       name
     }
@@ -331,7 +342,10 @@ export type CreatePostMutationOptions = Apollo.BaseMutationOptions<CreatePostMut
 export const LoginDocument = gql`
     mutation Login($email: String!, $password: String!) {
   login(payload: {email: $email, password: $password}) {
+    id
     token
+    username
+    email
   }
 }
     `;
@@ -431,6 +445,42 @@ export function useUpdateTagMutation(baseOptions?: Apollo.MutationHookOptions<Up
 export type UpdateTagMutationHookResult = ReturnType<typeof useUpdateTagMutation>;
 export type UpdateTagMutationResult = Apollo.MutationResult<UpdateTagMutation>;
 export type UpdateTagMutationOptions = Apollo.BaseMutationOptions<UpdateTagMutation, UpdateTagMutationVariables>;
+export const UpdateAuthorDocument = gql`
+    mutation UpdateAuthor($id: Int!, $username: String!) {
+  UpdateAuthor(payload: {id: $id, username: $username}) {
+    id
+    username
+    email
+  }
+}
+    `;
+export type UpdateAuthorMutationFn = Apollo.MutationFunction<UpdateAuthorMutation, UpdateAuthorMutationVariables>;
+
+/**
+ * __useUpdateAuthorMutation__
+ *
+ * To run a mutation, you first call `useUpdateAuthorMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateAuthorMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateAuthorMutation, { data, loading, error }] = useUpdateAuthorMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      username: // value for 'username'
+ *   },
+ * });
+ */
+export function useUpdateAuthorMutation(baseOptions?: Apollo.MutationHookOptions<UpdateAuthorMutation, UpdateAuthorMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateAuthorMutation, UpdateAuthorMutationVariables>(UpdateAuthorDocument, options);
+      }
+export type UpdateAuthorMutationHookResult = ReturnType<typeof useUpdateAuthorMutation>;
+export type UpdateAuthorMutationResult = Apollo.MutationResult<UpdateAuthorMutation>;
+export type UpdateAuthorMutationOptions = Apollo.BaseMutationOptions<UpdateAuthorMutation, UpdateAuthorMutationVariables>;
 export const DeleteTagDocument = gql`
     mutation DeleteTag($id: Int!) {
   DeleteTag(payload: {id: $id}) {
@@ -465,8 +515,8 @@ export type DeleteTagMutationHookResult = ReturnType<typeof useDeleteTagMutation
 export type DeleteTagMutationResult = Apollo.MutationResult<DeleteTagMutation>;
 export type DeleteTagMutationOptions = Apollo.BaseMutationOptions<DeleteTagMutation, DeleteTagMutationVariables>;
 export const GetPostDocument = gql`
-    query GetPost($id: Int!) {
-  GetPost(payload: {id: $id}) {
+    query GetPost($slug: String!) {
+  GetPost(payload: {slug: $slug}) {
     author {
       username
     }
@@ -494,7 +544,7 @@ export const GetPostDocument = gql`
  * @example
  * const { data, loading, error } = useGetPostQuery({
  *   variables: {
- *      id: // value for 'id'
+ *      slug: // value for 'slug'
  *   },
  * });
  */
@@ -513,6 +563,10 @@ export const LoadPostsDocument = gql`
     query LoadPosts {
   ShowAllPost {
     title
+    slug
+    tags {
+      name
+    }
   }
 }
     `;
@@ -546,6 +600,7 @@ export type LoadPostsQueryResult = Apollo.QueryResult<LoadPostsQuery, LoadPostsQ
 export const ShowAllUsersDocument = gql`
     query ShowAllUsers {
   ShowAllAuthor {
+    id
     username
     email
   }
