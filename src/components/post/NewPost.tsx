@@ -1,19 +1,20 @@
 import { useMutation, useQuery } from "@apollo/client";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { Mutation } from "../../../generated-types";
-import { CREATE_POST } from "../../GraphQL/Mutations";
+import { CREATE_POST, EDIT_POST } from "../../GraphQL/Mutations";
 import { SHOW_ALL_TAGS } from "../../GraphQL/Queries";
 import { HandleData, tags } from "../../lib/types";
 import Editor from "../plugins/Editor";
 import Loading from "../plugins/Loading";
 import Tags from "../plugins/Tags";
 
-function NewPost() {
+function NewPost({ editPost = null }: { editPost?: HandleData | null }) {
   const navigate = useNavigate();
+  const urlParams = useParams();
   const [data, setData] = useState<HandleData>();
   const [tags, setTags] = useState<tags[]>([]);
-  const [createPost] = useMutation<Mutation>(CREATE_POST);
+  const [createPost] = useMutation<Mutation>(editPost ? CREATE_POST : EDIT_POST);
   const { data: suggestions, loading } = useQuery(SHOW_ALL_TAGS);
 
   const handleData = (newData: HandleData) => {
@@ -29,12 +30,19 @@ function NewPost() {
           JSON.stringify({
             ...data,
             tags: tags.length ? tags.map((tag) => tag.id) : undefined,
+            slug: urlParams.slug,
           })
         ),
       });
       navigate(`/post/${response!.data!.CreatePost.slug}`);
     }
   };
+
+  useEffect(() => {
+    if (editPost) {
+      setData(editPost);
+    }
+  }, [editPost]);
 
   if (loading) return <Loading />;
   return (

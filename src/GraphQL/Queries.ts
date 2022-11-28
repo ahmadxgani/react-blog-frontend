@@ -12,6 +12,7 @@ export const GET_POST = gql`
       createdAt
       updatedAt
       tags {
+        id
         name
       }
     }

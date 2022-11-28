@@ -13,6 +13,19 @@ export const CREATE_POST = gql`
   }
 `;
 
+export const EDIT_POST = gql`
+  mutation UpdatePost($content: String!, $tags: [Int!], $slug: String!, $title: String!, $slug: String!) {
+    UpdatePost(payload: { title: $title, content: $content, tags: $tags, slug: $slug }) {
+      title
+      content
+      slug
+      tags {
+        name
+      }
+    }
+  }
+`;
+
 export const LOGIN = gql`
   mutation Login($email: String!, $password: String!) {
     login(payload: { email: $email, password: $password }) {
