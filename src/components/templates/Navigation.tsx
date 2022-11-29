@@ -12,7 +12,7 @@ function Navigation({ pages }: { pages: Pages }) {
     navigate("/login");
   };
   return (
-    <nav className="flex justify-between w-full p-5 border-b">
+    <nav className="flex justify-between w-full p-5 border-b bg-white">
       <Link to="/">
         <h2 className="text-2xl font-extrabold">Zero's Blog</h2>
       </Link>

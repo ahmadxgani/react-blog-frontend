@@ -6,10 +6,10 @@ const MainLayout = ({ pages }: { pages: Pages }) => {
   const outlet = useOutlet();
 
   return (
-    <>
+    <div className="bg-[#E6E5F3] min-h-screen h-full">
       <Navigation pages={pages} />
-      <main className="bg-[#E6E5F3] py-10 h-full flex justify-center">{outlet}</main>
-    </>
+      <main className="py-10 flex justify-center">{outlet}</main>
+    </div>
   );
 };
 

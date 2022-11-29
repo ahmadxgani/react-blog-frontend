@@ -40,6 +40,7 @@ const Login = () => {
             },
           },
         });
+        navigate("/dashboard/users");
       } catch (error) {
         console.log(error);
       }
@@ -75,6 +76,7 @@ const Login = () => {
         }}
         onChange={onChange}
         value={password}
+        autoComplete="on"
       />
       <div className="flex gap-1">
         <label htmlFor="rememberme">Remember me</label>
