@@ -16,6 +16,14 @@ export const EDIT_POST = gql`
   }
 `;
 
+export const DELETE_POST = gql`
+  mutation DeletePost($id: Int!) {
+    DeletePost(payload: { id: $id }) {
+      success
+    }
+  }
+`;
+
 export const LOGIN = gql`
   mutation Login($email: String!, $password: String!) {
     login(payload: { email: $email, password: $password }) {

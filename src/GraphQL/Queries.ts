@@ -31,6 +31,21 @@ export const LOAD_POSTS = gql`
   }
 `;
 
+export const LOAD_POSTS_BY_AUTHOR = gql`
+  query LoadPostsByAuthor($id: Int!) {
+    GetAuthorById(payload: { id: $id }) {
+      posts {
+        id
+        title
+        slug
+        tags {
+          name
+        }
+      }
+    }
+  }
+`;
+
 export const SHOW_ALL_USERS = gql`
   query ShowAllUsers {
     ShowAllAuthor {

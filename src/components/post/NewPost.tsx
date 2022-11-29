@@ -58,6 +58,7 @@ function NewPost({ editPost = null, tags = null }: { editPost?: HandleData | nul
         variables: JSON.parse(
           JSON.stringify({
             ...data,
+            slug: editPost ? editPost.slug : data.slug,
             tags: inputTags.length ? inputTags.map((tag) => tag.id) : undefined,
           })
         ),
