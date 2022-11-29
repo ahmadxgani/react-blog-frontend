@@ -6,7 +6,7 @@ import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import Modal from "../modals/Modal";
 import { SelectedTag } from "../../lib/types";
-import { Query } from "../../../generated-types";
+import { Mutation, Query } from "../../../generated-types";
 
 const ManageTags = () => {
   const MySwal = withReactContent(Swal);
@@ -17,9 +17,9 @@ const ManageTags = () => {
   const [showCreateModal, setShowCreateModal] = useState(false);
 
   const { data } = useQuery(SHOW_ALL_TAGS);
-  const [createTag] = useMutation(CREATE_TAG, {
+  const [createTag] = useMutation<Mutation>(CREATE_TAG, {
     update: (cache, { data }) => {
-      const newTagFromResponse = data.CreateTag;
+      const newTagFromResponse = data?.CreateTag;
       const existingTags = cache.readQuery<Query>({
         query: SHOW_ALL_TAGS,
       });
