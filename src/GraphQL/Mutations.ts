@@ -3,7 +3,18 @@ import { gql } from "@apollo/client";
 export const CREATE_POST = gql`
   mutation CreatePost($content: String!, $tags: [Int!], $slug: String!, $title: String!) {
     CreatePost(payload: { title: $title, content: $content, tags: $tags, slug: $slug }) {
+      author {
+        username
+      }
+      title
+      content
       slug
+      createdAt
+      updatedAt
+      tags {
+        id
+        name
+      }
     }
   }
 `;
@@ -17,8 +28,8 @@ export const EDIT_POST = gql`
 `;
 
 export const DELETE_POST = gql`
-  mutation DeletePost($id: Int!) {
-    DeletePost(payload: { id: $id }) {
+  mutation DeletePost($slug: String!) {
+    DeletePost(payload: { slug: $slug }) {
       success
     }
   }

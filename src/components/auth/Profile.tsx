@@ -17,17 +17,20 @@ const Profile = () => {
   const [updateProfile] = useMutation(UPDATE_PROFILE);
   const [deletePost] = useMutation(DELETE_POST, {
     update: (cache, _, { variables }) => {
-      const existingTags = cache.readQuery<Query>({
+      const existingPosts = cache.readQuery<Query>({
         query: LOAD_POSTS_BY_AUTHOR,
+        variables: {
+          id: (user?.currentUser.user as User).id,
+        },
       });
 
-      if (existingTags) {
+      if (existingPosts) {
         cache.writeQuery({
           query: LOAD_POSTS_BY_AUTHOR,
           data: {
             GetAuthorById: {
-              ...existingTags.GetAuthorById,
-              posts: existingTags.GetAuthorById.posts.filter((post) => post.id !== variables!.id),
+              ...existingPosts,
+              posts: existingPosts.GetAuthorById.posts.filter((post) => post.slug !== variables!.slug),
             },
           },
         });
@@ -73,7 +76,7 @@ const Profile = () => {
     console.dir(e.target.files);
   };
 
-  const handleDelete = (id: number) => {
+  const handleDelete = (slug: string) => {
     MySwal.fire({
       title: "Are you sure?",
       text: "You won't be able to revert this!",
@@ -87,7 +90,7 @@ const Profile = () => {
         try {
           await deletePost({
             variables: {
-              id,
+              slug,
             },
           });
           Swal.fire("Deleted!", "The post has been deleted", "success");
@@ -155,7 +158,7 @@ const Profile = () => {
               </div>
             </div>
             <div className="flex gap-2">
-              <img src={process.env.PUBLIC_URL + "/img/icon/Bookmark.png"} alt="delete" className="w-8 h-8 hover:cursor-pointer" onClick={() => handleDelete(post.id)} />
+              <img src={process.env.PUBLIC_URL + "/img/icon/Bookmark.png"} alt="delete" className="w-8 h-8 hover:cursor-pointer" onClick={() => handleDelete(post.slug)} />
               <Link to={`/post/${post.slug}/edit`}>
                 <img src={process.env.PUBLIC_URL + "/img/icon/Option.png"} alt="edit" className="w-8 h-8" />
               </Link>

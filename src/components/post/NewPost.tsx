@@ -13,37 +13,32 @@ function NewPost({ editPost = null, tags = null }: { editPost?: HandleData | nul
   const navigate = useNavigate();
   const [data, setData] = useState<HandleData | null>(() => editPost);
   const [inputTags, setTags] = useState<tags[]>(() => tags || []);
-  const [createOrUpdatePost] = useMutation<Mutation>(
-    editPost ? EDIT_POST : CREATE_POST,
-    editPost
-      ? {
-          update: (cache, { data }, { variables }) => {
-            const existingPost = cache.readQuery<Query>({
-              query: GET_POST,
-              variables: {
-                slug: variables?.slug,
-              },
-            });
+  const [createOrUpdatePost] = useMutation<Mutation>(editPost ? EDIT_POST : CREATE_POST, {
+    update: (cache, { data }, { variables }) => {
+      const existingPost = cache.readQuery<Query>({
+        query: GET_POST,
+        variables: {
+          slug: variables?.slug,
+        },
+      });
 
-            if (existingPost) {
-              cache.writeQuery({
-                query: GET_POST,
-                data: {
-                  GetPost: {
-                    ...existingPost.GetPost,
-                    ...variables,
-                    tags: inputTags.map((tag) => ({ ...tag, __typename: "Tag" })),
-                  },
-                },
-                variables: {
-                  slug: data?.UpdatePost.slug,
-                },
-              });
-            }
+      if (existingPost) {
+        cache.writeQuery({
+          query: GET_POST,
+          data: {
+            GetPost: {
+              ...existingPost.GetPost,
+              ...variables,
+              tags: inputTags.map((tag) => ({ ...tag, __typename: "Tag" })),
+            },
           },
-        }
-      : {}
-  );
+          variables: {
+            slug: data?.UpdatePost.slug,
+          },
+        });
+      }
+    },
+  });
   const { data: suggestions, loading } = useQuery(SHOW_ALL_TAGS);
 
   const handleData = (newData: HandleData) => {
