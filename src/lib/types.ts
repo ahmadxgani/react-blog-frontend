@@ -4,7 +4,6 @@ import { INPUT_FIELD_POSITIONS } from "./constants";
 export interface HandleData {
   title: string;
   content: string;
-  slug: string;
 }
 
 export interface SelectedTag {

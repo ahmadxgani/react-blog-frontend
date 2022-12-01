@@ -38,7 +38,7 @@ export type CreateAuthorInput = {
 export type CreatePostInput = {
   content: Scalars['String'];
   draft?: InputMaybe<Scalars['Boolean']>;
-  slug: Scalars['String'];
+  slug?: InputMaybe<Scalars['String']>;
   tags?: InputMaybe<Array<Scalars['Int']>>;
   title: Scalars['String'];
 };
@@ -52,7 +52,7 @@ export type DeleteAuthorInput = {
 };
 
 export type DeletePostInput = {
-  id: Scalars['Int'];
+  slug: Scalars['String'];
 };
 
 export type DeleteTagInput = {
@@ -210,7 +210,7 @@ export type UpdateAuthorInput = {
 export type UpdatePostInput = {
   content: Scalars['String'];
   draft?: InputMaybe<Scalars['Boolean']>;
-  slug: Scalars['String'];
+  slug?: InputMaybe<Scalars['String']>;
   tags?: InputMaybe<Array<Scalars['Int']>>;
   title: Scalars['String'];
 };
@@ -246,7 +246,7 @@ export type UpdatePostMutationVariables = Exact<{
 export type UpdatePostMutation = { __typename?: 'Mutation', UpdatePost: { __typename?: 'Post', slug: string } };
 
 export type DeletePostMutationVariables = Exact<{
-  id: Scalars['Int'];
+  slug: Scalars['String'];
 }>;
 
 
@@ -312,7 +312,7 @@ export type LoadPostsByAuthorQuery = { __typename?: 'Query', GetAuthorById: { __
 export type ShowAllUsersQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type ShowAllUsersQuery = { __typename?: 'Query', ShowAllAuthor: Array<{ __typename?: 'Author', id: number, username: string, email: string }> };
+export type ShowAllUsersQuery = { __typename?: 'Query', ShowAllAuthor: Array<{ __typename?: 'Author', id: number, username: string, email: string, role: Roles }> };
 
 export type ShowAllTagsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -397,8 +397,8 @@ export type UpdatePostMutationHookResult = ReturnType<typeof useUpdatePostMutati
 export type UpdatePostMutationResult = Apollo.MutationResult<UpdatePostMutation>;
 export type UpdatePostMutationOptions = Apollo.BaseMutationOptions<UpdatePostMutation, UpdatePostMutationVariables>;
 export const DeletePostDocument = gql`
-    mutation DeletePost($id: Int!) {
-  DeletePost(payload: {id: $id}) {
+    mutation DeletePost($slug: String!) {
+  DeletePost(payload: {slug: $slug}) {
     success
   }
 }
@@ -418,7 +418,7 @@ export type DeletePostMutationFn = Apollo.MutationFunction<DeletePostMutation, D
  * @example
  * const [deletePostMutation, { data, loading, error }] = useDeletePostMutation({
  *   variables: {
- *      id: // value for 'id'
+ *      slug: // value for 'slug'
  *   },
  * });
  */
@@ -735,6 +735,7 @@ export const ShowAllUsersDocument = gql`
     id
     username
     email
+    role
   }
 }
     `;

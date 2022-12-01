@@ -14,6 +14,7 @@ function DetailPost() {
       slug: urlParams.slug,
     },
   });
+
   const user = useUser();
 
   if (loading) return <Loading />;

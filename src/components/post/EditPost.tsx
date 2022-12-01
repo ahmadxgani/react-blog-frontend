@@ -16,6 +16,7 @@ function EditPost() {
   if (loading) return <Loading />;
 
   const filteredData = {
+    id: data!.GetPost.id,
     title: data!.GetPost.title,
     content: data!.GetPost.content,
     slug: data!.GetPost.slug,

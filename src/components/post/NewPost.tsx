@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from "@apollo/client";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Mutation, Query } from "../../../generated-types";
 import { CREATE_POST, EDIT_POST } from "../../GraphQL/Mutations";
@@ -9,16 +9,17 @@ import Editor from "../plugins/Editor";
 import Loading from "../plugins/Loading";
 import Tags from "../plugins/Tags";
 
-function NewPost({ editPost = null, tags = null }: { editPost?: HandleData | null; tags?: tags[] | null }) {
+function NewPost({ editPost = null, tags = null }: { editPost?: (HandleData & { slug: string; id: number }) | null; tags?: tags[] | null }) {
   const navigate = useNavigate();
   const [data, setData] = useState<HandleData | null>(() => editPost);
+  const input = useRef<HTMLInputElement | null>();
   const [inputTags, setTags] = useState<tags[]>(() => tags || []);
   const [createOrUpdatePost] = useMutation<Mutation>(editPost ? EDIT_POST : CREATE_POST, {
-    update: (cache, { data }, { variables }) => {
+    update: (cache, _, { variables }) => {
       const existingPost = cache.readQuery<Query>({
         query: GET_POST,
         variables: {
-          slug: variables?.slug,
+          id: variables?.id,
         },
       });
 
@@ -33,7 +34,7 @@ function NewPost({ editPost = null, tags = null }: { editPost?: HandleData | nul
             },
           },
           variables: {
-            slug: data?.UpdatePost.slug,
+            id: variables?.id,
           },
         });
       }
@@ -53,7 +54,8 @@ function NewPost({ editPost = null, tags = null }: { editPost?: HandleData | nul
         variables: JSON.parse(
           JSON.stringify({
             ...data,
-            slug: editPost ? editPost.slug : data.slug,
+            id: editPost?.id,
+            slug: input.current?.value,
             tags: inputTags.length ? inputTags.map((tag) => tag.id) : undefined,
           })
         ),
@@ -71,6 +73,8 @@ function NewPost({ editPost = null, tags = null }: { editPost?: HandleData | nul
       </div>
       <Editor handleData={handleData} content={data?.content} />
       {<Tags suggestions={suggestions.ShowAllTag} setTags={setTags} tags={inputTags} />}
+      <label htmlFor="slug">Slug</label>
+      <input ref={(element) => (input.current = element)} id="slug" type="text" className="p-1 rounded-lg focus:outline-none" defaultValue={editPost?.slug} />
       <div className="flex gap-5 items-center self-end mt-5">
         <p className="uppercase cursor-pointer">save as draft</p>
         <button className="p-1 px-2 rounded-xl bg-[#3B49DF] text-white uppercase" onClick={handleClick}>

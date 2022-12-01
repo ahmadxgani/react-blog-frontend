@@ -58,11 +58,9 @@ const Editor = ({ handleData, content = null }: EditorProps) => {
             break;
           }
         }
-        const slug = Slugify(title);
         handleData({
           title,
           content: JSON.stringify(outputData),
-          slug,
         });
       }
     })();
@@ -98,16 +96,5 @@ const Editor = ({ handleData, content = null }: EditorProps) => {
     </>
   );
 };
-
-function Slugify(title: string) {
-  return title
-    .toString()
-    .toLowerCase()
-    .replace(/\s+/g, "-")
-    .replace(/[^\w\-]+/g, "")
-    .replace(/\-\-+/g, "-")
-    .replace(/^-+/, "")
-    .replace(/-+$/, "");
-}
 
 export default Editor;
