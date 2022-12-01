@@ -29,9 +29,11 @@ const Profile = () => {
           query: LOAD_POSTS_BY_AUTHOR,
           data: {
             GetAuthorById: {
-              ...existingPosts,
               posts: existingPosts.GetAuthorById.posts.filter((post) => post.slug !== variables!.slug),
             },
+          },
+          variables: {
+            id: (user?.currentUser.user as User).id,
           },
         });
       }

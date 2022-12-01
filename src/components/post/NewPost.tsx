@@ -19,7 +19,7 @@ function NewPost({ editPost = null, tags = null }: { editPost?: (HandleData & { 
       const existingPost = cache.readQuery<Query>({
         query: GET_POST,
         variables: {
-          id: variables?.id,
+          slug: variables?.slug,
         },
       });
 
@@ -34,7 +34,7 @@ function NewPost({ editPost = null, tags = null }: { editPost?: (HandleData & { 
             },
           },
           variables: {
-            id: variables?.id,
+            slug: variables?.slug,
           },
         });
       }
