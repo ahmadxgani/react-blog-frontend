@@ -51,6 +51,7 @@ export const SHOW_ALL_USERS = gql`
       id
       username
       email
+      role
     }
   }
 `;

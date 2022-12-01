@@ -90,7 +90,7 @@ const ManageUsers = () => {
                       <div className="text-left">{author.username}</div>
                     </td>
                     <td>{author.email}</td>
-                    <td>admin or member</td>
+                    <td>{author.role}</td>
                     <td className="p-2 whitespace-nowrap">
                       <div className="flex gap-5 items-center">
                         <button className="text-sm p-1 px-2 bg-[#5561E3] text-white rounded-lg" onClick={() => handleEditProfile(author.id, author.username)}>
