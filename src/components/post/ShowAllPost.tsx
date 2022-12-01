@@ -5,7 +5,9 @@ import { Query } from "../../../generated-types";
 import Loading from "../plugins/Loading";
 
 function ShowAllPost() {
-  const { data, loading } = useQuery<Query>(LOAD_POSTS);
+  const { data, loading } = useQuery<Query>(LOAD_POSTS, {
+    fetchPolicy: "no-cache",
+  });
   if (loading) return <Loading />;
   return (
     <div className="flex flex-col gap-[1.25rem] mx-3">

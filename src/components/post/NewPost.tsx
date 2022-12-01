@@ -2,9 +2,10 @@ import { useMutation, useQuery } from "@apollo/client";
 import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Mutation, Query } from "../../../generated-types";
+import { useUser } from "../../global/UserProvider";
 import { CREATE_POST, EDIT_POST } from "../../GraphQL/Mutations";
-import { GET_POST, SHOW_ALL_TAGS } from "../../GraphQL/Queries";
-import { HandleData, tags } from "../../lib/types";
+import { GET_POST, LOAD_POSTS_BY_AUTHOR, SHOW_ALL_TAGS } from "../../GraphQL/Queries";
+import { HandleData, tags, User } from "../../lib/types";
 import Editor from "../plugins/Editor";
 import Loading from "../plugins/Loading";
 import Tags from "../plugins/Tags";
@@ -13,6 +14,7 @@ function NewPost({ editPost = null, tags = null }: { editPost?: (HandleData & { 
   const navigate = useNavigate();
   const [data, setData] = useState<HandleData | null>(() => editPost);
   const input = useRef<HTMLInputElement | null>();
+  const user = useUser();
   const [inputTags, setTags] = useState<tags[]>(() => tags || []);
   const [createOrUpdatePost] = useMutation<Mutation>(editPost ? EDIT_POST : CREATE_POST, {
     update: (cache, _, { variables }) => {
@@ -22,6 +24,29 @@ function NewPost({ editPost = null, tags = null }: { editPost?: (HandleData & { 
           slug: variables?.slug,
         },
       });
+
+      const existingAuthorPosts = cache.readQuery<Query>({
+        query: LOAD_POSTS_BY_AUTHOR,
+        variables: {
+          id: (user?.currentUser.user as User).id,
+        },
+      });
+
+      if (existingAuthorPosts && !editPost) {
+        cache.writeQuery({
+          query: LOAD_POSTS_BY_AUTHOR,
+          data: {
+            posts: [
+              ...existingAuthorPosts.GetAuthorById.posts,
+              {
+                title: variables?.title,
+                slug: variables?.slug,
+                tags: variables?.tags,
+              },
+            ],
+          },
+        });
+      }
 
       if (existingPost) {
         cache.writeQuery({
