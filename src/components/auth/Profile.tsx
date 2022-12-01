@@ -160,7 +160,7 @@ const Profile = () => {
               </div>
             </div>
             <div className="flex gap-2">
-              <img src={process.env.PUBLIC_URL + "/img/icon/Bookmark.png"} alt="delete" className="w-8 h-8 hover:cursor-pointer" onClick={() => handleDelete(post.slug)} />
+              <img src={process.env.PUBLIC_URL + "/img/icon/Trash.png"} alt="delete" className="w-8 h-8 hover:cursor-pointer" onClick={() => handleDelete(post.slug)} />
               <Link to={`/post/${post.slug}/edit`}>
                 <img src={process.env.PUBLIC_URL + "/img/icon/Option.png"} alt="edit" className="w-8 h-8" />
               </Link>
