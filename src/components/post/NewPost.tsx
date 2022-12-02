@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from "@apollo/client";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Mutation, Query } from "../../../generated-types";
 import { useUser } from "../../global/UserProvider";
@@ -13,7 +13,9 @@ import Tags from "../plugins/Tags";
 function NewPost({ editPost = null, tags = null }: { editPost?: (HandleData & { slug: string; id: number }) | null; tags?: tags[] | null }) {
   const navigate = useNavigate();
   const [data, setData] = useState<HandleData | null>(() => editPost);
-  const input = useRef<HTMLInputElement | null>();
+  const [isGenerated, setIsGenerated] = useState(false);
+  const inputSlug = useRef<HTMLInputElement | null>();
+  const checkboxSlug = useRef<HTMLInputElement | null>();
   const user = useUser();
   const [inputTags, setTags] = useState<tags[]>(() => tags || []);
   const [createOrUpdatePost] = useMutation<Mutation>(editPost ? EDIT_POST : CREATE_POST, {
@@ -85,6 +87,10 @@ function NewPost({ editPost = null, tags = null }: { editPost?: (HandleData & { 
     setData(newData);
   };
 
+  const handleIsGenerated = () => {
+    setIsGenerated(!isGenerated);
+  };
+
   const handleClick: React.MouseEventHandler<HTMLButtonElement> = async (e) => {
     e.preventDefault();
 
@@ -94,7 +100,7 @@ function NewPost({ editPost = null, tags = null }: { editPost?: (HandleData & { 
           JSON.stringify({
             ...data,
             id: editPost?.id,
-            slug: input.current?.value,
+            slug: inputSlug.current?.value,
             tags: inputTags.length ? inputTags.map((tag) => tag.id) : undefined,
           })
         ),
@@ -102,6 +108,12 @@ function NewPost({ editPost = null, tags = null }: { editPost?: (HandleData & { 
       navigate(`/post/${editPost ? response!.data!.UpdatePost.slug : response!.data!.CreatePost.slug}`);
     }
   };
+
+  useEffect(() => {
+    if (isGenerated && !!inputSlug.current && !!data?.title) {
+      inputSlug.current.value = Slugify(data.title);
+    }
+  }, [isGenerated]);
 
   if (loading) return <Loading />;
   return (
@@ -113,7 +125,11 @@ function NewPost({ editPost = null, tags = null }: { editPost?: (HandleData & { 
       <Editor handleData={handleData} content={data?.content} />
       {<Tags suggestions={suggestions.ShowAllTag} setTags={setTags} tags={inputTags} />}
       <label htmlFor="slug">Slug</label>
-      <input ref={(element) => (input.current = element)} id="slug" type="text" className="p-1 rounded-lg focus:outline-none" defaultValue={editPost?.slug} />
+      <input ref={(element) => (inputSlug.current = element)} id="slug" type="text" className="p-1 rounded-lg focus:outline-none" defaultValue={editPost?.slug} disabled={isGenerated} />
+      <div className="flex">
+        <input type="checkbox" onChange={handleIsGenerated} />
+        <span>generate slug from title</span>
+      </div>
       <div className="flex gap-5 items-center self-end mt-5">
         <p className="uppercase cursor-pointer">save as draft</p>
         <button className="p-1 px-2 rounded-xl bg-[#3B49DF] text-white uppercase disabled:bg-[#212da9]" onClick={handleClick} disabled={!data}>
@@ -122,6 +138,17 @@ function NewPost({ editPost = null, tags = null }: { editPost?: (HandleData & { 
       </div>
     </div>
   );
+}
+
+function Slugify(title: string) {
+  return title
+    .toString()
+    .toLowerCase()
+    .replace(/\s+/g, "-")
+    .replace(/[^\w\-]+/g, "")
+    .replace(/\-\-+/g, "-")
+    .replace(/^-+/, "")
+    .replace(/-+$/, "");
 }
 
 export default NewPost;
