@@ -32,18 +32,32 @@ function NewPost({ editPost = null, tags = null }: { editPost?: (HandleData & { 
         },
       });
 
-      if (existingAuthorPosts && !editPost) {
+      if (existingAuthorPosts) {
         cache.writeQuery({
           query: LOAD_POSTS_BY_AUTHOR,
           data: {
-            posts: [
-              ...existingAuthorPosts.GetAuthorById.posts,
-              {
-                title: variables?.title,
-                slug: variables?.slug,
-                tags: variables?.tags,
-              },
-            ],
+            GetAuthorById: {
+              posts: editPost
+                ? [
+                    ...existingAuthorPosts.GetAuthorById.posts.filter(() => existingAuthorPosts.GetAuthorById.posts.findIndex((post) => post.id !== variables?.id)),
+                    {
+                      title: variables?.title,
+                      slug: _.data!.UpdatePost.slug,
+                      tags: inputTags.map((tag) => ({ name: tag.name })),
+                    },
+                  ]
+                : [
+                    ...existingAuthorPosts.GetAuthorById.posts,
+                    {
+                      title: variables?.title,
+                      slug: _.data?.CreatePost.slug,
+                      tags: inputTags.map((tag) => ({ name: tag.name })),
+                    },
+                  ],
+            },
+          },
+          variables: {
+            id: (user?.currentUser.user as User).id,
           },
         });
       }
@@ -55,7 +69,7 @@ function NewPost({ editPost = null, tags = null }: { editPost?: (HandleData & { 
             GetPost: {
               ...existingPost.GetPost,
               ...variables,
-              tags: inputTags.map((tag) => ({ ...tag, __typename: "Tag" })),
+              tags: inputTags,
             },
           },
           variables: {
@@ -102,7 +116,7 @@ function NewPost({ editPost = null, tags = null }: { editPost?: (HandleData & { 
       <input ref={(element) => (input.current = element)} id="slug" type="text" className="p-1 rounded-lg focus:outline-none" defaultValue={editPost?.slug} />
       <div className="flex gap-5 items-center self-end mt-5">
         <p className="uppercase cursor-pointer">save as draft</p>
-        <button className="p-1 px-2 rounded-xl bg-[#3B49DF] text-white uppercase" onClick={handleClick}>
+        <button className="p-1 px-2 rounded-xl bg-[#3B49DF] text-white uppercase disabled:bg-[#212da9]" onClick={handleClick} disabled={!data}>
           submit
         </button>
       </div>
