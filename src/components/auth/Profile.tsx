@@ -1,11 +1,11 @@
 import { useMutation, useQuery } from "@apollo/client";
 import { ChangeEventHandler, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import { Query } from "../../../generated-types";
 import { useUser } from "../../global/UserProvider";
-import { DELETE_POST, UPDATE_PROFILE } from "../../GraphQL/Mutations";
+import { DELETE_POST, DELETE_USER, UPDATE_PROFILE } from "../../GraphQL/Mutations";
 import { LOAD_POSTS_BY_AUTHOR } from "../../GraphQL/Queries";
 import { User } from "../../lib/types";
 import Loading from "../plugins/Loading";
@@ -13,8 +13,15 @@ import Loading from "../plugins/Loading";
 const Profile = () => {
   const MySwal = withReactContent(Swal);
   const user = useUser();
+  const navigate = useNavigate();
   const [username, setUsername] = useState((user?.currentUser.user as User).username);
   const [updateProfile] = useMutation(UPDATE_PROFILE);
+  const [deleteMyAccount] = useMutation(DELETE_USER, {
+    onCompleted() {
+      user?.setCurrentUser({ type: "logout" });
+      navigate("/login");
+    },
+  });
   const [deletePost] = useMutation(DELETE_POST, {
     update: (cache, _, { variables }) => {
       const existingPosts = cache.readQuery<Query>({
@@ -104,6 +111,14 @@ const Profile = () => {
     });
   };
 
+  const handleDeleteAccount = () => {
+    deleteMyAccount({
+      variables: {
+        id: (user?.currentUser.user as User).id,
+      },
+    });
+  };
+
   return (
     <div className="flex gap-5 md:flex-row flex-col px-3">
       <div className="p-5 bg-white rounded-xl flex flex-col gap-5 self-start">
@@ -130,7 +145,7 @@ const Profile = () => {
             </div>
           </div>
           <button className="p-1 px-2 bg-[#5561E3] text-white rounded-lg">Save Profile Information</button>
-          <button className="p-1 px-2 bg-red-600 text-white rounded-lg" type="button">
+          <button className="p-1 px-2 bg-red-600 text-white rounded-lg" type="button" onClick={handleDeleteAccount}>
             Delete My Account
           </button>
         </form>
