@@ -1,11 +1,13 @@
-import { useMutation } from "@apollo/client";
+import { useLazyQuery } from "@apollo/client";
 import { FormEventHandler, useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Query } from "../../../generated-types";
 import { useUser } from "../../global/UserProvider";
-import { LOGIN } from "../../GraphQL/Mutations";
+import { LOGIN } from "../../GraphQL/Queries";
+import Loading from "../plugins/Loading";
 
 const Login = () => {
-  const [fetchToken] = useMutation(LOGIN);
+  const [fetchToken, { loading, data }] = useLazyQuery<Query>(LOGIN);
   const navigate = useNavigate();
   const user = useUser();
   const location = useLocation();
@@ -18,11 +20,13 @@ const Login = () => {
     }
   }, []);
 
+  if (loading) return <Loading />;
+
   const onSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
     if (email && password) {
       try {
-        const result = await fetchToken({
+        await fetchToken({
           variables: {
             email,
             password,
@@ -32,10 +36,10 @@ const Login = () => {
           type: "login",
           payload: {
             user: {
-              id: result.data.login.id,
-              token: result.data.login.token,
-              username: result.data.login.username,
-              email: result.data.login.email,
+              id: data!.login.id,
+              token: data!.login.token,
+              username: data!.login.username,
+              email: data!.login.email,
             },
           },
         });

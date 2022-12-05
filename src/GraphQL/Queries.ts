@@ -46,6 +46,17 @@ export const LOAD_POSTS_BY_AUTHOR = gql`
   }
 `;
 
+export const LOGIN = gql`
+  query Login($email: String!, $password: String!) {
+    login(payload: { email: $email, password: $password }) {
+      id
+      token
+      username
+      email
+    }
+  }
+`;
+
 export const SHOW_ALL_USERS = gql`
   query ShowAllUsers {
     ShowAllAuthor {

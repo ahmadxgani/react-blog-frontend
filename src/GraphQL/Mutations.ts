@@ -24,19 +24,8 @@ export const DELETE_POST = gql`
   }
 `;
 
-export const LOGIN = gql`
-  mutation Login($email: String!, $password: String!) {
-    login(payload: { email: $email, password: $password }) {
-      id
-      token
-      username
-      email
-    }
-  }
-`;
-
 export const REGISTER = gql`
-  mutation createAuthor($username: String!, $password: String!, $email: String!) {
+  mutation CreateAuthor($username: String!, $password: String!, $email: String!) {
     CreateAuthor(payload: { username: $username, password: $password, email: $email }) {
       email
     }
@@ -67,6 +56,14 @@ export const UPDATE_PROFILE = gql`
       id
       username
       email
+    }
+  }
+`;
+
+export const DELETE_USER = gql`
+  mutation DeleteAuthor($id: Int!) {
+    DeleteAuthor(payload: { id: $id }) {
+      success
     }
   }
 `;

@@ -67,7 +67,7 @@ export type GetByTagInput = {
   name: Scalars['String'];
 };
 
-export type GetPostByIdInput = {
+export type GetPostBySlugInput = {
   slug: Scalars['String'];
 };
 
@@ -96,7 +96,6 @@ export type Mutation = {
   UpdateAuthor: Author;
   UpdatePost: Post;
   UpdateTag: Tag;
-  login: LoginType;
 };
 
 
@@ -144,11 +143,6 @@ export type MutationUpdateTagArgs = {
   payload: UpdateTagInput;
 };
 
-
-export type MutationLoginArgs = {
-  payload: LoginInput;
-};
-
 /** Post model */
 export type Post = {
   __typename?: 'Post';
@@ -171,6 +165,7 @@ export type Query = {
   ShowAllPost: Array<Post>;
   ShowAllTag: Array<Tag>;
   ShowByTag: Tag;
+  login: LoginType;
 };
 
 
@@ -180,12 +175,17 @@ export type QueryGetAuthorByIdArgs = {
 
 
 export type QueryGetPostArgs = {
-  payload: GetPostByIdInput;
+  payload: GetPostBySlugInput;
 };
 
 
 export type QueryShowByTagArgs = {
   payload: GetByTagInput;
+};
+
+
+export type QueryLoginArgs = {
+  payload: LoginInput;
 };
 
 /** Return Response Type */
@@ -210,6 +210,7 @@ export type UpdateAuthorInput = {
 export type UpdatePostInput = {
   content: Scalars['String'];
   draft?: InputMaybe<Scalars['Boolean']>;
+  id: Scalars['Int'];
   slug?: InputMaybe<Scalars['String']>;
   tags?: InputMaybe<Array<Scalars['Int']>>;
   title: Scalars['String'];
@@ -240,6 +241,7 @@ export type UpdatePostMutationVariables = Exact<{
   tags?: InputMaybe<Array<Scalars['Int']> | Scalars['Int']>;
   slug: Scalars['String'];
   title: Scalars['String'];
+  id: Scalars['Int'];
 }>;
 
 
@@ -252,13 +254,14 @@ export type DeletePostMutationVariables = Exact<{
 
 export type DeletePostMutation = { __typename?: 'Mutation', DeletePost: { __typename?: 'ResponseType', success: boolean } };
 
-export type LoginMutationVariables = Exact<{
-  email: Scalars['String'];
+export type CreateAuthorMutationVariables = Exact<{
+  username: Scalars['String'];
   password: Scalars['String'];
+  email: Scalars['String'];
 }>;
 
 
-export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'LoginType', id: number, token: string, username: string, email: string } };
+export type CreateAuthorMutation = { __typename?: 'Mutation', CreateAuthor: { __typename?: 'Author', email: string } };
 
 export type CreateTagMutationVariables = Exact<{
   name: Scalars['String'];
@@ -283,6 +286,13 @@ export type UpdateAuthorMutationVariables = Exact<{
 
 export type UpdateAuthorMutation = { __typename?: 'Mutation', UpdateAuthor: { __typename?: 'Author', id: number, username: string, email: string } };
 
+export type DeleteAuthorMutationVariables = Exact<{
+  id: Scalars['Int'];
+}>;
+
+
+export type DeleteAuthorMutation = { __typename?: 'Mutation', DeleteAuthor: { __typename?: 'ResponseType', success: boolean } };
+
 export type DeleteTagMutationVariables = Exact<{
   id: Scalars['Int'];
 }>;
@@ -295,7 +305,7 @@ export type GetPostQueryVariables = Exact<{
 }>;
 
 
-export type GetPostQuery = { __typename?: 'Query', GetPost: { __typename?: 'Post', title: string, content: string, slug: string, createdAt: any, updatedAt: any, author: { __typename?: 'Author', username: string }, tags: Array<{ __typename?: 'Tag', id: number, name: string }> } };
+export type GetPostQuery = { __typename?: 'Query', GetPost: { __typename?: 'Post', id: number, title: string, content: string, slug: string, createdAt: any, updatedAt: any, author: { __typename?: 'Author', username: string }, tags: Array<{ __typename?: 'Tag', id: number, name: string }> } };
 
 export type LoadPostsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -308,6 +318,14 @@ export type LoadPostsByAuthorQueryVariables = Exact<{
 
 
 export type LoadPostsByAuthorQuery = { __typename?: 'Query', GetAuthorById: { __typename?: 'Author', posts: Array<{ __typename?: 'Post', title: string, slug: string, tags: Array<{ __typename?: 'Tag', name: string }> }> } };
+
+export type LoginQueryVariables = Exact<{
+  email: Scalars['String'];
+  password: Scalars['String'];
+}>;
+
+
+export type LoginQuery = { __typename?: 'Query', login: { __typename?: 'LoginType', id: number, token: string, username: string, email: string } };
 
 export type ShowAllUsersQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -359,9 +377,9 @@ export type CreatePostMutationHookResult = ReturnType<typeof useCreatePostMutati
 export type CreatePostMutationResult = Apollo.MutationResult<CreatePostMutation>;
 export type CreatePostMutationOptions = Apollo.BaseMutationOptions<CreatePostMutation, CreatePostMutationVariables>;
 export const UpdatePostDocument = gql`
-    mutation UpdatePost($content: String!, $tags: [Int!], $slug: String!, $title: String!) {
+    mutation UpdatePost($content: String!, $tags: [Int!], $slug: String!, $title: String!, $id: Int!) {
   UpdatePost(
-    payload: {title: $title, content: $content, tags: $tags, slug: $slug}
+    payload: {title: $title, content: $content, tags: $tags, slug: $slug, id: $id}
   ) {
     slug
   }
@@ -386,6 +404,7 @@ export type UpdatePostMutationFn = Apollo.MutationFunction<UpdatePostMutation, U
  *      tags: // value for 'tags'
  *      slug: // value for 'slug'
  *      title: // value for 'title'
+ *      id: // value for 'id'
  *   },
  * });
  */
@@ -429,43 +448,41 @@ export function useDeletePostMutation(baseOptions?: Apollo.MutationHookOptions<D
 export type DeletePostMutationHookResult = ReturnType<typeof useDeletePostMutation>;
 export type DeletePostMutationResult = Apollo.MutationResult<DeletePostMutation>;
 export type DeletePostMutationOptions = Apollo.BaseMutationOptions<DeletePostMutation, DeletePostMutationVariables>;
-export const LoginDocument = gql`
-    mutation Login($email: String!, $password: String!) {
-  login(payload: {email: $email, password: $password}) {
-    id
-    token
-    username
+export const CreateAuthorDocument = gql`
+    mutation CreateAuthor($username: String!, $password: String!, $email: String!) {
+  CreateAuthor(payload: {username: $username, password: $password, email: $email}) {
     email
   }
 }
     `;
-export type LoginMutationFn = Apollo.MutationFunction<LoginMutation, LoginMutationVariables>;
+export type CreateAuthorMutationFn = Apollo.MutationFunction<CreateAuthorMutation, CreateAuthorMutationVariables>;
 
 /**
- * __useLoginMutation__
+ * __useCreateAuthorMutation__
  *
- * To run a mutation, you first call `useLoginMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useLoginMutation` returns a tuple that includes:
+ * To run a mutation, you first call `useCreateAuthorMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateAuthorMutation` returns a tuple that includes:
  * - A mutate function that you can call at any time to execute the mutation
  * - An object with fields that represent the current status of the mutation's execution
  *
  * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
  *
  * @example
- * const [loginMutation, { data, loading, error }] = useLoginMutation({
+ * const [createAuthorMutation, { data, loading, error }] = useCreateAuthorMutation({
  *   variables: {
- *      email: // value for 'email'
+ *      username: // value for 'username'
  *      password: // value for 'password'
+ *      email: // value for 'email'
  *   },
  * });
  */
-export function useLoginMutation(baseOptions?: Apollo.MutationHookOptions<LoginMutation, LoginMutationVariables>) {
+export function useCreateAuthorMutation(baseOptions?: Apollo.MutationHookOptions<CreateAuthorMutation, CreateAuthorMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<LoginMutation, LoginMutationVariables>(LoginDocument, options);
+        return Apollo.useMutation<CreateAuthorMutation, CreateAuthorMutationVariables>(CreateAuthorDocument, options);
       }
-export type LoginMutationHookResult = ReturnType<typeof useLoginMutation>;
-export type LoginMutationResult = Apollo.MutationResult<LoginMutation>;
-export type LoginMutationOptions = Apollo.BaseMutationOptions<LoginMutation, LoginMutationVariables>;
+export type CreateAuthorMutationHookResult = ReturnType<typeof useCreateAuthorMutation>;
+export type CreateAuthorMutationResult = Apollo.MutationResult<CreateAuthorMutation>;
+export type CreateAuthorMutationOptions = Apollo.BaseMutationOptions<CreateAuthorMutation, CreateAuthorMutationVariables>;
 export const CreateTagDocument = gql`
     mutation CreateTag($name: String!) {
   CreateTag(payload: {name: $name}) {
@@ -571,6 +588,39 @@ export function useUpdateAuthorMutation(baseOptions?: Apollo.MutationHookOptions
 export type UpdateAuthorMutationHookResult = ReturnType<typeof useUpdateAuthorMutation>;
 export type UpdateAuthorMutationResult = Apollo.MutationResult<UpdateAuthorMutation>;
 export type UpdateAuthorMutationOptions = Apollo.BaseMutationOptions<UpdateAuthorMutation, UpdateAuthorMutationVariables>;
+export const DeleteAuthorDocument = gql`
+    mutation DeleteAuthor($id: Int!) {
+  DeleteAuthor(payload: {id: $id}) {
+    success
+  }
+}
+    `;
+export type DeleteAuthorMutationFn = Apollo.MutationFunction<DeleteAuthorMutation, DeleteAuthorMutationVariables>;
+
+/**
+ * __useDeleteAuthorMutation__
+ *
+ * To run a mutation, you first call `useDeleteAuthorMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteAuthorMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteAuthorMutation, { data, loading, error }] = useDeleteAuthorMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDeleteAuthorMutation(baseOptions?: Apollo.MutationHookOptions<DeleteAuthorMutation, DeleteAuthorMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteAuthorMutation, DeleteAuthorMutationVariables>(DeleteAuthorDocument, options);
+      }
+export type DeleteAuthorMutationHookResult = ReturnType<typeof useDeleteAuthorMutation>;
+export type DeleteAuthorMutationResult = Apollo.MutationResult<DeleteAuthorMutation>;
+export type DeleteAuthorMutationOptions = Apollo.BaseMutationOptions<DeleteAuthorMutation, DeleteAuthorMutationVariables>;
 export const DeleteTagDocument = gql`
     mutation DeleteTag($id: Int!) {
   DeleteTag(payload: {id: $id}) {
@@ -607,6 +657,7 @@ export type DeleteTagMutationOptions = Apollo.BaseMutationOptions<DeleteTagMutat
 export const GetPostDocument = gql`
     query GetPost($slug: String!) {
   GetPost(payload: {slug: $slug}) {
+    id
     author {
       username
     }
@@ -729,6 +780,45 @@ export function useLoadPostsByAuthorLazyQuery(baseOptions?: Apollo.LazyQueryHook
 export type LoadPostsByAuthorQueryHookResult = ReturnType<typeof useLoadPostsByAuthorQuery>;
 export type LoadPostsByAuthorLazyQueryHookResult = ReturnType<typeof useLoadPostsByAuthorLazyQuery>;
 export type LoadPostsByAuthorQueryResult = Apollo.QueryResult<LoadPostsByAuthorQuery, LoadPostsByAuthorQueryVariables>;
+export const LoginDocument = gql`
+    query Login($email: String!, $password: String!) {
+  login(payload: {email: $email, password: $password}) {
+    id
+    token
+    username
+    email
+  }
+}
+    `;
+
+/**
+ * __useLoginQuery__
+ *
+ * To run a query within a React component, call `useLoginQuery` and pass it any options that fit your needs.
+ * When your component renders, `useLoginQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useLoginQuery({
+ *   variables: {
+ *      email: // value for 'email'
+ *      password: // value for 'password'
+ *   },
+ * });
+ */
+export function useLoginQuery(baseOptions: Apollo.QueryHookOptions<LoginQuery, LoginQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<LoginQuery, LoginQueryVariables>(LoginDocument, options);
+      }
+export function useLoginLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<LoginQuery, LoginQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<LoginQuery, LoginQueryVariables>(LoginDocument, options);
+        }
+export type LoginQueryHookResult = ReturnType<typeof useLoginQuery>;
+export type LoginLazyQueryHookResult = ReturnType<typeof useLoginLazyQuery>;
+export type LoginQueryResult = Apollo.QueryResult<LoginQuery, LoginQueryVariables>;
 export const ShowAllUsersDocument = gql`
     query ShowAllUsers {
   ShowAllAuthor {

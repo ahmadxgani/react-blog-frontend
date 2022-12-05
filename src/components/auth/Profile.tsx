@@ -130,6 +130,9 @@ const Profile = () => {
             </div>
           </div>
           <button className="p-1 px-2 bg-[#5561E3] text-white rounded-lg">Save Profile Information</button>
+          <button className="p-1 px-2 bg-red-600 text-white rounded-lg" type="button">
+            Delete My Account
+          </button>
         </form>
       </div>
       <div className="flex gap-3 flex-col">

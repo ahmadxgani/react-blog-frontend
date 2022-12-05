@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import { Mutation, Query } from "../../../generated-types";
-import { UPDATE_PROFILE } from "../../GraphQL/Mutations";
+import { DELETE_USER, UPDATE_PROFILE } from "../../GraphQL/Mutations";
 import { SHOW_ALL_USERS } from "../../GraphQL/Queries";
 import Modal from "../modals/Modal";
 import Loading from "../plugins/Loading";
@@ -11,6 +11,7 @@ import Loading from "../plugins/Loading";
 const ManageUsers = () => {
   const { data, loading } = useQuery<Query>(SHOW_ALL_USERS);
   const [updateProfile] = useMutation<Mutation>(UPDATE_PROFILE);
+  const [deleteAuthor] = useMutation<Mutation>(DELETE_USER);
   const [showEditModal, setShowEditModal] = useState(false);
   const [user, setUser] = useState<{ id: number; username: string } | null>();
   const [inputEditUsername, setInputEditUsername] = useState("");
@@ -23,6 +24,32 @@ const ManageUsers = () => {
   const handleEditOnChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
     e.preventDefault();
     setInputEditUsername(e.target.value);
+  };
+
+  const handleDeleteAuthor = (i: number) => {
+    MySwal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          await deleteAuthor({
+            variables: {
+              id: i,
+            },
+          });
+          Swal.fire("Deleted!", "The Users has been deleted", "success");
+        } catch (error) {
+          console.log(error);
+          Swal.fire("Oops!", "some error occurred", "error");
+        }
+      }
+    });
   };
 
   const handleEditOnSubmit: React.FormEventHandler<HTMLFormElement> = async (e) => {
@@ -96,7 +123,9 @@ const ManageUsers = () => {
                         <button className="text-sm p-1 px-2 bg-[#5561E3] text-white rounded-lg" onClick={() => handleEditProfile(author.id, author.username)}>
                           Edit
                         </button>
-                        <button className="text-sm p-1 px-2 bg-[#5561E3] text-white rounded-lg">Delete</button>
+                        <button className="text-sm p-1 px-2 bg-[#5561E3] text-white rounded-lg" onClick={() => handleDeleteAuthor(i)}>
+                          Delete
+                        </button>
                       </div>
                     </td>
                   </tr>
