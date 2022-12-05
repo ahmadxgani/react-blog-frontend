@@ -7,20 +7,35 @@ import { LOGIN } from "../../GraphQL/Queries";
 import Loading from "../plugins/Loading";
 
 const Login = () => {
-  const [fetchToken, { loading, data }] = useLazyQuery<Query>(LOGIN);
   const navigate = useNavigate();
   const user = useUser();
   const location = useLocation();
-  const [email, setEmail] = useState(() => location.state?.email);
+  const [email, setEmail] = useState(() => location.state?.email || "");
   const [password, setPassword] = useState("");
+  const [fetchToken, { loading, called }] = useLazyQuery<Query>(LOGIN, {
+    onCompleted(data) {
+      user!.setCurrentUser({
+        type: "login",
+        payload: {
+          user: {
+            id: data.login.id,
+            token: data.login.token,
+            username: data.login.username,
+            email: data.login.email,
+          },
+        },
+      });
+      navigate("/profile");
+    },
+  });
 
   useEffect(() => {
     if (user?.currentUser.user) {
-      navigate("/dashboard/users");
+      navigate("/profile");
     }
   }, []);
 
-  if (loading) return <Loading />;
+  if (called && loading) return <Loading />;
 
   const onSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
@@ -32,18 +47,6 @@ const Login = () => {
             password,
           },
         });
-        user!.setCurrentUser({
-          type: "login",
-          payload: {
-            user: {
-              id: data!.login.id,
-              token: data!.login.token,
-              username: data!.login.username,
-              email: data!.login.email,
-            },
-          },
-        });
-        navigate("/dashboard/users");
       } catch (error) {
         console.log(error);
       }
@@ -64,7 +67,9 @@ const Login = () => {
         Don't have an account yet? <Link to="/register">Register</Link>
       </p>
       <Link to="/recovery-password">Forgot password?</Link>
-      <button>Submit</button>
+      <button className="p-1 px-2 rounded-xl bg-[#3B49DF] text-white uppercase disabled:bg-[#212da9]" disabled={called}>
+        Submit
+      </button>
     </form>
   );
 };

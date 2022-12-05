@@ -6,7 +6,7 @@ const Recovery = () => {
   const user = useUser();
 
   if (user?.currentUser.user) {
-    navigate("/dashboard/users");
+    navigate("/profile");
   }
 
   return (
