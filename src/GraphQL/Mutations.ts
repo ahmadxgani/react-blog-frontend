@@ -35,6 +35,14 @@ export const LOGIN = gql`
   }
 `;
 
+export const REGISTER = gql`
+  mutation createAuthor($username: String!, $password: String!, $email: String!) {
+    CreateAuthor(payload: { username: $username, password: $password, email: $email }) {
+      email
+    }
+  }
+`;
+
 export const CREATE_TAG = gql`
   mutation CreateTag($name: String!) {
     CreateTag(payload: { name: $name }) {
