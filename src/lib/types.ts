@@ -14,6 +14,7 @@ export interface SelectedTag {
 export type Pages = {
   label: string;
   path: string;
+  role?: string;
 }[];
 
 export interface EditorProps {

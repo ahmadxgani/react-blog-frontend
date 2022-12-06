@@ -17,7 +17,7 @@ import EditPost from "../post/EditPost";
 export const Router = () => {
   const user = useUser();
   const protectedRoutes = [
-    { label: "dashboard", path: "/dashboard/users" },
+    { label: "dashboard", path: "/dashboard/users", role: "admin" },
     { label: "profile", path: "/profile" },
     { label: "new post", path: "/post/" },
   ];

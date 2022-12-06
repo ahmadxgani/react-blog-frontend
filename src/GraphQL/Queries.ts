@@ -20,6 +20,14 @@ export const GET_POST = gql`
   }
 `;
 
+export const GET_ROLE = gql`
+  query GetRole($id: Int!) {
+    GetAuthorById(payload: { id: $id }) {
+      role
+    }
+  }
+`;
+
 export const LOAD_POSTS = gql`
   query LoadPosts {
     ShowAllPost {
