@@ -20,6 +20,7 @@ const Profile = () => {
     onCompleted() {
       user?.setCurrentUser({ type: "logout" });
       navigate("/login");
+      Swal.fire("Deleted!", "The Users has been deleted", "success");
     },
   });
   const [deletePost] = useMutation(DELETE_POST, {
@@ -112,10 +113,27 @@ const Profile = () => {
   };
 
   const handleDeleteAccount = () => {
-    deleteMyAccount({
-      variables: {
-        id: (user?.currentUser.user as User).id,
-      },
+    MySwal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          deleteMyAccount({
+            variables: {
+              id: (user?.currentUser.user as User).id,
+            },
+          });
+        } catch (error) {
+          console.log(error);
+          Swal.fire("Oops!", "some error occurred", "error");
+        }
+      }
     });
   };
 

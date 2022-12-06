@@ -138,7 +138,7 @@ const ManageUsers = () => {
                         <button className="text-sm p-1 px-2 bg-[#5561E3] text-white rounded-lg" onClick={() => handleEditProfile(author.id, author.username)}>
                           Edit
                         </button>
-                        <button className="text-sm p-1 px-2 bg-[#5561E3] text-white rounded-lg" onClick={() => handleDeleteAuthor(i)}>
+                        <button className="text-sm p-1 px-2 bg-[#5561E3] text-white rounded-lg" onClick={() => handleDeleteAuthor(author.id)}>
                           Delete
                         </button>
                       </div>
