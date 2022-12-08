@@ -1,6 +1,6 @@
 import { useLazyQuery } from "@apollo/client";
 import { EnvelopeIcon, LockClosedIcon } from "@heroicons/react/24/solid";
-import { FormEventHandler, useEffect, useState } from "react";
+import { FormEventHandler, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Query } from "../../../generated-types";
 import { useUser } from "../../global/UserProvider";
@@ -29,12 +29,6 @@ const Login = () => {
       navigate("/profile");
     },
   });
-
-  useEffect(() => {
-    if (user?.currentUser.user) {
-      navigate("/profile");
-    }
-  }, []);
 
   if (called && loading) return <Loading />;
 

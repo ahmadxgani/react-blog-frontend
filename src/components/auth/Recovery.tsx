@@ -1,16 +1,9 @@
 import { EnvelopeIcon } from "@heroicons/react/24/solid";
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { useUser } from "../../global/UserProvider";
+import { Link } from "react-router-dom";
 
 const Recovery = () => {
-  const navigate = useNavigate();
-  const user = useUser();
   const [email, setEmail] = useState("");
-
-  if (user?.currentUser.user) {
-    navigate("/profile");
-  }
 
   return (
     <form className="card w-96 shadow-xl bg-white">

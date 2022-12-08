@@ -13,6 +13,7 @@ import MainLayout from "../templates/MainLayout";
 import ProtectedRoute from "../templates/ProtectedLayout";
 import { useUser } from "../../global/UserProvider";
 import EditPost from "../post/EditPost";
+import AuthLayout from "../templates/AuthLayout";
 
 export const Router = () => {
   const user = useUser();
@@ -39,11 +40,13 @@ export const Router = () => {
             <Route path="post" element={<NewPost />} />
             <Route path="/post/:slug/edit" element={<EditPost />} />
           </Route>
+          <Route path="/" element={<ShowAllPost />} />
+          <Route path="/post/:slug" element={<DetailPost />} />
+        </Route>
+        <Route element={<AuthLayout />}>
           <Route path="/login" element={<Login />}></Route>
           <Route path="/register" element={<Register />} />
           <Route path="/recovery-password" element={<Recovery />} />
-          <Route path="/" element={<ShowAllPost />} />
-          <Route path="/post/:slug" element={<DetailPost />} />
         </Route>
       </Routes>
     </BrowserRouter>

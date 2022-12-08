@@ -31,7 +31,7 @@ function Navigation({ pages }: { pages: Pages }) {
     navigate("/login");
   };
   return (
-    <nav className="navbar bg-base-100">
+    <nav className="navbar bg-white">
       <div className="dropdown dropdown-bottom">
         <label tabIndex={0} className="btn btn-ghost btn-circle avatar">
           <Bars3Icon />
@@ -39,8 +39,8 @@ function Navigation({ pages }: { pages: Pages }) {
         <ul tabIndex={0} className="mt-3 p-2 shadow menu menu-compact dropdown-content bg-base-100 rounded-box w-52 gap-1">
           {pages
             .filter((page) => !page.role)
-            .map(({ label, path }) => (
-              <li>
+            .map(({ label, path }, i) => (
+              <li key={i}>
                 <NavLink key={label} to={path} className={({ isActive }) => (isActive ? "bg-[#6419e6] rounded p-1 px-2 text-white" : undefined) + " uppercase font-semibold"}>
                   {label}
                 </NavLink>
@@ -50,8 +50,8 @@ function Navigation({ pages }: { pages: Pages }) {
             author.GetAuthorById.role === "admin" &&
             pages
               .filter((page) => page.role === "admin")
-              .map(({ label, path }) => (
-                <li>
+              .map(({ label, path }, i) => (
+                <li key={i}>
                   <NavLink key={label} to={path} className={({ isActive }) => (isActive ? "bg-[#6419e6] rounded p-1 px-2 text-white" : undefined) + " uppercase font-semibold"}>
                     {label}
                   </NavLink>

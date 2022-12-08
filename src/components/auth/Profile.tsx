@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from "@apollo/client";
-import { BookmarkIcon, Cog8ToothIcon, TrashIcon } from "@heroicons/react/24/solid";
+import { BookmarkIcon, Cog8ToothIcon, EnvelopeIcon, TrashIcon, UserCircleIcon } from "@heroicons/react/24/solid";
 import { ChangeEventHandler, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
@@ -140,34 +140,52 @@ const Profile = () => {
 
   return (
     <div className="flex gap-5 md:flex-row flex-col px-3">
-      <div className="p-5 bg-white rounded-xl flex flex-col gap-5 self-start">
-        <div className="flex justify-between">
-          <h3 className="text-xl font-bold">Profile</h3>
-          <button className="p-1 px-2 bg-[#5561E3] text-white rounded-lg">Set New Password</button>
-        </div>
-        <form onSubmit={handleSubmit} className="flex flex-col gap-3">
-          <div className="flex flex-col gap-2">
-            <div className="flex flex-col">
-              <label htmlFor="username">Username</label>
-              <input className="px-2 focus:outline-none border py-1 rounded" type="text" name="username" id="username" value={username} onChange={handleUsername} />
-            </div>
-            <div className="flex flex-col">
-              <label htmlFor="email">Email</label>
-              <input className="px-2 focus:outline-none border py-1 rounded" type="email" name="email" id="email" value={(user?.currentUser.user as User)?.email} disabled />
-            </div>
-            <div className="flex flex-col">
-              <label htmlFor="profile_image">Profile Image</label>
-              <div className="flex gap-2 items-center">
-                <img className="rounded-full" src={process.env.PUBLIC_URL + "/img/example/user.jpeg"} alt="user's profile" width={40} />
-                <input type="file" name="profile_image" id="profile_image" onChange={handleImage} />
-              </div>
-            </div>
+      <div className="card w-96 bg-base-100 shadow-xl self-start">
+        <div className="card-body">
+          <div className="card-title justify-between">
+            <h3 className="text-xl font-bold">Profile</h3>
+            <button className="btn btn-xs btn-primary">Set New Password</button>
           </div>
-          <button className="p-1 px-2 bg-[#5561E3] text-white rounded-lg">Save Profile Information</button>
-          <button className="p-1 px-2 bg-red-600 text-white rounded-lg" type="button" onClick={handleDeleteAccount}>
-            Delete My Account
-          </button>
-        </form>
+          <form onSubmit={handleSubmit} className="form-control">
+            <div className="form-control">
+              <label htmlFor="username" className="label">
+                <span className="label-text">Username</span>
+              </label>
+              <label className="input-group">
+                <span>
+                  <UserCircleIcon className="w-6" />
+                </span>
+                <input type="text" id="username" value={username} onChange={handleUsername} className="input input-bordered w-full input-md" />
+              </label>
+            </div>
+            <div className="form-control">
+              <label className="label">
+                <span className="label-text">Your Email</span>
+              </label>
+              <label className="input-group">
+                <span>
+                  <EnvelopeIcon className="w-6" />
+                </span>
+                <input type="email" id="email" value={(user?.currentUser.user as User)?.email} disabled className="input input-bordered w-full input-md" />
+              </label>
+            </div>
+            <div className="form-control w-full max-w-xs">
+              <label className="label">
+                <span className="label-text">Profile Image</span>
+              </label>
+              <input type="file" className="file-input file-input-bordered w-full max-w-xs file-input-md" onChange={handleImage} id="profile_image" />
+              <label className="label" htmlFor="profile_image">
+                <span className="label-text-alt">Pick a file</span>
+              </label>
+            </div>
+            <div className="form-control gap-1 mt-3">
+              <button className="btn btn-primary btn-sm">Save Profile Information</button>
+              <button className="bg-red-600 text-white btn btn-sm btn-error" type="button" onClick={handleDeleteAccount}>
+                Delete My Account
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
       <div className="flex gap-3 flex-col">
         {data?.GetAuthorById.posts.map((post, i) => (

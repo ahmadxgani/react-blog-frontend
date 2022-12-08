@@ -1,9 +1,8 @@
 import { useMutation } from "@apollo/client";
 import { EnvelopeIcon, LockClosedIcon, UserCircleIcon } from "@heroicons/react/24/solid";
-import { FormEventHandler, useEffect, useState } from "react";
+import { FormEventHandler, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Mutation } from "../../../generated-types";
-import { useUser } from "../../global/UserProvider";
 import { REGISTER } from "../../GraphQL/Mutations";
 
 const Register = () => {
@@ -12,13 +11,6 @@ const Register = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
-  const user = useUser();
-
-  useEffect(() => {
-    if (user?.currentUser.user) {
-      navigate("/profile");
-    }
-  }, []);
 
   const onSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
