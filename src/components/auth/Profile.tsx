@@ -1,4 +1,5 @@
 import { useMutation, useQuery } from "@apollo/client";
+import { BookmarkIcon, Cog8ToothIcon, TrashIcon } from "@heroicons/react/24/solid";
 import { ChangeEventHandler, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
@@ -14,7 +15,7 @@ const Profile = () => {
   const MySwal = withReactContent(Swal);
   const user = useUser();
   const navigate = useNavigate();
-  const [username, setUsername] = useState((user?.currentUser.user as User).username);
+  const [username, setUsername] = useState(() => (user?.currentUser.user as User)?.username);
   const [updateProfile] = useMutation(UPDATE_PROFILE);
   const [deleteMyAccount] = useMutation(DELETE_USER, {
     onCompleted() {
@@ -28,7 +29,7 @@ const Profile = () => {
       const existingPosts = cache.readQuery<Query>({
         query: LOAD_POSTS_BY_AUTHOR,
         variables: {
-          id: (user?.currentUser.user as User).id,
+          id: (user?.currentUser.user as User)?.id,
         },
       });
 
@@ -41,7 +42,7 @@ const Profile = () => {
             },
           },
           variables: {
-            id: (user?.currentUser.user as User).id,
+            id: (user?.currentUser.user as User)?.id,
           },
         });
       }
@@ -49,7 +50,7 @@ const Profile = () => {
   });
   const { data, loading } = useQuery<Query>(LOAD_POSTS_BY_AUTHOR, {
     variables: {
-      id: (user?.currentUser.user as User).id,
+      id: (user?.currentUser.user as User)?.id,
     },
   });
   if (loading) return <Loading />;
@@ -63,7 +64,7 @@ const Profile = () => {
     e.preventDefault();
     const result = await updateProfile({
       variables: {
-        id: (user?.currentUser.user as User).id,
+        id: (user?.currentUser.user as User)?.id,
         username,
       },
     });
@@ -126,7 +127,7 @@ const Profile = () => {
         try {
           deleteMyAccount({
             variables: {
-              id: (user?.currentUser.user as User).id,
+              id: (user?.currentUser.user as User)?.id,
             },
           });
         } catch (error) {
@@ -152,7 +153,7 @@ const Profile = () => {
             </div>
             <div className="flex flex-col">
               <label htmlFor="email">Email</label>
-              <input className="px-2 focus:outline-none border py-1 rounded" type="email" name="email" id="email" value={(user?.currentUser.user as User).email} disabled />
+              <input className="px-2 focus:outline-none border py-1 rounded" type="email" name="email" id="email" value={(user?.currentUser.user as User)?.email} disabled />
             </div>
             <div className="flex flex-col">
               <label htmlFor="profile_image">Profile Image</label>
@@ -195,12 +196,12 @@ const Profile = () => {
                 </Link>
               </div>
             </div>
-            <div className="flex gap-2">
-              <img src={process.env.PUBLIC_URL + "/img/icon/Trash.png"} alt="delete" className="w-8 h-8 hover:cursor-pointer" onClick={() => handleDelete(post.slug)} />
+            <div className="flex gap-2 items-start">
+              <TrashIcon className="w-8" onClick={() => handleDelete(post.slug)} />
               <Link to={`/post/${post.slug}/edit`}>
-                <img src={process.env.PUBLIC_URL + "/img/icon/Option.png"} alt="edit" className="w-8 h-8" />
+                <Cog8ToothIcon className="w-8" />
               </Link>
-              <img src={process.env.PUBLIC_URL + "/img/icon/Bookmark.png"} alt="bookmark" className="w-8 h-8" />
+              <BookmarkIcon className="w-8" />
             </div>
           </div>
         ))}

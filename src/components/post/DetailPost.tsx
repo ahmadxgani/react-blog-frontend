@@ -5,6 +5,7 @@ import { Query } from "../../../generated-types";
 import Loading from "../plugins/Loading";
 import { Link, useParams } from "react-router-dom";
 import { useUser } from "../../global/UserProvider";
+import { Cog8ToothIcon, LinkIcon } from "@heroicons/react/24/solid";
 
 function DetailPost() {
   const urlParams = useParams();
@@ -45,13 +46,13 @@ function DetailPost() {
             <div className="flex gap-1">
               {!!user?.currentUser.user && (
                 <Link to={`/post/${data?.GetPost.slug}/edit`}>
-                  <img src={process.env.PUBLIC_URL + "/img/icon/Option.png"} alt="Edit Post" />
+                  <Cog8ToothIcon className="w-8" />
                 </Link>
               )}
               <img src={process.env.PUBLIC_URL + "/img/icon/Twitter.png"} alt="Twitter" />
               <img src={process.env.PUBLIC_URL + "/img/icon/Facebook.png"} alt="Facebook" />
               <img src={process.env.PUBLIC_URL + "/img/icon/LinkedIn.png"} alt="LinkedIn" />
-              <img src={process.env.PUBLIC_URL + "/img/icon/Link.png"} alt="Copy Link" />
+              <LinkIcon className="w-8" />
             </div>
           </div>
           <div className="flex gap-2">

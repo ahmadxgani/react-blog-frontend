@@ -1,16 +1,21 @@
+import { UserGroupIcon, TagIcon } from "@heroicons/react/24/solid";
 import { NavLink, Outlet } from "react-router-dom";
 
 export default function Dashboard() {
   return (
     <>
-      <div className="flex flex-col items-center gap-3 p-3 py-6 bg-white rounded-full absolute right-10">
-        <NavLink to="/dashboard/users" className={({ isActive }) => (isActive ? "bg-[#E6E5F3] rounded p-1 px-2" : undefined)}>
-          <img src={process.env.PUBLIC_URL + "/img/icon/ManageUser.png"} alt="manage user" width={30} />
-        </NavLink>
-        <NavLink to="/dashboard/tags" className={({ isActive }) => (isActive ? "bg-[#E6E5F3] rounded p-1 px-2" : undefined)}>
-          <img src={process.env.PUBLIC_URL + "/img/icon/Tags.png"} alt="manage tags" width={30} />
-        </NavLink>
-      </div>
+      <ul className="menu menu-compact p-4 space-y-1 w-60 text-base-content absolute right-10 gap-1">
+        <li>
+          <NavLink to="/dashboard/users" className={({ isActive }) => (isActive ? "bg-[#6419E6] text-white rounded p-1 px-2" : undefined)}>
+            <UserGroupIcon className="h-10 w-10" /> Manage Users
+          </NavLink>
+        </li>
+        <li>
+          <NavLink to="/dashboard/tags" className={({ isActive }) => (isActive ? "bg-[#6419e6] text-white rounded p-1 px-2" : undefined)}>
+            <TagIcon className="h-10 w-10" /> Manage Tags
+          </NavLink>
+        </li>
+      </ul>
       <Outlet />
     </>
   );

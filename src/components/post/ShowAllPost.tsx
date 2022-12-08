@@ -3,6 +3,7 @@ import { useQuery } from "@apollo/client";
 import { LOAD_POSTS } from "../../GraphQL/Queries";
 import { Query } from "../../../generated-types";
 import Loading from "../plugins/Loading";
+import { BookmarkIcon } from "@heroicons/react/24/solid";
 
 function ShowAllPost() {
   const { data, loading } = useQuery<Query>(LOAD_POSTS, {
@@ -37,7 +38,7 @@ function ShowAllPost() {
               </Link>
             </div>
           </div>
-          <img src={process.env.PUBLIC_URL + "/img/icon/Bookmark.png"} alt="bookmark" className="w-8 h-8" />
+          <BookmarkIcon className="w-8" />
         </div>
       ))}
     </div>

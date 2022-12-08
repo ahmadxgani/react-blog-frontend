@@ -1,4 +1,5 @@
 import { useLazyQuery } from "@apollo/client";
+import { EnvelopeIcon, LockClosedIcon } from "@heroicons/react/24/solid";
 import { FormEventHandler, useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Query } from "../../../generated-types";
@@ -54,22 +55,52 @@ const Login = () => {
   };
 
   return (
-    <form onSubmit={onSubmit} className="flex flex-col">
-      <label htmlFor="email">Email</label>
-      <input type="email" name="email" id="email" onChange={(e) => setEmail(e.target.value)} value={email} />
-      <label htmlFor="password">Password</label>
-      <input type="password" name="password" id="password" onChange={(e) => setPassword(e.target.value)} value={password} autoComplete="on" />
-      <div className="flex gap-1">
-        <label htmlFor="rememberme">Remember me</label>
-        <input type="checkbox" name="rememberme" id="rememberme" />
+    <form onSubmit={onSubmit} className="card w-96 shadow-xl bg-white">
+      <div className="card-body">
+        <h2 className="card-title">Login</h2>
+        <div className="form-control">
+          <label className="label">
+            <span className="label-text">Your Email</span>
+          </label>
+          <label className="input-group">
+            <span>
+              <EnvelopeIcon className="w-6" />
+            </span>
+            <input type="email" name="email" id="email" onChange={(e) => setEmail(e.target.value)} value={email} className="input input-bordered w-full" />
+          </label>
+        </div>
+        <div className="form-control">
+          <label htmlFor="password" className="label">
+            <span className="label-text">Your Password</span>
+          </label>
+          <label className="input-group">
+            <span>
+              <LockClosedIcon className="w-6" />
+            </span>
+            <input type="password" name="password" id="password" onChange={(e) => setPassword(e.target.value)} value={password} autoComplete="on" className="input input-bordered w-full" />
+          </label>
+        </div>
+        <div className="form-control">
+          <label className="label">
+            <label htmlFor="rememberme" className="cursor-pointer">
+              <div className="flex items-center gap-3">
+                <span className="label-text">Remember me</span>
+                <input id="rememberme" type="checkbox" className="checkbox checkbox-primary w-4 h-4" />
+              </div>
+            </label>
+            <Link to="/recovery-password" className="label-text">
+              Forgot password?
+            </Link>
+          </label>
+        </div>
+
+        <button className="btn btn-primary disabled:bg-[#5014b8] mt-5" disabled={called}>
+          Submit
+        </button>
+        <p>
+          Don't have an account yet? <Link to="/register">Register</Link>
+        </p>
       </div>
-      <p>
-        Don't have an account yet? <Link to="/register">Register</Link>
-      </p>
-      <Link to="/recovery-password">Forgot password?</Link>
-      <button className="p-1 px-2 rounded-xl bg-[#3B49DF] text-white uppercase disabled:bg-[#212da9]" disabled={called}>
-        Submit
-      </button>
     </form>
   );
 };

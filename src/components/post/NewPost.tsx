@@ -1,4 +1,5 @@
 import { useMutation, useQuery } from "@apollo/client";
+import { Cog8ToothIcon } from "@heroicons/react/24/solid";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Mutation, Query } from "../../../generated-types";
@@ -120,7 +121,7 @@ function NewPost({ editPost = null, tags = null }: { editPost?: (HandleData & { 
     <div className="flex flex-col gap-3 w-[43.75rem] mx-3">
       <div className="flex justify-between">
         <button className="p-2 px-3 rounded-xl bg-[#DADDFB] text-[#5561E3] uppercase">{(editPost ? "edit " : "create new ") + "article"}</button>
-        <img className="cursor-pointer" src={process.env.PUBLIC_URL + "/img/icon/Option.png"} alt="Option" />
+        <Cog8ToothIcon className="w-8 cursor-pointer" />
       </div>
       <Editor handleData={handleData} content={data?.content} />
       {<Tags suggestions={suggestions.ShowAllTag} setTags={setTags} tags={inputTags} />}

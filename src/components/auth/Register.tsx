@@ -1,4 +1,5 @@
 import { useMutation } from "@apollo/client";
+import { EnvelopeIcon, LockClosedIcon, UserCircleIcon } from "@heroicons/react/24/solid";
 import { FormEventHandler, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Mutation } from "../../../generated-types";
@@ -43,23 +44,48 @@ const Register = () => {
   };
 
   return (
-    <form onSubmit={onSubmit} className="flex flex-col gap-2">
-      <div className="flex gap-3">
-        <label htmlFor="email">Email</label>
-        <input type="email" name="email" id="email" onChange={(e) => setEmail(e.target.value)} value={email} />
+    <form onSubmit={onSubmit} className="card w-96 shadow-xl bg-white">
+      <div className="card-body">
+        <h2 className="card-title">Register</h2>
+        <div className="form-control">
+          <label className="label">
+            <span className="label-text">Your Username</span>
+          </label>
+          <label className="input-group">
+            <span>
+              <UserCircleIcon className="w-6" />
+            </span>
+            <input type="text" id="username" onChange={(e) => setUsername(e.target.value)} value={username} className="input input-bordered w-full" autoComplete="off" />
+          </label>
+        </div>
+        <div className="form-control">
+          <label className="label">
+            <span className="label-text">Your Email</span>
+          </label>
+          <label className="input-group">
+            <span>
+              <EnvelopeIcon className="w-6" />
+            </span>
+            <input type="email" id="email" onChange={(e) => setEmail(e.target.value)} value={email} className="input input-bordered w-full" autoComplete="email" />
+          </label>
+        </div>
+        <div className="form-control">
+          <label htmlFor="password" className="label">
+            <span className="label-text">Your Password</span>
+          </label>
+          <label className="input-group">
+            <span>
+              <LockClosedIcon className="w-6" />
+            </span>
+            <input type="password" id="password" onChange={(e) => setPassword(e.target.value)} value={password} className="input input-bordered w-full" autoComplete="password" />
+          </label>
+        </div>
+
+        <button className="btn btn-primary disabled:bg-[#5014b8] mt-5">Submit</button>
+        <p>
+          Already have an account? <Link to="/login">Login</Link>
+        </p>
       </div>
-      <div className="flex gap-3">
-        <label htmlFor="username">Username</label>
-        <input type="text" name="username" id="username" onChange={(e) => setUsername(e.target.value)} value={username} />
-      </div>
-      <div className="flex gap-3">
-        <label htmlFor="password">Password</label>
-        <input type="password" name="password" id="password" onChange={(e) => setPassword(e.target.value)} value={password} autoComplete="on" />
-      </div>
-      <p>
-        Already have an account? <Link to="/login">Login</Link>
-      </p>
-      <button>Submit</button>
     </form>
   );
 };
