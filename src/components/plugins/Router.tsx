@@ -42,11 +42,11 @@ export const Router = () => {
           </Route>
           <Route path="/" element={<ShowAllPost />} />
           <Route path="/post/:slug" element={<DetailPost />} />
-        </Route>
-        <Route element={<AuthLayout />}>
-          <Route path="/login" element={<Login />}></Route>
-          <Route path="/register" element={<Register />} />
-          <Route path="/recovery-password" element={<Recovery />} />
+          <Route element={<AuthLayout />}>
+            <Route path="/login" element={<Login />}></Route>
+            <Route path="/register" element={<Register />} />
+            <Route path="/recovery-password" element={<Recovery />} />
+          </Route>
         </Route>
       </Routes>
     </BrowserRouter>
