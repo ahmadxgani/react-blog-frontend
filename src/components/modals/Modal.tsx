@@ -1,3 +1,4 @@
+import { XCircleIcon } from "@heroicons/react/24/solid";
 import { useCallback, useEffect, useRef } from "react";
 import useOnClickOutside from "../../hooks/useOnClickOutside";
 import PortalModal from "./PortalModal";
@@ -37,14 +38,14 @@ const Modal = ({ children, show, setShow, title }: Props) => {
     <>
       {show && (
         <PortalModal wrapperId="modal-portal">
-          <div ref={modalRef} className="absolute md:w-1/2 w-4/5 flex mx-auto top-28 inset-x-0 flex-col bg-[#E6E5F3] drop-shadow-2xl rounded gap-5 lg:p-5 md:p-3 p-2">
-            <header className="flex justify-between items-center">
-              <h3 className="text-lg">{title}</h3>
-              <span className="text-2xl hover:cursor-pointer" onClick={() => setShow(!show)}>
-                &#10006;
-              </span>
-            </header>
-            {children}
+          <div ref={modalRef} className="absolute mx-auto top-28 inset-x-0 card w-96 bg-base-100 shadow-xl">
+            <div className="card-body gap-5">
+              <header className="card-title justify-between">
+                <h3 className="text-lg">{title}</h3>
+                <XCircleIcon className="hover:cursor-pointer w-6" onClick={() => setShow(!show)} />
+              </header>
+              {children}
+            </div>
           </div>
         </PortalModal>
       )}
