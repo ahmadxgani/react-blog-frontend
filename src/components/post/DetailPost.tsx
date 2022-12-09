@@ -6,6 +6,9 @@ import Loading from "../plugins/Loading";
 import { Link, useParams } from "react-router-dom";
 import { useUser } from "../../global/UserProvider";
 import { Cog8ToothIcon, LinkIcon } from "@heroicons/react/24/solid";
+import { ReactComponent as Twitter } from "../../icon/Twitter.svg";
+import { ReactComponent as LinkedIn } from "../../icon/LinkedIn.svg";
+import { ReactComponent as Facebook } from "../../icon/Facebook.svg";
 
 function DetailPost() {
   const urlParams = useParams();
@@ -21,7 +24,7 @@ function DetailPost() {
   if (loading) return <Loading />;
 
   const Article = () => (
-    <section className="xl:prose-xl lg:prose-lg md:prose-base prose-sm prose bg-white px-3 rounded-lg shadow !max-w-[43.75rem] md:px-[1.25rem]">
+    <section className="xl:prose-xl lg:prose-lg md:prose-base prose-sm prose shadow-2xl px-3 rounded-lg !max-w-[43.75rem] md:px-[1.25rem]">
       <Output data={JSON.parse(data!.GetPost.content)} />
     </section>
   );
@@ -29,7 +32,7 @@ function DetailPost() {
   return (
     <div className="flex flex-col w-[55.125rem] mx-3">
       <img src={process.env.PUBLIC_URL + "/img/example/thumbnail.jpg"} alt="Thumbnail" className="w-auto h-[21.125rem] rounded-t-[0.625rem]" />
-      <div className="flex flex-col gap-5 lg:px-16 sm:px-9 px-4 py-[1.875rem] box-border bg-white rounded-b-[0.625rem]">
+      <div className="flex flex-col gap-5 lg:px-16 sm:px-9 px-4 py-[1.875rem] box-border shadow-2xl rounded-b-[0.625rem]">
         <div className="flex flex-col gap-2">
           <div className="flex justify-between items-center">
             <div className="flex gap-3 items-center">
@@ -43,15 +46,15 @@ function DetailPost() {
                 </span>
               </div>
             </div>
-            <div className="flex gap-1">
+            <div className="flex gap-1 items-center">
               {!!user?.currentUser.user && (
                 <Link to={`/post/${data?.GetPost.slug}/edit`}>
                   <Cog8ToothIcon className="w-8" />
                 </Link>
               )}
-              <img src={process.env.PUBLIC_URL + "/img/icon/Twitter.png"} alt="Twitter" />
-              <img src={process.env.PUBLIC_URL + "/img/icon/Facebook.png"} alt="Facebook" />
-              <img src={process.env.PUBLIC_URL + "/img/icon/LinkedIn.png"} alt="LinkedIn" />
+              <Twitter className="fill-base-content" width={32} />
+              <LinkedIn className="fill-base-content" width={32} />
+              <Facebook className="fill-base-content" width={32} />
               <LinkIcon className="w-8" />
             </div>
           </div>
