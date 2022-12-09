@@ -6,11 +6,11 @@ import { GET_ROLE } from "../../GraphQL/Queries";
 import { Pages, User } from "../../lib/types";
 import Loading from "../plugins/Loading";
 import { Bars3Icon, MagnifyingGlassIcon } from "@heroicons/react/24/solid";
-import { themeChange } from "theme-change";
-import { useEffect } from "react";
+import { useTheme } from "../../global/ThemeProvider";
 
 function Navigation({ pages }: { pages: Pages }) {
   const auth = useUser();
+  const { handleToggleTheme, currentTheme } = useTheme();
   const { data: author, loading } = useQuery<Query>(GET_ROLE, {
     variables: {
       id: (auth?.currentUser.user as User)?.id,
@@ -18,10 +18,6 @@ function Navigation({ pages }: { pages: Pages }) {
     skip: !auth?.currentUser.user,
   });
   const navigate = useNavigate();
-
-  useEffect(() => {
-    themeChange(false);
-  }, []);
 
   if (loading) return <Loading />;
 
@@ -65,7 +61,7 @@ function Navigation({ pages }: { pages: Pages }) {
         </Link>
       </div>
       <div className="flex-none gap-2">
-        <input type="checkbox" className="toggle" data-toggle-theme="light,dark" data-act-class="ACTIVECLASS" />
+        <input type="checkbox" className="toggle" onClick={() => handleToggleTheme(currentTheme)} defaultChecked={currentTheme === "dark"} />
         <div className="form-control">
           <div className="input-group">
             <input type="text" placeholder="Search…" className="input input-bordered" />
