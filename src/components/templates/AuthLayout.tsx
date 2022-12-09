@@ -13,7 +13,7 @@ const AuthLayout = () => {
     }
   }, []);
 
-  return <div className="bg-[#E6E5F3] min-h-screen h-full flex items-center justify-center">{outlet}</div>;
+  return <div className="min-h-screen h-full flex items-center justify-center">{outlet}</div>;
 };
 
 export default AuthLayout;

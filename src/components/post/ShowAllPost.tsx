@@ -13,7 +13,7 @@ function ShowAllPost() {
   return (
     <div className="flex flex-col gap-[1.25rem] mx-3">
       {data?.ShowAllPost.map((post, i) => (
-        <div key={i} className="flex p-[1.125rem] gap-[2.1875rem] justify-center bg-white rounded-xl box-content">
+        <div key={i} className="flex p-[1.125rem] gap-[2.1875rem] items-start bg-white rounded-xl box-content">
           <div className="flex gap-5">
             <Link to={`/post/${post.slug}`} className="relative min-w-[14.6875rem] max-w-[14.6875rem] sm:block hidden">
               <img src={process.env.PUBLIC_URL + "/img/example/thumbnail.jpg"} alt="Thumbnail" className="rounded-[1.25rem]" />

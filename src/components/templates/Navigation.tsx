@@ -31,7 +31,7 @@ function Navigation({ pages }: { pages: Pages }) {
     navigate("/login");
   };
   return (
-    <nav className="navbar bg-white">
+    <nav className="navbar bg-base-100">
       <div className="dropdown dropdown-bottom">
         <label tabIndex={0} className="btn btn-ghost btn-circle avatar">
           <Bars3Icon />
