@@ -40,7 +40,7 @@ const Tag = (props: TagTypes) => {
   const tagComponent = (
     <span
       ref={tagRef}
-      className="btn btn-primary btn-xs"
+      className="btn btn-primary btn-xs gap-1"
       style={{
         opacity,
         cursor: canDrag(props) ? "move" : "auto",
@@ -48,7 +48,7 @@ const Tag = (props: TagTypes) => {
       onClick={props.onTagClicked as React.MouseEventHandler<HTMLSpanElement>}
       onTouchStart={props.onTagClicked as React.TouchEventHandler<HTMLSpanElement>}
     >
-      {label}
+      <span>{label}</span>
       <RemoveComponent tag={props.tag} onRemove={props.onDelete} readOnly={props.readOnly} index={props.index} />
     </span>
   );

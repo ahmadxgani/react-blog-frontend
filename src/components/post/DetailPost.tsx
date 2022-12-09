@@ -62,7 +62,7 @@ function DetailPost() {
             {data!.GetPost.tags.length ? (
               data!.GetPost.tags.map((tag, id) => {
                 return (
-                  <span key={id} className="text-[#404040] bg-[#B7BDFF] px-[0.625rem] py-[0.3125rem] rounded-xl text-xs">
+                  <span key={id} className="btn btn-primary btn-xs">
                     {tag.name}
                   </span>
                 );
