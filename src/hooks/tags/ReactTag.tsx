@@ -5,12 +5,11 @@ import { HTML5Backend } from "react-dnd-html5-backend";
 import { isEqual, noop, uniq } from "lodash";
 import ClearAllTags from "./ClearAllTags";
 import Suggestions from "./Suggestions";
-import ClassNames from "classnames";
 import Tag from "./Tag";
 
 import { buildRegExpFromDelimiters } from "../../lib/utils";
 
-import { KEYS, DEFAULT_PLACEHOLDER, DEFAULT_CLASSNAMES, DEFAULT_LABEL_FIELD, INPUT_FIELD_POSITIONS } from "../../lib/constants";
+import { KEYS, DEFAULT_PLACEHOLDER, DEFAULT_CLASSNAMES, DEFAULT_LABEL_FIELD } from "../../lib/constants";
 import { ReactTagsPropTypes, ReactTagsState, ReactTagTypes, tags } from "../../lib/types";
 import { usePrevious } from "../usePrevious";
 
@@ -269,10 +268,8 @@ const ReactTags = (props: ReactTagTypes) => {
               labelField={props.labelField as any}
               onDelete={(ev) => props!.handleDelete!(index, ev)}
               moveTag={moveTag}
-              removeComponent={props.removeComponent}
               onTagClicked={handleTagClick.bind(this, index, tag)}
               readOnly={props.readOnly}
-              classNames={classNames}
               allowDragDrop={props.allowDragDrop}
             />
           )}
@@ -311,8 +308,6 @@ const ReactTags = (props: ReactTagTypes) => {
     }
   }, [state.query]);
 
-  const position = !props.inline ? INPUT_FIELD_POSITIONS.BOTTOM : props.inputFieldPosition;
-
   const tagInput = !props.readOnly ? (
     <div className={classNames.tagInput}>
       <input
@@ -320,7 +315,7 @@ const ReactTags = (props: ReactTagTypes) => {
         ref={(input) => {
           inputTextRef.current = input;
         }}
-        className={classNames.tagInputField}
+        className="input input-bordered input-sm w-full max-w-xs"
         type="text"
         placeholder={props.placeholder as string}
         onFocus={handleFocus}
@@ -355,13 +350,9 @@ const ReactTags = (props: ReactTagTypes) => {
   ) : null;
 
   return (
-    <div className={ClassNames(classNames.tags, "react-tags-wrapper")} ref={reactTagsRef}>
-      {position === INPUT_FIELD_POSITIONS.TOP && tagInput}
-      <div className={classNames.selected}>
-        {tagItems}
-        {position === INPUT_FIELD_POSITIONS.INLINE && tagInput}
-      </div>
-      {position === INPUT_FIELD_POSITIONS.BOTTOM && tagInput}
+    <div className="flex gap-2" ref={reactTagsRef}>
+      {tagItems}
+      {tagInput}
     </div>
   );
 };
@@ -379,7 +370,6 @@ ReactTags.defaultProps = {
   delimiters: [...KEYS.ENTER, KEYS.TAB],
   autofocus: true,
   inline: true, // TODO: Remove in v7.x.x
-  inputFieldPosition: INPUT_FIELD_POSITIONS.INLINE,
   handleDelete: noop,
   handleAddition: noop,
   allowDeleteFromEmptyInput: true,

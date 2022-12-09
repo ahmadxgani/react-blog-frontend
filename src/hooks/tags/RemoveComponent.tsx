@@ -1,9 +1,9 @@
 import { KEYS } from "./ReactTag";
 import { RemoveComponentPropTypes, removeComponentTypes } from "../../lib/types";
+import { XCircleIcon } from "@heroicons/react/24/solid";
 
-const crossStr = String.fromCharCode(215);
 const RemoveComponent = (props: removeComponentTypes) => {
-  const { readOnly, removeComponent, onRemove, className, tag, index } = props;
+  const { readOnly, onRemove, tag, index } = props;
 
   const onKeydown = (event: any) => {
     if (KEYS.ENTER.includes(event.keyCode) || event.keyCode === KEYS.SPACE) {
@@ -21,16 +21,7 @@ const RemoveComponent = (props: removeComponentTypes) => {
   }
 
   const ariaLabel = `Tag at index ${index} with value ${tag.name} focussed. Press backspace to remove`;
-  if (removeComponent) {
-    const Component = removeComponent;
-    return <Component onRemove={onRemove} onKeyDown={onKeydown} className={className} aria-label={ariaLabel} tag={tag} index={index} />;
-  }
-
-  return (
-    <button onClick={(event) => onRemove(event)} onKeyDown={onKeydown} className={className as string} type="button" aria-label={ariaLabel}>
-      {crossStr}
-    </button>
-  );
+  return <XCircleIcon onClick={(event) => onRemove(event)} onKeyDown={onKeydown} type="button" aria-label={ariaLabel} className="w-5 cursor-pointer" />;
 };
 
 RemoveComponent.propTypes = RemoveComponentPropTypes;

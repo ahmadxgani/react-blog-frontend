@@ -16,7 +16,6 @@ function NewPost({ editPost = null, tags = null }: { editPost?: (HandleData & { 
   const [data, setData] = useState<HandleData | null>(() => editPost);
   const [isGenerated, setIsGenerated] = useState(false);
   const inputSlug = useRef<HTMLInputElement | null>();
-  const checkboxSlug = useRef<HTMLInputElement | null>();
   const user = useUser();
   const [inputTags, setTags] = useState<tags[]>(() => tags || []);
   const [createOrUpdatePost] = useMutation<Mutation>(editPost ? EDIT_POST : CREATE_POST, {
@@ -126,14 +125,14 @@ function NewPost({ editPost = null, tags = null }: { editPost?: (HandleData & { 
       <Editor handleData={handleData} content={data?.content} />
       {<Tags suggestions={suggestions.ShowAllTag} setTags={setTags} tags={inputTags} />}
       <label htmlFor="slug">Slug</label>
-      <input ref={(element) => (inputSlug.current = element)} id="slug" type="text" className="p-1 rounded-lg focus:outline-none" defaultValue={editPost?.slug} disabled={isGenerated} />
-      <div className="flex">
-        <input type="checkbox" onChange={handleIsGenerated} />
-        <span>generate slug from title</span>
+      <input ref={(element) => (inputSlug.current = element)} id="slug" type="text" className="input input-bordered input-sm w-full" defaultValue={editPost?.slug} disabled={isGenerated} />
+      <div className="flex items-center gap-1">
+        <input type="checkbox" onChange={handleIsGenerated} className="checkbox checkbox-primary w-4 h-4" />
+        <span>Generate slug from title</span>
       </div>
       <div className="flex gap-5 items-center self-end mt-5">
-        <p className="uppercase cursor-pointer">save as draft</p>
-        <button className="p-1 px-2 rounded-xl bg-[#3B49DF] text-white uppercase disabled:bg-[#212da9]" onClick={handleClick} disabled={!data}>
+        <button className="uppercase btn btn-outline btn-info btn-sm">save as draft</button>
+        <button className="btn btn-primary btn-sm uppercase disabled:bg-primary-focus" onClick={handleClick} disabled={!data}>
           submit
         </button>
       </div>

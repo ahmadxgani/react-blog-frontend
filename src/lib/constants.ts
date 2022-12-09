@@ -25,9 +25,3 @@ export const DEFAULT_CLASSNAMES = {
   editTagInput: "ReactTags__editTagInput",
   editTagInputField: "ReactTags__editTagInputField",
 };
-
-export const INPUT_FIELD_POSITIONS = {
-  INLINE: "inline",
-  TOP: "top",
-  BOTTOM: "bottom",
-};

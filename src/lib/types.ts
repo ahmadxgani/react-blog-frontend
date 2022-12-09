@@ -1,5 +1,4 @@
 import PropTypes, { InferProps } from "prop-types";
-import { INPUT_FIELD_POSITIONS } from "./constants";
 
 export interface HandleData {
   title: string;
@@ -63,9 +62,7 @@ export const TagPropTypes = {
     name: PropTypes.string.isRequired,
   }).isRequired,
   moveTag: PropTypes.func,
-  removeComponent: PropTypes.func,
   onTagClicked: PropTypes.func,
-  classNames: PropTypes.object,
   readOnly: PropTypes.bool,
   index: PropTypes.number.isRequired,
   allowDragDrop: PropTypes.bool.isRequired,
@@ -88,10 +85,8 @@ export const ClearAllTagsPropTypes = {
 export type ClearAllTagsTypes = InferProps<typeof ClearAllTagsPropTypes>;
 
 export const RemoveComponentPropTypes = {
-  className: PropTypes.string,
   onRemove: PropTypes.func.isRequired,
   readOnly: PropTypes.bool,
-  removeComponent: PropTypes.func,
   tag: PropTypes.shape({
     id: PropTypes.number.isRequired,
     name: PropTypes.string.isRequired,
@@ -127,7 +122,6 @@ export const ReactTagsPropTypes = {
   delimiters: PropTypes.arrayOf(PropTypes.number),
   autofocus: PropTypes.bool,
   inline: PropTypes.bool, // TODO: Remove in v7.x.x
-  inputFieldPosition: PropTypes.oneOf([INPUT_FIELD_POSITIONS.INLINE, INPUT_FIELD_POSITIONS.TOP, INPUT_FIELD_POSITIONS.BOTTOM]),
   handleDelete: PropTypes.func,
   handleAddition: PropTypes.func,
   onTagUpdate: PropTypes.func,
@@ -141,7 +135,6 @@ export const ReactTagsPropTypes = {
   handleInputBlur: PropTypes.func,
   minQueryLength: PropTypes.number,
   shouldRenderSuggestions: PropTypes.func,
-  removeComponent: PropTypes.func,
   autocomplete: PropTypes.oneOfType([PropTypes.bool, PropTypes.number]),
   readOnly: PropTypes.bool,
   name: PropTypes.string,

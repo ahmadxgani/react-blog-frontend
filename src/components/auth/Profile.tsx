@@ -215,11 +215,11 @@ const Profile = () => {
               </div>
             </div>
             <div className="flex gap-2 items-start">
-              <TrashIcon className="w-8" onClick={() => handleDelete(post.slug)} />
+              <TrashIcon className="w-8 cursor-pointer" onClick={() => handleDelete(post.slug)} />
               <Link to={`/post/${post.slug}/edit`}>
                 <Cog8ToothIcon className="w-8" />
               </Link>
-              <BookmarkIcon className="w-8" />
+              <BookmarkIcon className="w-8 cursor-pointer" />
             </div>
           </div>
         ))}

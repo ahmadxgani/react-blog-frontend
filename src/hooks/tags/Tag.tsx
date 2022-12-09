@@ -1,5 +1,4 @@
 import { useDrag, useDrop } from "react-dnd";
-import ClassNames from "classnames";
 
 import RemoveComponent from "./RemoveComponent";
 import { useRef } from "react";
@@ -41,7 +40,7 @@ const Tag = (props: TagTypes) => {
   const tagComponent = (
     <span
       ref={tagRef}
-      className={ClassNames("tag-wrapper", (props.classNames as any).tag)}
+      className="btn btn-primary btn-xs"
       style={{
         opacity,
         cursor: canDrag(props) ? "move" : "auto",
@@ -50,7 +49,7 @@ const Tag = (props: TagTypes) => {
       onTouchStart={props.onTagClicked as React.TouchEventHandler<HTMLSpanElement>}
     >
       {label}
-      <RemoveComponent tag={props.tag} className={(props.classNames as any).remove} removeComponent={props.removeComponent} onRemove={props.onDelete} readOnly={props.readOnly} index={props.index} />
+      <RemoveComponent tag={props.tag} onRemove={props.onDelete} readOnly={props.readOnly} index={props.index} />
     </span>
   );
   return tagComponent;

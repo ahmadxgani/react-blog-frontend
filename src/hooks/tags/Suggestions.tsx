@@ -51,7 +51,13 @@ const Suggestions = (props: SuggestionsTypes) => {
 
   const suggestions = props.suggestions.map((item, i) => {
     return (
-      <li key={i} onMouseDown={() => props.handleClick(i)} onTouchStart={() => props.handleClick(i)} onMouseOver={() => props.handleHover(i)} className={i === props.selectedIndex ? props.classNames.activeSuggestion : ""}>
+      <li
+        key={i}
+        onMouseDown={() => props.handleClick(i)}
+        onTouchStart={() => props.handleClick(i)}
+        onMouseOver={() => props.handleHover(i)}
+        className={(i === props.selectedIndex ? "bg-primary" : "bg-primary-focus") + " btn btn-sm btn-primary rounded-lg"}
+      >
         {renderSuggestion(item, props.query)}
       </li>
     );
@@ -84,9 +90,8 @@ const Suggestions = (props: SuggestionsTypes) => {
       ref={(elem) => {
         suggestionsContainer.current = elem;
       }}
-      className={props.classNames.suggestions}
     >
-      <ul> {suggestions} </ul>
+      <ul className="menu menu-compact p-4 w-60 text-base-content gap-1">{suggestions}</ul>
     </div>
   );
 };
