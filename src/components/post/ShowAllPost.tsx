@@ -12,35 +12,49 @@ function ShowAllPost() {
   if (loading) return <Loading />;
   return (
     <div className="flex flex-col gap-[1.25rem] mx-3">
-      {data?.ShowAllPost.map((post, i) => (
-        <div key={i} className="flex p-[1.125rem] gap-[2.1875rem] items-start bg-white rounded-xl box-content">
-          <div className="flex gap-5">
-            <Link to={`/post/${post.slug}`} className="relative min-w-[14.6875rem] max-w-[14.6875rem] sm:block hidden">
-              <img src={process.env.PUBLIC_URL + "/img/example/thumbnail.jpg"} alt="Thumbnail" className="rounded-[1.25rem]" />
-              <div className="pt-[0.625rem] pr-[0.625rem] top-0 right-0 absolute">
-                <img src={process.env.PUBLIC_URL + "/img/example/profile.jpg"} alt="Profile" className="border-[3px] border-solid border-white rounded-full w-8 h-8" />
-              </div>
-            </Link>
-            <div className="max-w-[26.125rem] flex flex-col gap-2">
-              <div>
-                <Link to={`/post/${post.slug}`} className="font-bold lg:text-3xl sm:text-2xl text-sm leading-6 text-[#353443]">
-                  {post.title}
-                </Link>
-                <p className="sm:text-xl text-sm">
-                  <small className="text-[#37A0C1] font-bold">{post.tags[0] ? post.tags[0].name : "Uncategories"}&#9;</small>
-                  <span className="text-[#8C8B93] font-light">|&#9;</span>
-                  <small className="text-[#8E8D93]">6 min read</small>
-                </p>
-              </div>
+      {data?.ShowAllPost.length ? (
+        data?.ShowAllPost.map((post, i) => (
+          <div key={i} className="flex p-[1.125rem] gap-[2.1875rem] items-start bg-white rounded-xl box-content">
+            <div className="flex gap-5">
+              <Link to={`/post/${post.slug}`} className="relative min-w-[14.6875rem] max-w-[14.6875rem] sm:block hidden">
+                <img src={process.env.PUBLIC_URL + "/img/example/thumbnail.jpg"} alt="Thumbnail" className="rounded-[1.25rem]" />
+                <div className="pt-[0.625rem] pr-[0.625rem] top-0 right-0 absolute">
+                  <img src={process.env.PUBLIC_URL + "/img/example/profile.jpg"} alt="Profile" className="border-[3px] border-solid border-white rounded-full w-8 h-8" />
+                </div>
+              </Link>
+              <div className="max-w-[26.125rem] flex flex-col gap-2">
+                <div>
+                  <Link to={`/post/${post.slug}`} className="font-bold lg:text-3xl sm:text-2xl text-sm leading-6 text-[#353443]">
+                    {post.title}
+                  </Link>
+                  <p className="sm:text-xl text-sm">
+                    <small className="text-[#37A0C1] font-bold">{post.tags[0] ? post.tags[0].name : "Uncategories"}&#9;</small>
+                    <span className="text-[#8C8B93] font-light">|&#9;</span>
+                    <small className="text-[#8E8D93]">6 min read</small>
+                  </p>
+                </div>
 
-              <Link to={`/post/${post.slug}`} className="text-[#57565C] text-sm overflow-hidden">
-                Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s...
+                <Link to={`/post/${post.slug}`} className="text-[#57565C] text-sm overflow-hidden">
+                  Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s...
+                </Link>
+              </div>
+            </div>
+            <BookmarkIcon className="w-8" />
+          </div>
+        ))
+      ) : (
+        <div className="card w-96 bg-base-100 shadow-xl card-normal">
+          <div className="card-body">
+            <h2 className="card-title">Belum ada artikel!</h2>
+            <p>Silahkan Login dan mulailah membuat artikel</p>
+            <div className="card-actions justify-end">
+              <Link to="/login" className="btn btn-primary">
+                Login
               </Link>
             </div>
           </div>
-          <BookmarkIcon className="w-8" />
         </div>
-      ))}
+      )}
     </div>
   );
 }
