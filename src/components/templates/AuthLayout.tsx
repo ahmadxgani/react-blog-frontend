@@ -13,7 +13,7 @@ const AuthLayout = () => {
     }
   }, []);
 
-  return <div className="min-h-screen h-full flex items-center justify-center">{outlet}</div>;
+  return <div className="h-full flex items-center justify-center">{outlet}</div>;
 };
 
 export default AuthLayout;

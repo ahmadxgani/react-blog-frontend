@@ -104,10 +104,10 @@ const Profile = () => {
               slug,
             },
           });
-          Swal.fire("Deleted!", "The post has been deleted", "success");
+          MySwal.fire("Deleted!", "The post has been deleted", "success");
         } catch (error) {
           console.log(error);
-          Swal.fire("Oops!", "some error occurred", "error");
+          MySwal.fire("Oops!", "some error occurred", "error");
         }
       }
     });
@@ -132,7 +132,7 @@ const Profile = () => {
           });
         } catch (error) {
           console.log(error);
-          Swal.fire("Oops!", "some error occurred", "error");
+          MySwal.fire("Oops!", "some error occurred", "error");
         }
       }
     });

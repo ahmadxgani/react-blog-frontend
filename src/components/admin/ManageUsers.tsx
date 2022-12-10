@@ -58,10 +58,10 @@ const ManageUsers = () => {
               id: i,
             },
           });
-          Swal.fire("Deleted!", "The Users has been deleted", "success");
+          MySwal.fire("Deleted!", "The Users has been deleted", "success");
         } catch (error) {
           console.log(error);
-          Swal.fire("Oops!", "some error occurred", "error");
+          MySwal.fire("Oops!", "some error occurred", "error");
         }
       }
     });

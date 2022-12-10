@@ -2,17 +2,20 @@ import { useLazyQuery } from "@apollo/client";
 import { EnvelopeIcon, LockClosedIcon } from "@heroicons/react/24/solid";
 import { FormEventHandler, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
 import { Query } from "../../../generated-types";
 import { useUser } from "../../global/UserProvider";
 import { LOGIN } from "../../GraphQL/Queries";
 
 const Login = () => {
+  const MySwal = withReactContent(Swal);
   const navigate = useNavigate();
   const user = useUser();
   const location = useLocation();
   const [email, setEmail] = useState(() => location.state?.email || "");
   const [password, setPassword] = useState("");
-  const [fetchToken, { loading, called }] = useLazyQuery<Query>(LOGIN, {
+  const [fetchToken, { loading }] = useLazyQuery<Query>(LOGIN, {
     onCompleted(data) {
       user!.setCurrentUser({
         type: "login",
@@ -27,27 +30,27 @@ const Login = () => {
       });
       navigate("/profile");
     },
+    onError(error) {
+      MySwal.fire("Failed to login!", "Email or Password not found", "error");
+      console.log(error);
+    },
   });
 
   const onSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
     if (email && password) {
-      try {
-        await fetchToken({
-          variables: {
-            email,
-            password,
-          },
-        });
-      } catch (error) {
-        console.log(error);
-      }
+      await fetchToken({
+        variables: {
+          email,
+          password,
+        },
+      });
     }
   };
 
   return (
     <>
-      {called && loading && <progress className="progress rounded-none absolute top-0 inset-x-0"></progress>}
+      {loading && <progress className="progress rounded-none absolute top-0 inset-x-0"></progress>}
       <form onSubmit={onSubmit} className="card w-96 shadow-xl bg-white">
         <div className="card-body">
           <h2 className="card-title">Login</h2>
@@ -87,7 +90,7 @@ const Login = () => {
             </label>
           </div>
 
-          <button className="btn btn-primary disabled:bg-[#5014b8] mt-5" disabled={called}>
+          <button className="btn btn-primary disabled:bg-[#5014b8] mt-5" disabled={loading}>
             Submit
           </button>
           <p>
