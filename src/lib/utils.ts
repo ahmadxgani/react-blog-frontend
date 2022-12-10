@@ -1,5 +1,14 @@
 import { escapeRegExp } from "lodash";
 
+export const titleCase = (str: string) => {
+  // cara pertama
+  // return str.split(" ").map((str) => str[0].toUpperCase() + str.slice(1)).join();
+  // cara kedua | by chat gpt :v
+  return str.replace(/\b[a-z]/gi, function (letter) {
+    return letter.toUpperCase();
+  });
+};
+
 export function buildRegExpFromDelimiters(delimiters: any) {
   const delimiterChars = delimiters
     .map((delimiter: any) => {

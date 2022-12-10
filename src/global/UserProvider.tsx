@@ -1,4 +1,4 @@
-import { createContext, ReactNode, useContext, useReducer } from "react";
+import { createContext, useContext, useReducer } from "react";
 import { User } from "../lib/types";
 import Reducer from "./Reducer";
 
@@ -14,7 +14,7 @@ let initialState: {
 
 const UserContext = createContext<{ currentUser: typeof initialState; setCurrentUser: React.Dispatch<any> } | null>(null);
 
-const UserProvider = ({ children }: { children: ReactNode }) => {
+const UserProvider = ({ children }: { children: React.ReactNode }) => {
   const [currentUser, setCurrentUser] = useReducer(Reducer, initialState);
   return <UserContext.Provider value={{ currentUser, setCurrentUser }}>{children}</UserContext.Provider>;
 };

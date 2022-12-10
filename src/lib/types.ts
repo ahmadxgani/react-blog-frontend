@@ -10,11 +10,15 @@ export interface SelectedTag {
   id: number;
 }
 
-export type Pages = {
+export interface Page {
   label: string;
   path: string;
   role?: string;
-}[];
+  title?: string;
+  isInNavBar?: boolean;
+}
+
+export type Pages = Page[];
 
 export interface EditorProps {
   handleData: (data: HandleData) => void;
