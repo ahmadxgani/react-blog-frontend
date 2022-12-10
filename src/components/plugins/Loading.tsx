@@ -1,5 +1,12 @@
 function Loading() {
-  return <div className="w-full h-screen fixed bg-[url('https://media.giphy.com/media/8agqybiK5LW8qrG3vJ/giphy.gif')] bg-center bg-no-repeat z-10 bg-[#E6E5F3]"></div>;
+  return (
+    <div className="flex justify-center items-center absolute inset-0">
+      <div className="relative">
+        <div className="w-12 h-12 rounded-full absolute border-8 border-solid border-base-100"></div>
+        <div className="w-12 h-12 rounded-full animate-spin absolute border-8 border-solid border-primary border-t-transparent shadow-md"></div>
+      </div>
+    </div>
+  );
 }
 
 export default Loading;
