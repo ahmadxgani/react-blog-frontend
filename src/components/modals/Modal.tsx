@@ -38,7 +38,7 @@ const Modal = ({ children, show, setShow, title }: Props) => {
     <>
       {show && (
         <PortalModal wrapperId="modal-portal">
-          <div ref={modalRef} className="absolute mx-auto top-28 inset-x-0 card w-96 bg-base-100 shadow-xl">
+          <div ref={modalRef} className="absolute mx-auto top-28 inset-x-0 card w-96 bg-base-100 shadow-xl z-50">
             <div className="card-body gap-5">
               <header className="card-title justify-between">
                 <h3 className="text-lg">{title}</h3>

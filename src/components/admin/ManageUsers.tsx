@@ -99,46 +99,45 @@ const ManageUsers = () => {
   if (loading) return <Loading />;
 
   return (
-    <div className="w-full max-w-2xl mx-auto bg-white shadow-lg rounded-sm border border-gray-200">
-      <header className="px-5 py-4 border-b border-gray-100">
-        <h2 className="font-semibold text-gray-800">List Of Users</h2>
-      </header>
-      <div className="p-3">
+    <div className="mx-auto shadow-xl card w-96 md:w-full card-compact bg-base-100">
+      <div className="card-body">
+        <header className="card-title justify-between">
+          <h2 className="font-semibold">List Of Users</h2>
+        </header>
+        <div className="divider m-0 mb-1" />
         <div className="overflow-x-auto">
-          <table className="table-auto w-full">
-            <thead className="text-xs font-semibold uppercase text-gray-400 bg-gray-50">
+          <table className="table table-compact w-full">
+            <thead>
               <tr>
-                <th className="p-2 whitespace-nowrap">
-                  <div className="font-semibold text-left">No</div>
-                </th>
-                <th className="p-2 whitespace-nowrap">
+                <th></th>
+                <th>
                   <div className="font-semibold text-left">Username</div>
                 </th>
-                <th className="p-2 whitespace-nowrap">
+                <th>
                   <div className="font-semibold text-left">Email</div>
                 </th>
-                <th className="p-2 whitespace-nowrap">
+                <th>
                   <div className="font-semibold text-left">Role</div>
                 </th>
                 <th></th>
               </tr>
             </thead>
-            <tbody className="text-sm divide-y divide-gray-100">
+            <tbody>
               {data?.ShowAllAuthor.map((author, i) => {
                 return (
                   <tr key={i}>
-                    <td className="p-2 whitespace-nowrap">{++i}</td>
-                    <td className="p-2 whitespace-nowrap">
+                    <td>{++i}</td>
+                    <td>
                       <div className="text-left">{author.username}</div>
                     </td>
                     <td>{author.email}</td>
                     <td>{author.role}</td>
-                    <td className="p-2 whitespace-nowrap">
-                      <div className="flex gap-5 items-center">
-                        <button className="text-sm p-1 px-2 bg-[#5561E3] text-white rounded-lg" onClick={() => handleEditProfile(author.id, author.username)}>
+                    <td>
+                      <div className="flex gap-3 items-center">
+                        <button className="btn btn-sm btn-primary" onClick={() => handleEditProfile(author.id, author.username)}>
                           Edit
                         </button>
-                        <button className="text-sm p-1 px-2 bg-[#5561E3] text-white rounded-lg" onClick={() => handleDeleteAuthor(author.id)}>
+                        <button className="btn btn-sm btn-primary" onClick={() => handleDeleteAuthor(author.id)}>
                           Delete
                         </button>
                       </div>
@@ -153,7 +152,7 @@ const ManageUsers = () => {
       <Modal show={showEditModal} setShow={handleCloseModal} title="Edit Author">
         <form onSubmit={handleEditOnSubmit} className="flex flex-col gap-2">
           <input type="text" className="p-1 rounded-lg focus:outline-none" value={inputEditUsername} onChange={handleEditOnChange} />
-          <button className="p-1 px-2 bg-[#5561E3] text-white rounded-lg">Submit</button>
+          <button className="btn btn-sm btn-primary">Submit</button>
         </form>
       </Modal>
     </div>

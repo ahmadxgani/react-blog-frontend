@@ -140,40 +140,37 @@ const ManageTags = () => {
   }, [selectedTag]);
 
   return (
-    <div className="w-1/2 max-w-2xl mx-auto bg-white shadow-lg rounded-sm border border-gray-200">
-      <header className="px-5 py-4 border-b border-gray-100 flex justify-between">
-        <h2 className="font-semibold text-gray-800">List Of Tags</h2>
-        <button className="text-sm p-1 px-2 bg-[#5561E3] text-white rounded-lg" onClick={() => setShowCreateModal(true)}>
-          New Tag
-        </button>
-      </header>
-      <div className="p-3">
+    <div className="mx-auto shadow-xl card w-96 bg-base-100">
+      <div className="card-body">
+        <header className="card-title justify-between">
+          <h2 className="font-semibold">List Of Tags</h2>
+          <button className="btn btn-primary btn-sm" onClick={() => setShowCreateModal(true)}>
+            New Tag
+          </button>
+        </header>
+        <div className="divider m-0 mb-1" />
         <div className="overflow-x-auto">
-          <table className="table-auto w-full">
-            <thead className="text-xs font-semibold uppercase text-gray-400 bg-gray-50">
+          <table className="table table-compact w-full">
+            <thead>
               <tr>
-                <th className="p-2 whitespace-nowrap">
-                  <div className="font-semibold text-left">No</div>
-                </th>
-                <th className="p-2 whitespace-nowrap">
-                  <div className="font-semibold text-left">Name</div>
-                </th>
                 <th></th>
+                <th>Name</th>
+                <th>Action</th>
               </tr>
             </thead>
-            <tbody className="text-sm divide-y divide-gray-100">
+            <tbody>
               {tags.map((tag, i) => (
                 <tr key={i}>
-                  <td className="p-2 whitespace-nowrap">{++i}</td>
-                  <td className="p-2 whitespace-nowrap">
+                  <td>{++i}</td>
+                  <td>
                     <div className="text-left">{tag.name}</div>
                   </td>
-                  <td className="p-2 whitespace-nowrap">
-                    <div className="flex gap-5 items-center">
-                      <button className="text-sm p-1 px-2 bg-[#5561E3] text-white rounded-lg" onClick={() => handleEditTag({ name: tag.name, id: tag.id })}>
+                  <td>
+                    <div className="flex gap-3 items-center">
+                      <button className="btn btn-xs btn-primary" onClick={() => handleEditTag({ name: tag.name, id: tag.id })}>
                         Edit
                       </button>
-                      <button className="text-sm p-1 px-2 bg-[#5561E3] text-white rounded-lg" onClick={() => handleDeleteTag(tag.id)}>
+                      <button className="btn btn-xs btn-primary" onClick={() => handleDeleteTag(tag.id)}>
                         Delete
                       </button>
                     </div>
@@ -187,13 +184,13 @@ const ManageTags = () => {
       <Modal show={showEditModal} setShow={setShowEditModal} title="Edit Tag">
         <form onSubmit={handleEditOnSubmit} className="flex flex-col gap-2">
           <input id="nameTag" type="text" className="p-1 rounded-lg focus:outline-none" value={inputEditTag} onChange={handleEditOnChange} />
-          <button className="p-1 px-2 bg-[#5561E3] text-white rounded-lg">Submit</button>
+          <button className="btn btn-primary btn-sm">Submit</button>
         </form>
       </Modal>
       <Modal show={showCreateModal} setShow={setShowCreateModal} title="Create Tag">
         <form onSubmit={handleCreateOnSubmit} className="flex flex-col gap-2">
           <input id="nameTag" type="text" className="p-1 rounded-lg focus:outline-none" />
-          <button className="p-1 px-2 bg-[#5561E3] text-white rounded-lg">Submit</button>
+          <button className="btn btn-primary btn-sm">Submit</button>
         </form>
       </Modal>
     </div>

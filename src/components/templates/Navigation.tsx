@@ -5,7 +5,7 @@ import { useUser } from "../../global/UserProvider";
 import { GET_ROLE } from "../../GraphQL/Queries";
 import { Pages, User } from "../../lib/types";
 import Loading from "../plugins/Loading";
-import { Bars3Icon, MagnifyingGlassIcon } from "@heroicons/react/24/solid";
+import { Bars3BottomLeftIcon, MagnifyingGlassIcon } from "@heroicons/react/24/solid";
 import { useTheme } from "../../global/ThemeProvider";
 
 function Navigation({ pages }: { pages: Pages }) {
@@ -29,10 +29,11 @@ function Navigation({ pages }: { pages: Pages }) {
   return (
     <nav className="navbar bg-base-100">
       <div className="dropdown dropdown-bottom">
-        <label tabIndex={0} className="btn btn-ghost btn-circle avatar">
-          <Bars3Icon />
+        <label tabIndex={0} className="btn btn-ghost btn-xs md:btn-md btn-circle avatar">
+          <Bars3BottomLeftIcon className="md:w-9 w-5" />
         </label>
         <ul tabIndex={0} className="mt-3 p-2 shadow menu menu-compact dropdown-content bg-base-100 rounded-box w-52 gap-1">
+          <input type="checkbox" className="toggle self-end" onClick={() => handleToggleTheme(currentTheme)} defaultChecked={currentTheme === "dark"} />
           {pages
             .filter((page) => !page.role)
             .map(({ label, path }, i) => (
@@ -56,16 +57,15 @@ function Navigation({ pages }: { pages: Pages }) {
         </ul>
       </div>
       <div className="flex-1">
-        <Link to="/" className="btn btn-ghost normal-case text-xl">
+        <Link to="/" className="btn btn-ghost normal-case text-base md:text-lg lg:text-xl btn-sm md:btn-md">
           Zero's Blog
         </Link>
       </div>
       <div className="flex-none gap-2">
-        <input type="checkbox" className="toggle" onClick={() => handleToggleTheme(currentTheme)} defaultChecked={currentTheme === "dark"} />
         <div className="form-control">
           <div className="input-group">
-            <input type="text" placeholder="Search…" className="input input-bordered" />
-            <button className="btn btn-square">
+            <input type="text" placeholder="Search…" className="input input-bordered input-xs md:input-sm" />
+            <button className="btn btn-square btn-xs md:btn-sm">
               <MagnifyingGlassIcon className="h-6 w-6" />
             </button>
           </div>
