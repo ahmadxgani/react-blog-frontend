@@ -16,6 +16,7 @@ export interface Page {
   role?: string;
   title?: string;
   isInNavBar?: boolean;
+  regex?: string;
 }
 
 export type Pages = Page[];

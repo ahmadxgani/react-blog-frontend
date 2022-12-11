@@ -9,7 +9,7 @@ const TitleProvider = ({ children }: { children: React.ReactNode }) => {
   let curLoc = useLocation();
 
   useEffect(() => {
-    const pages = mappedRoutes.find((page) => page.path === curLoc.pathname);
+    const pages = mappedRoutes.find((page) => (page.regex ? new RegExp(page.regex).test(curLoc.pathname) : page.path === curLoc.pathname));
     if (pages?.title || pages?.label) {
       document.title = `Blog | ${titleCase(pages?.title || pages?.label)}`;
     }

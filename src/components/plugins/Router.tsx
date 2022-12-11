@@ -22,14 +22,14 @@ const protectedRoutes = [
   { label: "profile", path: "/profile", isInNavBar: true, title: "my profile" },
   { label: "new post", path: "/post/", isInNavBar: true },
   { label: "dashboard", path: "/dashboard/tags", title: "manage tags" },
-  { label: "edit post", path: "/post/:slug/edit" },
+  { label: "edit post", path: "/post/:slug/edit", regex: "^\/post\/[^\/]+\/edit$" },
 ];
 const unprotectedRoutes = [
   { label: "login", path: "/login", isInNavBar: true },
   { label: "register", path: "/register", isInNavBar: true },
   { label: "forgot password", path: "/recovery-password" },
 ];
-export const mappedRoutes: Pages = [{ label: "home", path: "/" }, { label: "detail", path: "/post/:slug" }, ...protectedRoutes, ...unprotectedRoutes];
+export const mappedRoutes: Pages = [{ label: "home", path: "/" }, { label: "detail post", path: "/post/:slug", regex: "^\/post\/[^\/]+(\/?)$" }, ...protectedRoutes, ...unprotectedRoutes];
 
 export const Router = () => {
   const user = useUser();
