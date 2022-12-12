@@ -6,7 +6,7 @@ import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import { Query } from "../../../generated-types";
 import { useUser } from "../../global/UserProvider";
-import { DELETE_POST, DELETE_USER, UPDATE_PROFILE } from "../../GraphQL/Mutations";
+import { DELETE_POST, DELETE_USER, UPDATE_PROFILE, UPLOAD_IMAGE } from "../../GraphQL/Mutations";
 import { LOAD_POSTS_BY_AUTHOR } from "../../GraphQL/Queries";
 import { User } from "../../lib/types";
 import Loading from "../plugins/Loading";
@@ -17,6 +17,7 @@ const Profile = () => {
   const navigate = useNavigate();
   const [username, setUsername] = useState(() => (user?.currentUser.user as User)?.username);
   const [updateProfile] = useMutation(UPDATE_PROFILE);
+  const [uploadImage] = useMutation(UPLOAD_IMAGE);
   const [deleteMyAccount] = useMutation(DELETE_USER, {
     onCompleted() {
       user?.setCurrentUser({ type: "logout" });
@@ -83,8 +84,10 @@ const Profile = () => {
     });
   };
 
-  const handleImage: ChangeEventHandler<HTMLInputElement> = (e) => {
-    console.dir(e.target.files);
+  const handleImage: ChangeEventHandler<HTMLInputElement> = ({ target: { validity, files } }) => {
+    if (files) {
+      if (validity.valid) uploadImage({ variables: { file: files[0] } });
+    }
   };
 
   const handleDelete = (slug: string) => {

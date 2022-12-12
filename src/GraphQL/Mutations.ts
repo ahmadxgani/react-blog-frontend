@@ -24,6 +24,14 @@ export const DELETE_POST = gql`
   }
 `;
 
+export const UPLOAD_IMAGE = gql`
+  mutation ($file: Upload!) {
+    uploadFile(file: $file) {
+      secure_url
+    }
+  }
+`;
+
 export const REGISTER = gql`
   mutation CreateAuthor($username: String!, $password: String!, $email: String!) {
     CreateAuthor(payload: { username: $username, password: $password, email: $email }) {

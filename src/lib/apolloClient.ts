@@ -1,7 +1,8 @@
-import { ApolloClient, HttpLink, ApolloLink, InMemoryCache, concat } from "@apollo/client";
+import { ApolloClient, ApolloLink, InMemoryCache, concat } from "@apollo/client";
+import { createUploadLink } from "apollo-upload-client";
 
 const client = (token: string) => {
-  const httpLink = new HttpLink({ uri: "http://localhost:3000/graphql" });
+  const httpLink = createUploadLink({ uri: "http://localhost:3000/graphql" });
 
   const authMiddleware = new ApolloLink((operation, forward) => {
     operation.setContext(({ headers = {} }) => ({
