@@ -1,7 +1,9 @@
 import { useQuery } from "@apollo/client";
-import { useParams } from "react-router-dom";
+import { useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { Query } from "../../../generated-types";
 import { GET_POST } from "../../GraphQL/Queries";
+import useUsersPost from "../../hooks/useUsersPost";
 import Loading from "../plugins/Loading";
 import NewPost from "./NewPost";
 
@@ -12,6 +14,15 @@ function EditPost() {
       slug: urlParams.slug,
     },
   });
+
+  const isUsersPost = useUsersPost(data?.GetPost.id as number);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (data && !isUsersPost) {
+      navigate("/");
+    }
+  }, [isUsersPost]);
 
   if (loading) return <Loading />;
 

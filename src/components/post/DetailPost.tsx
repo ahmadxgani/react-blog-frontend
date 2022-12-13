@@ -9,6 +9,7 @@ import { Cog8ToothIcon, LinkIcon } from "@heroicons/react/24/solid";
 import { ReactComponent as Twitter } from "../../icon/Twitter.svg";
 import { ReactComponent as LinkedIn } from "../../icon/LinkedIn.svg";
 import { ReactComponent as Facebook } from "../../icon/Facebook.svg";
+import useUsersPost from "../../hooks/useUsersPost";
 
 function DetailPost() {
   const urlParams = useParams();
@@ -20,6 +21,8 @@ function DetailPost() {
   });
 
   const user = useUser();
+
+  const isUsersPost = useUsersPost(data?.GetPost.id as number);
 
   if (loading) return <Loading />;
 
@@ -47,7 +50,7 @@ function DetailPost() {
               </div>
             </div>
             <div className="flex gap-1 items-center">
-              {!!user?.currentUser.user && (
+              {!!user?.currentUser.user && isUsersPost && (
                 <Link to={`/post/${data?.GetPost.slug}/edit`}>
                   <Cog8ToothIcon className="w-8" />
                 </Link>

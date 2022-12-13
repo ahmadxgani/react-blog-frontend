@@ -1,3 +1,4 @@
+/* eslint-disable no-useless-escape */
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Dashboard from "../admin/Dashboard";
 import ManageTags from "../admin/ManageTags";
