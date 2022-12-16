@@ -17,8 +17,8 @@ export const EDIT_POST = gql`
 `;
 
 export const DELETE_POST = gql`
-  mutation DeletePost($slug: String!) {
-    DeletePost(payload: { slug: $slug }) {
+  mutation DeletePost($id: Int!) {
+    DeletePost(payload: { id: $id }) {
       success
     }
   }

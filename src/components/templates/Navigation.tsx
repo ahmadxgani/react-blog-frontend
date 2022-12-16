@@ -57,7 +57,7 @@ function Navigation({ pages }: { pages: Pages }) {
         </ul>
       </div>
       <div className="flex-1">
-        <Link to="/" className="btn btn-ghost normal-case text-base md:text-lg lg:text-xl btn-sm md:btn-md">
+        <Link to="/" className="btn btn-ghost normal-case text-base md:text-lg lg:text-xl btn-sm md:btn-lg">
           Zero's Blog
         </Link>
       </div>

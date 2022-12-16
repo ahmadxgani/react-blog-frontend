@@ -90,7 +90,7 @@ const Profile = () => {
     }
   };
 
-  const handleDelete = (slug: string) => {
+  const handleDelete = (id: number) => {
     MySwal.fire({
       title: "Are you sure?",
       text: "You won't be able to revert this!",
@@ -104,7 +104,7 @@ const Profile = () => {
         try {
           await deletePost({
             variables: {
-              slug,
+              id,
             },
           });
           MySwal.fire("Deleted!", "The post has been deleted", "success");
@@ -218,7 +218,7 @@ const Profile = () => {
               </div>
             </div>
             <div className="flex gap-2 items-start">
-              <TrashIcon className="w-8 cursor-pointer" onClick={() => handleDelete(post.slug)} />
+              <TrashIcon className="w-8 cursor-pointer" onClick={() => handleDelete(post.id)} />
               <Link to={`/post/${post.slug}/edit`}>
                 <Cog8ToothIcon className="w-8" />
               </Link>
