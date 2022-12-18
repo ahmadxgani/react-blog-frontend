@@ -132,7 +132,7 @@ function NewPost({ editPost = null, tags = null }: { editPost?: (HandleData & { 
       </div>
       <div className="flex gap-5 items-center self-end mt-5">
         <button className="uppercase btn btn-outline btn-info btn-sm">save as draft</button>
-        <button className="btn btn-primary btn-sm uppercase disabled:bg-primary-focus" onClick={handleClick} disabled={!data}>
+        <button className="btn btn-primary btn-sm uppercase disabled:bg-primary-focus" onClick={handleClick}>
           submit
         </button>
       </div>

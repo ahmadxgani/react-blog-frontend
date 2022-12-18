@@ -19,6 +19,7 @@
     "@apollo/client": "^3.7.1",
     "@editorjs/editorjs": "^2.25.0",
     "@editorjs/header": "^2.6.2",
+    "@editorjs/image": "^2.7.1",
     "@heroicons/react": "^2.0.13",
     "@types/node": "^16.11.68",
     "@types/react": "^18.0.21",

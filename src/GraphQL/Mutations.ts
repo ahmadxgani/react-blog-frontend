@@ -25,9 +25,9 @@ export const DELETE_POST = gql`
 `;
 
 export const UPLOAD_IMAGE = gql`
-  mutation ($file: Upload!) {
+  mutation UploadFile($file: Upload!) {
     uploadFile(file: $file) {
-      secure_url
+      url
     }
   }
 `;

@@ -45,11 +45,11 @@ function ShowAllPost() {
       ) : (
         <div className="card w-96 bg-base-100 shadow-xl card-normal">
           <div className="card-body">
-            <h2 className="card-title">Belum ada artikel!</h2>
-            <p>Silahkan Login dan mulailah membuat artikel</p>
+            <h2 className="card-title">Belum ada artikel.</h2>
+            <p>Mulailah membuat artikel!</p>
             <div className="card-actions justify-end">
-              <Link to="/login" className="btn btn-primary">
-                Login
+              <Link to="/post" className="btn btn-primary">
+                Buat artikel
               </Link>
             </div>
           </div>

@@ -1,8 +1,13 @@
+// @ts-nocheck
 import "./editor.css";
 import { useEffect, useRef, useState } from "react";
 import EditorJS, { BlockToolConstructable, LogLevels, OutputData } from "@editorjs/editorjs";
+import ImageTool from "@editorjs/image";
 import Header from "@editorjs/header";
 import { EditorProps } from "../../lib/types";
+import { useMutation } from "@apollo/client";
+import { Mutation } from "../../../generated-types";
+import { UPLOAD_IMAGE } from "../../GraphQL/Mutations";
 
 const DEFAULT_INITIAL_DATA = (content?: null | string) => {
   return content
@@ -32,6 +37,7 @@ const EDITTOR_HOLDER_ID = "editorjs";
 const Editor = ({ handleData, content = null }: EditorProps) => {
   const ejInstance = useRef<EditorJS | null>(null);
   const [editorData, setEditorData] = useState<OutputData>(() => DEFAULT_INITIAL_DATA(content));
+  const [uploadImage] = useMutation<Mutation>(UPLOAD_IMAGE);
 
   useEffect(() => {
     if (!ejInstance.current) {
@@ -84,6 +90,35 @@ const Editor = ({ handleData, content = null }: EditorProps) => {
           config: {
             placeholder: "Title here...",
             defaultLevel: 3,
+          },
+        },
+        image: {
+          class: ImageTool,
+          config: {
+            uploader: {
+              async uploadByFile(file) {
+                try {
+                  const response = await uploadImage({
+                    variables: {
+                      file,
+                    },
+                  });
+                  return {
+                    success: 1,
+                    file: {
+                      url: response.data?.uploadFile.url,
+                    },
+                    stretched: true,
+                    types: "image/png, image/jpg",
+                  };
+                } catch (error) {
+                  console.log(error);
+                  return {
+                    success: 0,
+                  };
+                }
+              },
+            },
           },
         },
       },
