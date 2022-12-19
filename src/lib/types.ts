@@ -31,6 +31,8 @@ export interface User {
   username: string;
   email: string;
   token: string;
+  image: string;
+  delete_image: string;
 }
 
 export interface ReactTagsState {

@@ -59,11 +59,11 @@ export const UPDATE_TAG = gql`
 `;
 
 export const UPDATE_PROFILE = gql`
-  mutation UpdateAuthor($id: Int!, $username: String!) {
-    UpdateAuthor(payload: { id: $id, username: $username }) {
-      id
+  mutation UpdateAuthor($id: Int!, $username: String!, $file: Upload) {
+    UpdateAuthor(payload: { id: $id, username: $username }, file: $file) {
       username
-      email
+      image
+      delete_image
     }
   }
 `;

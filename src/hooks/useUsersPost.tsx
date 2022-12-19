@@ -9,9 +9,12 @@ function useUsersPost(idPost: number) {
   const user = useUser();
   const { data: usersPost, loading } = useQuery<Query>(LOAD_POSTS_BY_AUTHOR, {
     variables: {
-      id: (user?.currentUser.user as User).id,
+      id: (user?.currentUser.user as User)?.id,
     },
+    skip: user?.currentUser.user === null,
   });
+
+  if (!user?.currentUser.user) return false;
   if (loading) return <Loading />;
 
   if (usersPost?.GetAuthorById.posts.length) {

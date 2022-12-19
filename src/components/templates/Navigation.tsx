@@ -26,6 +26,7 @@ function Navigation({ pages }: { pages: Pages }) {
     auth?.setCurrentUser({ type: "logout" });
     navigate("/login");
   };
+
   return (
     <nav className="navbar bg-base-100">
       <div className="dropdown dropdown-bottom">
@@ -74,7 +75,7 @@ function Navigation({ pages }: { pages: Pages }) {
           <div className="dropdown dropdown-end">
             <label tabIndex={0} className="btn btn-ghost btn-circle avatar">
               <div className="w-10 rounded-full">
-                <img src={process.env.PUBLIC_URL + "/img/example/user.jpeg"} width={80} alt="profile" />
+                <img src={(auth.currentUser.user as User).image ? (auth.currentUser.user as User).image : process.env.PUBLIC_URL + "/img/default_user.png"} width={80} alt="profile" />
               </div>
             </label>
             <ul tabIndex={0} className="mt-3 p-2 shadow menu menu-compact dropdown-content bg-base-100 rounded-box w-52 gap-1">

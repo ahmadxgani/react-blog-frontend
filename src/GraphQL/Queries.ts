@@ -6,6 +6,7 @@ export const GET_POST = gql`
       id
       author {
         username
+        image
       }
       title
       content
@@ -36,6 +37,9 @@ export const LOAD_POSTS = gql`
       tags {
         name
       }
+      author {
+        image
+      }
     }
   }
 `;
@@ -43,6 +47,7 @@ export const LOAD_POSTS = gql`
 export const LOAD_POSTS_BY_AUTHOR = gql`
   query LoadPostsByAuthor($id: Int!) {
     GetAuthorById(payload: { id: $id }) {
+      image
       posts {
         id
         title
@@ -62,6 +67,8 @@ export const LOGIN = gql`
       token
       username
       email
+      image
+      delete_image
     }
   }
 `;

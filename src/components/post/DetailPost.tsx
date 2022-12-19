@@ -27,7 +27,7 @@ function DetailPost() {
   if (loading) return <Loading />;
 
   const Article = () => (
-    <section className="xl:prose-xl lg:prose-lg md:prose-base prose-sm prose shadow-lg px-3 rounded-lg !max-w-[43.75rem] md:px-[1.25rem]">
+    <section className="xl:prose-xl lg:prose-lg md:prose-base prose-sm prose shadow-lg px-3 rounded-lg md:px-[1.25rem] !max-w-full">
       <Output data={JSON.parse(data!.GetPost.content)} />
     </section>
   );
@@ -39,7 +39,7 @@ function DetailPost() {
         <div className="flex flex-col gap-2">
           <div className="flex justify-between items-center">
             <div className="flex gap-3 items-center">
-              <img src={process.env.PUBLIC_URL + "/img/example/user.jpeg"} alt="Twitter" className="w-[3.125rem] rounded-full" />
+              <img src={data?.GetPost.author.image ? data.GetPost.author.image : process.env.PUBLIC_URL + "/img/default_user.png"} alt="Profile" className="w-[3.125rem] rounded-full" />
               <div className="leading-none">
                 <h1 className="text-base font-semibold">{data!.GetPost.author.username}</h1>
                 <span className="text-sm">
@@ -75,7 +75,7 @@ function DetailPost() {
             )}
           </div>
         </div>
-        <div className="flex flex-col gap-1">{<Article />}</div>
+        <Article />
       </div>
     </div>
   );

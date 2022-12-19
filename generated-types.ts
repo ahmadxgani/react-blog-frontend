@@ -21,8 +21,10 @@ export type Scalars = {
 export type Author = {
   __typename?: 'Author';
   createdAt: Scalars['DateTime'];
+  delete_image?: Maybe<Scalars['String']>;
   email: Scalars['String'];
   id: Scalars['Float'];
+  image?: Maybe<Scalars['String']>;
   password: Scalars['String'];
   posts: Array<Post>;
   role: Roles;
@@ -87,9 +89,11 @@ export type LoginInput = {
 
 export type LoginType = {
   __typename?: 'LoginType';
+  delete_image?: Maybe<Scalars['String']>;
   email: Scalars['String'];
   expiresIn: Scalars['String'];
   id: Scalars['Int'];
+  image?: Maybe<Scalars['String']>;
   token: Scalars['String'];
   username: Scalars['String'];
 };
@@ -140,6 +144,7 @@ export type MutationDeleteTagArgs = {
 
 
 export type MutationUpdateAuthorArgs = {
+  file?: InputMaybe<Scalars['Upload']>;
   payload: UpdateAuthorInput;
 };
 
@@ -219,7 +224,7 @@ export type Tag = {
 
 export type UpdateAuthorInput = {
   id: Scalars['Int'];
-  username: Scalars['String'];
+  username?: InputMaybe<Scalars['String']>;
 };
 
 export type UpdatePostInput = {
@@ -303,10 +308,11 @@ export type UpdateTagMutation = { __typename?: 'Mutation', UpdateTag: { __typena
 export type UpdateAuthorMutationVariables = Exact<{
   id: Scalars['Int'];
   username: Scalars['String'];
+  file?: InputMaybe<Scalars['Upload']>;
 }>;
 
 
-export type UpdateAuthorMutation = { __typename?: 'Mutation', UpdateAuthor: { __typename?: 'Author', id: number, username: string, email: string } };
+export type UpdateAuthorMutation = { __typename?: 'Mutation', UpdateAuthor: { __typename?: 'Author', username: string, image?: string | null, delete_image?: string | null } };
 
 export type DeleteAuthorMutationVariables = Exact<{
   id: Scalars['Int'];
@@ -615,11 +621,11 @@ export type UpdateTagMutationHookResult = ReturnType<typeof useUpdateTagMutation
 export type UpdateTagMutationResult = Apollo.MutationResult<UpdateTagMutation>;
 export type UpdateTagMutationOptions = Apollo.BaseMutationOptions<UpdateTagMutation, UpdateTagMutationVariables>;
 export const UpdateAuthorDocument = gql`
-    mutation UpdateAuthor($id: Int!, $username: String!) {
-  UpdateAuthor(payload: {id: $id, username: $username}) {
-    id
+    mutation UpdateAuthor($id: Int!, $username: String!, $file: Upload) {
+  UpdateAuthor(payload: {id: $id, username: $username}, file: $file) {
     username
-    email
+    image
+    delete_image
   }
 }
     `;
@@ -640,6 +646,7 @@ export type UpdateAuthorMutationFn = Apollo.MutationFunction<UpdateAuthorMutatio
  *   variables: {
  *      id: // value for 'id'
  *      username: // value for 'username'
+ *      file: // value for 'file'
  *   },
  * });
  */

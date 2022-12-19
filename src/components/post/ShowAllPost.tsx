@@ -19,7 +19,7 @@ function ShowAllPost() {
               <Link to={`/post/${post.slug}`} className="relative min-w-[14.6875rem] max-w-[14.6875rem] sm:block hidden">
                 <img src={process.env.PUBLIC_URL + "/img/example/thumbnail.jpg"} alt="Thumbnail" className="rounded-[1.25rem]" />
                 <div className="pt-[0.625rem] pr-[0.625rem] top-0 right-0 absolute">
-                  <img src={process.env.PUBLIC_URL + "/img/example/profile.jpg"} alt="Profile" className="border-[3px] border-solid border-white rounded-full w-8 h-8" />
+                  <img src={post.author.image ? post.author.image : process.env.PUBLIC_URL + "/img/default_user.png"} alt="Profile" className="border-[3px] border-solid border-white rounded-full w-8 h-8" />
                 </div>
               </Link>
               <div className="max-w-[26.125rem] flex flex-col gap-2">

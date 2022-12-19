@@ -4,9 +4,9 @@ import { ChangeEventHandler, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
-import { Query } from "../../../generated-types";
+import { Mutation, Query } from "../../../generated-types";
 import { useUser } from "../../global/UserProvider";
-import { DELETE_POST, DELETE_USER, UPDATE_PROFILE, UPLOAD_IMAGE } from "../../GraphQL/Mutations";
+import { DELETE_POST, DELETE_USER, UPDATE_PROFILE } from "../../GraphQL/Mutations";
 import { LOAD_POSTS_BY_AUTHOR } from "../../GraphQL/Queries";
 import { User } from "../../lib/types";
 import Loading from "../plugins/Loading";
@@ -16,8 +16,8 @@ const Profile = () => {
   const user = useUser();
   const navigate = useNavigate();
   const [username, setUsername] = useState(() => (user?.currentUser.user as User)?.username);
-  const [updateProfile] = useMutation(UPDATE_PROFILE);
-  const [uploadImage] = useMutation(UPLOAD_IMAGE);
+  const [profileImage, setProfileImage] = useState<FileList>();
+  const [updateProfile] = useMutation<Mutation>(UPDATE_PROFILE);
   const [deleteMyAccount] = useMutation(DELETE_USER, {
     onCompleted() {
       user?.setCurrentUser({ type: "logout" });
@@ -67,14 +67,17 @@ const Profile = () => {
       variables: {
         id: (user?.currentUser.user as User)?.id,
         username,
+        file: profileImage?.length ? profileImage[0] : null,
       },
     });
+
     user?.setCurrentUser({
       type: "update",
       payload: {
-        user: { ...(user.currentUser.user as User), username: result.data.UpdateAuthor.username },
+        user: { ...(user.currentUser.user as User), ...result.data?.UpdateAuthor },
       },
     });
+
     MySwal.fire({
       position: "top-end",
       icon: "success",
@@ -86,7 +89,9 @@ const Profile = () => {
 
   const handleImage: ChangeEventHandler<HTMLInputElement> = ({ target: { validity, files } }) => {
     if (files) {
-      if (validity.valid) uploadImage({ variables: { file: files[0] } });
+      if (validity.valid) {
+        setProfileImage(files);
+      }
     }
   };
 
@@ -197,7 +202,7 @@ const Profile = () => {
               <Link to={`/post/${post.slug}`} className="relative min-w-[14.6875rem] max-w-[14.6875rem] sm:block hidden">
                 <img src={process.env.PUBLIC_URL + "/img/example/thumbnail.jpg"} alt="Thumbnail" className="rounded-[1.25rem]" />
                 <div className="pt-[0.625rem] pr-[0.625rem] top-0 right-0 absolute">
-                  <img src={process.env.PUBLIC_URL + "/img/example/profile.jpg"} alt="Profile" className="border-[3px] border-solid border-white rounded-full w-8 h-8" />
+                  <img src={data.GetAuthorById.image ? data.GetAuthorById.image : process.env.PUBLIC_URL + "/img/default_user.png"} alt="Profile" className="border-[3px] border-solid border-white rounded-full w-8 h-8" />
                 </div>
               </Link>
               <div className="max-w-[26.125rem] flex flex-col gap-2">
