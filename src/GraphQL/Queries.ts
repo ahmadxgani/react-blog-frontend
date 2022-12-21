@@ -9,6 +9,7 @@ export const GET_POST = gql`
         image
       }
       title
+      likes
       content
       slug
       createdAt

@@ -16,7 +16,8 @@ import { LIKE_POST } from "../../GraphQL/Mutations";
 function DetailPost() {
   const urlParams = useParams();
   const navigate = useNavigate();
-  const { data, loading } = useQuery<Query>(GET_POST, {
+  const [totalLike, setTotalLike] = useState<number>();
+  const { data, loading, refetch } = useQuery<Query>(GET_POST, {
     variables: {
       slug: urlParams.slug,
     },
@@ -28,6 +29,9 @@ function DetailPost() {
     },
     fetchPolicy: "no-cache",
     onCompleted(data) {
+      refetch({
+        slug: urlParams.slug,
+      });
       setIsLiked(data.LikedPost.isLiked);
     },
   });
@@ -36,7 +40,6 @@ function DetailPost() {
   const [likePost] = useMutation(LIKE_POST, {
     onError(error) {
       console.log(error);
-
       setIsLiked(true);
     },
     onCompleted() {
@@ -61,6 +64,12 @@ function DetailPost() {
       });
     }
   }, [loading]);
+
+  useEffect(() => {
+    if (data) {
+      setTotalLike(data.GetPost.likes);
+    }
+  }, [data]);
 
   if (loading) return <Loading />;
 
@@ -127,9 +136,12 @@ function DetailPost() {
           <Article />
         </div>
       </div>
-      <div className="flex flex-col gap-2 items-center bg-primary w-14 h-fit p-3 text-white rounded-lg">
-        <HandThumbUpIcon className={`w-10 hover:cursor-pointer ${isLiked ? "fill-black" : "fill-white"}`} onClick={handleLike} />
-        <BookmarkIcon className="w-10 hover:cursor-pointer" />
+      <div className="flex flex-col gap-2 items-center bg-primary h-fit p-3 px-2 text-white rounded-lg">
+        <div className="flex items-center">
+          <span>{totalLike}</span>
+          <HandThumbUpIcon className={`w-7 hover:cursor-pointer ${isLiked ? "fill-black" : "fill-white"}`} onClick={handleLike} />
+        </div>
+        <BookmarkIcon className="w-7 hover:cursor-pointer" />
       </div>
     </>
   );
