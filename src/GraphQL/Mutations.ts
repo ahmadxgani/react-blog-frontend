@@ -8,6 +8,14 @@ export const CREATE_POST = gql`
   }
 `;
 
+export const LIKE_POST = gql`
+  mutation likePost($id: Int!) {
+    LikePost(payload: { idPost: $id }) {
+      likes
+    }
+  }
+`;
+
 export const EDIT_POST = gql`
   mutation UpdatePost($content: String!, $tags: [Int!], $slug: String!, $title: String!, $id: Int!) {
     UpdatePost(payload: { title: $title, content: $content, tags: $tags, slug: $slug, id: $id }) {

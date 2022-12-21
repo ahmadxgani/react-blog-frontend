@@ -21,6 +21,14 @@ export const GET_POST = gql`
   }
 `;
 
+export const GET_LIKE = gql`
+  query getLikePost($id: Int!) {
+    LikedPost(payload: { id: $id }) {
+      isLiked
+    }
+  }
+`;
+
 export const GET_ROLE = gql`
   query GetRole($id: Int!) {
     GetAuthorById(payload: { id: $id }) {
