@@ -1,5 +1,5 @@
 import { useLazyQuery, useMutation, useQuery } from "@apollo/client";
-import { GET_LIKE, GET_POST } from "../../GraphQL/Queries";
+import { GET_LIKE, GET_POST, IS_POST_BOOKMARKED } from "../../GraphQL/Queries";
 import Output from "editorjs-react-renderer";
 import { Query } from "../../../generated-types";
 import Loading from "../plugins/Loading";
@@ -13,13 +13,26 @@ import useUsersPost from "../../hooks/useUsersPost";
 import { useEffect, useState } from "react";
 import { LIKE_POST } from "../../GraphQL/Mutations";
 import { BOOKMARK_POST } from "../../GraphQL/Mutations";
+
 function DetailPost() {
   const urlParams = useParams();
   const navigate = useNavigate();
+  const [checkBookmarkedPost] = useLazyQuery(IS_POST_BOOKMARKED, {
+    onCompleted(data) {
+      setIsBookmarked(data.isPostBookmarked.isBookmarked);
+    },
+  });
   const [totalLike, setTotalLike] = useState<number>();
   const { data, loading, refetch } = useQuery<Query>(GET_POST, {
     variables: {
       slug: urlParams.slug,
+    },
+    onCompleted(data) {
+      checkBookmarkedPost({
+        variables: {
+          id: data.GetPost.id,
+        },
+      });
     },
     onError(error) {
       console.log(error);
@@ -27,7 +40,7 @@ function DetailPost() {
     },
     fetchPolicy: "no-cache",
   });
-  const [isBookmarked, setIsBookmarked] = useState();
+  const [isBookmarked, setIsBookmarked] = useState<boolean>();
   const [bookmarkPost] = useMutation(BOOKMARK_POST, {
     onCompleted(data) {
       setIsBookmarked(data.BookmarkPost.isBookmarked);
@@ -161,9 +174,7 @@ function DetailPost() {
           <span>{totalLike}</span>
           <HandThumbUpIcon className={`w-7 hover:cursor-pointer ${isLiked ? "fill-black" : "fill-white"}`} onClick={handleLike} />
         </div>
-        <div className="bg-primary p-2 rounded-full cursor-pointer" onClick={() => handleBookmark(data!.GetPost.id)}>
-          <BookmarkIcon className="w-8 fill-white" />
-        </div>
+        <BookmarkIcon className={`w-8 ${isBookmarked ? "fill-black" : "fill-white"} cursor-pointer`} onClick={() => handleBookmark(data!.GetPost.id)} />
       </div>
     </>
   );

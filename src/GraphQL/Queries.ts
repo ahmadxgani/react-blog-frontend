@@ -13,6 +13,14 @@ export const MY_BOOKMARK = gql`
   }
 `;
 
+export const IS_POST_BOOKMARKED = gql`
+  query CheckBookmarked($id: Int!) {
+    isPostBookmarked(payload: { idPost: $id }) {
+      isBookmarked
+    }
+  }
+`;
+
 export const GET_POST = gql`
   query GetPost($slug: String!) {
     GetPost(payload: { slug: $slug }) {
