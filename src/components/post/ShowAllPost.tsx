@@ -39,7 +39,6 @@ function ShowAllPost() {
                 </Link>
               </div>
             </div>
-            <BookmarkIcon className="w-8" />
           </div>
         ))
       ) : (

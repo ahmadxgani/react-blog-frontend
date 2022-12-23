@@ -12,7 +12,7 @@ import { ReactComponent as Facebook } from "../../icon/Facebook.svg";
 import useUsersPost from "../../hooks/useUsersPost";
 import { useEffect, useState } from "react";
 import { LIKE_POST } from "../../GraphQL/Mutations";
-
+import { BOOKMARK_POST } from "../../GraphQL/Mutations";
 function DetailPost() {
   const urlParams = useParams();
   const navigate = useNavigate();
@@ -21,8 +21,28 @@ function DetailPost() {
     variables: {
       slug: urlParams.slug,
     },
+    onError(error) {
+      console.log(error);
+      navigate("/");
+    },
     fetchPolicy: "no-cache",
   });
+  const [isBookmarked, setIsBookmarked] = useState();
+  const [bookmarkPost] = useMutation(BOOKMARK_POST, {
+    onCompleted(data) {
+      setIsBookmarked(data.BookmarkPost.isBookmarked);
+    },
+    onError(error, clientOptions) {
+      console.log("sepertinya anda belum login! redirect...");
+    },
+  });
+  const handleBookmark = (id: number) => {
+    bookmarkPost({
+      variables: {
+        id,
+      },
+    });
+  };
   const [liked] = useLazyQuery(GET_LIKE, {
     variables: {
       id: data?.GetPost.id,
@@ -141,7 +161,9 @@ function DetailPost() {
           <span>{totalLike}</span>
           <HandThumbUpIcon className={`w-7 hover:cursor-pointer ${isLiked ? "fill-black" : "fill-white"}`} onClick={handleLike} />
         </div>
-        <BookmarkIcon className="w-7 hover:cursor-pointer" />
+        <div className="bg-primary p-2 rounded-full cursor-pointer" onClick={() => handleBookmark(data!.GetPost.id)}>
+          <BookmarkIcon className="w-8 fill-white" />
+        </div>
       </div>
     </>
   );

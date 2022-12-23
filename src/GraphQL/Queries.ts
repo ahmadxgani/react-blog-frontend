@@ -1,5 +1,18 @@
 import { gql } from "@apollo/client";
 
+export const MY_BOOKMARK = gql`
+  query MyBookmark {
+    getMyBookmark {
+      id
+      title
+      author {
+        id
+        username
+      }
+    }
+  }
+`;
+
 export const GET_POST = gql`
   query GetPost($slug: String!) {
     GetPost(payload: { slug: $slug }) {
@@ -41,6 +54,7 @@ export const GET_ROLE = gql`
 export const LOAD_POSTS = gql`
   query LoadPosts {
     ShowAllPost {
+      id
       title
       slug
       tags {

@@ -8,6 +8,14 @@ export const CREATE_POST = gql`
   }
 `;
 
+export const BOOKMARK_POST = gql`
+  mutation bookmarkPost($id: Int!) {
+    BookmarkPost(payload: { idPost: $id }) {
+      isBookmarked
+    }
+  }
+`;
+
 export const LIKE_POST = gql`
   mutation likePost($id: Int!) {
     LikePost(payload: { idPost: $id }) {
