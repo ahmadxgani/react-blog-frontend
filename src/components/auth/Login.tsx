@@ -25,7 +25,6 @@ const Login = () => {
             token: data.login.token,
             username: data.login.username,
             image: data.login.image,
-            delete_image: data.login.delete_image,
             email: data.login.email,
           },
         },

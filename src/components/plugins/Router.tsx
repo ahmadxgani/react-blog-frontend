@@ -17,20 +17,21 @@ import EditPost from "../post/EditPost";
 import AuthLayout from "../templates/AuthLayout";
 import { Pages } from "../../lib/types";
 import TitleProvider from "../../global/TitleProvider";
+import Verify from "../auth/verify";
 
 const protectedRoutes = [
   { label: "dashboard", path: "/dashboard/users", role: "admin", isInNavBar: true, title: "manage users" },
   { label: "profile", path: "/profile", isInNavBar: true, title: "my profile" },
   { label: "new post", path: "/post/", isInNavBar: true },
   { label: "dashboard", path: "/dashboard/tags", title: "manage tags" },
-  { label: "edit post", path: "/post/:slug/edit", regex: "^\/post\/[^\/]+\/edit$" },
+  { label: "edit post", path: "/post/:slug/edit", regex: "^/post/[^/]+/edit$" },
 ];
 const unprotectedRoutes = [
   { label: "login", path: "/login", isInNavBar: true },
   { label: "register", path: "/register", isInNavBar: true },
   { label: "forgot password", path: "/recovery-password" },
 ];
-export const mappedRoutes: Pages = [{ label: "home", path: "/" }, { label: "detail post", path: "/post/:slug", regex: "^\/post\/[^\/]+(\/?)$" }, ...protectedRoutes, ...unprotectedRoutes];
+export const mappedRoutes: Pages = [{ label: "home", path: "/" }, { label: "detail post", path: "/post/:slug", regex: "^/post/[^/]+(/?)$" }, ...protectedRoutes, ...unprotectedRoutes];
 
 export const Router = () => {
   const user = useUser();
@@ -50,6 +51,7 @@ export const Router = () => {
               <Route path="/post/:slug/edit" element={<EditPost />} />
             </Route>
             <Route path="/" element={<ShowAllPost />} />
+            <Route path="/token/:token/verify" element={<Verify />} />
             <Route path="/post/:slug" element={<DetailPost />} />
             <Route element={<AuthLayout />}>
               <Route path="/login" element={<Login />}></Route>

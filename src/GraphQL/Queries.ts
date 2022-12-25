@@ -1,5 +1,13 @@
 import { gql } from "@apollo/client";
 
+export const VERIFY_EMAIL = gql`
+  query VerifyEmail($code: String!) {
+    verifyEmail(code: $code) {
+      message
+    }
+  }
+`;
+
 export const MY_BOOKMARK = gql`
   query MyBookmark {
     getMyBookmark {
@@ -99,7 +107,6 @@ export const LOGIN = gql`
       username
       email
       image
-      delete_image
     }
   }
 `;

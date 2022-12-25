@@ -32,7 +32,6 @@ export interface User {
   email: string;
   token: string;
   image: string;
-  delete_image: string;
 }
 
 export interface ReactTagsState {

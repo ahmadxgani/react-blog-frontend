@@ -79,7 +79,6 @@ export const UPDATE_PROFILE = gql`
     UpdateAuthor(payload: { id: $id, username: $username }, file: $file) {
       username
       image
-      delete_image
     }
   }
 `;
