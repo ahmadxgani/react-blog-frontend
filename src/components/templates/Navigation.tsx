@@ -28,7 +28,7 @@ function Navigation({ pages }: { pages: Pages }) {
   };
 
   return (
-    <nav className="navbar bg-base-100">
+    <nav className="navbar bg-base-100 border-b-4 border-solid border-gray-600">
       <div className="dropdown dropdown-bottom">
         <label tabIndex={0} className="btn btn-ghost btn-xs md:btn-md btn-circle avatar">
           <Bars3BottomLeftIcon className="md:w-9 w-5" />
@@ -58,7 +58,7 @@ function Navigation({ pages }: { pages: Pages }) {
         </ul>
       </div>
       <div className="flex-1">
-        <Link to="/" className="btn btn-ghost normal-case text-base md:text-lg lg:text-xl btn-sm md:btn-lg">
+        <Link to="/" className="btn btn-ghost normal-case text-base md:text-lg lg:text-xl btn-sm md:btn-md">
           Zero's Blog
         </Link>
       </div>
