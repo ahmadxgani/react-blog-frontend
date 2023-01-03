@@ -8,7 +8,6 @@
 - Apollo Client as Graphql module
 - Tailwind as inline style
 - DaisyUI as tailwind component
-- Heroicons as icon
 
 ## Important Note!
 
