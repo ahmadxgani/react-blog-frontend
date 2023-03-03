@@ -1,3 +1,4 @@
+# This Project has been archived, please go to [NextJs version](https://github.com/ahmadxgani/next-blog-frontend.git) instead.
 # Zero's Blog | Client Side
 
 ## Technology stack:
